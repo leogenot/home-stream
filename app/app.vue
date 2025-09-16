@@ -1,6 +1,8 @@
 <script lang="ts" setup>
-  import fallback from '~/transitions/fallback'
+  import { useSupabaseAuth } from './composables/useSupabaseAuth'
+  import fallback from './transitions/fallback'
 
+  const { initAuthListener, unsubscribeAuthListener } = useSupabaseAuth()
   const usePageIsTransitioning = () =>
     useState('page-is-transitioning', () => false)
   const pageIsTransitioning = usePageIsTransitioning()
@@ -27,14 +29,23 @@
       },
     },
   })
+
+  onMounted(async () => {
+    await initAuthListener()
+  })
+
+  onUnmounted(() => {
+    unsubscribeAuthListener()
+  })
 </script>
 
 <template>
   <div>
-    <!-- <SiteHeader /> -->
+    <SiteHeader />
     <NuxtLayout>
       <DevGrid />
       <NuxtPage :transition="pageTransitions" />
+      <ElementsErrorMessage />
     </NuxtLayout>
   </div>
 </template>

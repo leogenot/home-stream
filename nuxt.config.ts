@@ -3,8 +3,15 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   runtimeConfig: {
+    supabaseUrl: process.env.SUPABASE_URL,
+    supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
+    RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY,
     public: {
       BASE_URL: process.env.BASE_URL || 'http://localhost:3000',
+      SUPABASE_URL: process.env.SUPABASE_URL,
+      SUPABASE_KEY: process.env.SUPABASE_KEY,
+      RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
     },
   },
   site: {
@@ -12,13 +19,22 @@ export default defineNuxtConfig({
     name: 'Curin',
   },
   devtools: { enabled: true },
-  modules: ['@nuxt/eslint', '@nuxt/image'],
+  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxtjs/supabase',],
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
     head: {
       htmlAttrs: {
         lang: 'en',
       },
+    },
+  },
+  supabase: {
+    redirectOptions: {
+      login: '/',
+      callback: '/confirm',
+      include: ['/account/'],
+      exclude: [],
+      saveRedirectToCookie: false,
     },
   },
   css: [
