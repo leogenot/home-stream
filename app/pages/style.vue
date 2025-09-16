@@ -1,5 +1,5 @@
 <script setup>
-  const editorial = [
+  const instrumentSerif = [
     { class: 'text-5xl', label: '5xl', italic: true },
     { class: 'text-4xl', label: '4xl' },
     { class: 'text-3xl', label: '3xl', italic: true },
@@ -12,7 +12,7 @@
     { class: 'text-xxs', label: 'xxs' },
     { class: 'text-legal', label: 'legal' },
   ]
-  const montreal = [
+  const sans = [
     { class: 'text-5xl', label: '5xl' },
     { class: 'text-4xl', label: '4xl' },
     { class: 'text-3xl', label: '3xl' },
@@ -67,11 +67,11 @@
     <div class="rounded-4xl bg-white p-10 shadow-lg">
       <h2 class="mb-6 font-mono text-2xl text-[--black]">Font styles</h2>
       <div class="mt-15">
-        <div v-for="size in editorial" :key="size.class" class="mb-6">
+        <div v-for="size in instrumentSerif" :key="size.class" class="mb-6">
           <span
             class="mb-1 block w-max rounded-md bg-gray-100 px-2 py-1 font-mono text-sm text-gray-500"
           >
-            Editorial / {{ size.label }}
+            Instrument Serif / {{ size.label }}
             <span v-if="size.italic">/ Italic</span>
           </span>
           <p :class="[`font-serif ${size.class}`, { italic: size.italic }]">
@@ -81,15 +81,18 @@
       </div>
 
       <div class="mt-15">
-        <div v-for="size in montreal" :key="size.class" class="mb-6">
+        <div v-for="size in sans" :key="size.class" class="mb-6">
           <span
             class="mb-1 block w-max rounded-md bg-gray-100 px-2 py-1 font-mono text-sm text-gray-500"
           >
-            Montreal / {{ size.label }}
+            Inter / {{ size.label }}
             <span v-if="size.medium">/ Medium</span>
           </span>
           <p
-            :class="[`font-sans ${size.class}`, { 'font-medium': size.medium }]"
+            :class="[
+              `font-instrumentSerif ${size.class}`,
+              { 'font-medium': size.medium },
+            ]"
           >
             The quick brown fox jumps over the lazy dog
           </p>
