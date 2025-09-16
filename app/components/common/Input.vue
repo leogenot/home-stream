@@ -31,15 +31,20 @@
 <template>
   <div class="relative mb-4">
     <input
-      @input="emit('update:modelValue', $event.target.value)"
+      :id="id"
       :value="modelValue"
       :type="inputType"
-      :id="id"
       :name="name"
       :autocomplete="autocomplete"
       :required="required"
       placeholder=" "
       class="peer w-full border-b pt-6 pr-10 pb-2 text-sm font-medium text-(--black)/50 placeholder-transparent focus:text-(--black) focus:outline-none"
+      @input="
+        emit(
+          'update:modelValue',
+          ($event.target as HTMLInputElement)?.value ?? '',
+        )
+      "
     />
 
     <label
@@ -52,8 +57,8 @@
     <button
       v-if="type === 'password'"
       type="button"
-      @click="toggleVisibility"
       class="absolute right-0 bottom-2 text-xs text-(--black)/50 focus:outline-none"
+      @click="toggleVisibility"
     >
       <span class="flex size-5">
         <IconsEyeOpen v-if="isPasswordVisible" />

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-  const { signInWithEmail, signInWithOAuth, isLoading } = useSupabaseAuth()
+  import { useSupabaseAuth } from '~/composables/useSupabaseAuth'
+  const { signInWithEmail, isLoading } = useSupabaseAuth()
   const router = useRouter()
   const email = ref('')
   const password = ref('')
   const message = ref('')
-  const hasError = ref<Boolean>(false)
-  // const isLoading = ref<boolean>(false)
+  const hasError = ref<boolean>(false)
 
   const handleLogin = async () => {
     message.value = ''
@@ -22,10 +22,9 @@
   }
 
   const handleGoogleLogin = async () => {
-    const { error } = await signInWithOAuth('google')
-
-    if (error) {
-      message.value = error
+    const result = await signInWithEmail(email.value, password.value)
+    if (result && result.error) {
+      message.value = result.error
     }
   }
 </script>
@@ -37,21 +36,6 @@
       class="absolute z-20 flex h-full w-full items-center justify-center bg-(--white)/80"
     >
       <ElementsLoader />
-    </div>
-    <ElementsButton
-      btn-type="button"
-      aria-label="Login with Google"
-      class="w-full"
-      @click="handleGoogleLogin"
-    >
-      <IconsGoogle class="size-4" />
-      Login with Google
-    </ElementsButton>
-
-    <div class="my-10 grid grid-cols-[1fr_auto_1fr] items-center">
-      <span class="h-px w-full bg-(--black)" />
-      <span class="mx-5 text-sm uppercase">Or</span>
-      <span class="h-px w-full bg-(--black)" />
     </div>
 
     <form class="font-sans uppercase" @submit.prevent="handleLogin">

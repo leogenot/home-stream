@@ -17,6 +17,13 @@
   }
 
   const _props = withDefaults(defineProps<ButtonProps>(), {
+    btnType: undefined,
+    ariaLabel: '',
+    disabled: false,
+    linkType: undefined,
+    title: '',
+    url: '',
+    page: undefined,
     underline: false,
     markActive: false,
     target: '_self',
@@ -34,7 +41,7 @@
     <span
       class="flex items-center gap-1 font-sans text-sm font-medium uppercase"
     >
-      <slot></slot>
+      <slot />
     </span>
   </button>
   <nuxt-link

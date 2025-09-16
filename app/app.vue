@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+  import useSmoothScroll from './composables/useSmoothScroll'
+  import usePageTransition from './composables/usePageTransition'
   import { useSupabaseAuth } from './composables/useSupabaseAuth'
   import fallback from './transitions/fallback'
 
@@ -13,7 +15,9 @@
   const pageTransitions = usePageTransition({
     defaultTransition: fallback,
     globalHooks: {
-      onBeforeLeave(el) {
+      onBeforeLeave(el: {
+        style: { position: string; width: string; left: number; top: string }
+      }) {
         pageIsTransitioning.value = true
 
         // place the old page in the place it was,
@@ -21,9 +25,10 @@
         el.style.position = 'fixed'
         el.style.width = '100vw'
         el.style.left = 0
-        el.style.top = currentScroll.value * -1 + 'px'
+        el.style.top =
+          currentScroll.value !== null ? currentScroll.value * -1 + 'px' : '0px'
       },
-      onAfterEnter(el) {
+      onAfterEnter(el: { removeAttribute: (arg0: string) => void }) {
         pageIsTransitioning.value = false
         el.removeAttribute('style')
       },

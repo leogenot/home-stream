@@ -20,6 +20,10 @@
   const isHovering = ref(false)
 
   const _props = withDefaults(defineProps<Link>(), {
+    linkType: undefined,
+    title: '',
+    url: '',
+    page: undefined,
     underline: false,
     markActive: false,
     target: '_self',
@@ -60,14 +64,14 @@
 </script>
 <template>
   <nuxt-link
-    @mouseenter="animateLine"
     :to="url || page?.url"
     :target="target"
     :aria-label="`Go to page ${title || page?.title || url}`"
-    class="e-link group relative flex cursor-pointer font-sans leading-none uppercase"
     :class="
       markActive ? 'text-3xl lg:text-sm lg:font-medium' : 'text-sm font-medium'
     "
+    class="e-link group relative flex cursor-pointer font-sans leading-none uppercase"
+    @mouseenter="animateLine"
   >
     <span
       class="absolute top-1/2 left-0 flex size-6 -translate-y-1/2 p-2 transition-opacity lg:hidden"
@@ -91,7 +95,7 @@
           ? 'line-initial'
           : 'line-hidden scale-x-0 group-hover:scale-x-100',
       ]"
-    ></span>
+    />
   </nuxt-link>
 </template>
 
