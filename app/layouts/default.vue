@@ -1,6 +1,6 @@
 <template>
   <div class="relative">
-    <!-- <SiteHeader /> -->
+    <SiteHeader />
     <main>
       <slot />
     </main>

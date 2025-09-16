@@ -1,5 +1,5 @@
 <script setup>
-  const { progress, currentScroll } = useSmoothScroll()
+  const { progress } = useSmoothScroll()
 
   const footerRef = ref(null)
   const translateY = ref(100)
@@ -58,13 +58,18 @@
             </span>
           </h4>
           <div class="font-serif text-lg">
-            <p>Home Stream is a big middle finger to streaming services (I'm cheap)</p>
+            <p>
+              Home Stream is a big middle finger to streaming services (I'm
+              cheap)
+            </p>
           </div>
         </div>
         <div
           class="px-bleed gap-gap grid grid-cols-2 border-t border-(--white)/20 pt-8 pb-15 text-xs uppercase lg:grid-cols-4 lg:py-5"
         >
-          <div class="flex flex-col lg:flex-row gap-5 lg:col-span-2 items-start justify-start">
+          <div
+            class="flex flex-col items-start justify-start gap-5 lg:col-span-2 lg:flex-row"
+          >
             <span class="text-xs font-medium lg:flex">
               @ No rights reserved
             </span>
