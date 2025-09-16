@@ -1,68 +1,62 @@
-<script lang="ts" setup>
-  import useSmoothScroll from './composables/useSmoothScroll'
-  import usePageTransition from './composables/usePageTransition'
-  import { useSupabaseAuth } from './composables/useSupabaseAuth'
-  import fallback from './transitions/fallback'
-
-  const { initAuthListener, unsubscribeAuthListener } = useSupabaseAuth()
-  const usePageIsTransitioning = () =>
-    useState('page-is-transitioning', () => false)
-  const pageIsTransitioning = usePageIsTransitioning()
-
-  const { currentScroll } = useSmoothScroll(true)
-  // const isTransitioning = ref(false)
-
-  const pageTransitions = usePageTransition({
-    defaultTransition: fallback,
-    globalHooks: {
-      onBeforeLeave(el: {
-        style: { position: string; width: string; left: number; top: string }
-      }) {
-        pageIsTransitioning.value = true
-
-        // place the old page in the place it was,
-        // so it's safe to scroll to the top
-        el.style.position = 'fixed'
-        el.style.width = '100vw'
-        el.style.left = 0
-        el.style.top =
-          currentScroll.value !== null ? currentScroll.value * -1 + 'px' : '0px'
-      },
-      onAfterEnter(el: { removeAttribute: (arg0: string) => void }) {
-        pageIsTransitioning.value = false
-        el.removeAttribute('style')
-      },
-    },
-  })
-
-  onMounted(async () => {
-    await initAuthListener()
-  })
-
-  onUnmounted(() => {
-    unsubscribeAuthListener()
-  })
-</script>
-
 <template>
-  <div>
-    <SiteHeader />
-    <NuxtLayout>
-      <DevGrid />
-      <NuxtPage :transition="pageTransitions" />
-      <ElementsErrorMessage />
-    </NuxtLayout>
-  </div>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 
 <style lang="postcss">
-  .fade-leave-active,
-  .fade-enter-active {
-    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  @keyframes fadeIn {
+    0% {
+      opacity: 0.001;
+    }
+    100% {
+      opacity: 1;
+    }
   }
-
-  .fade-enter-from,
-  .fade-leave-to {
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.001;
+    }
+  }
+  .page-enter-active,
+  .page-leave-active,
+  .layout-enter-active,
+  .layout-leave-active {
+    transition: opacity 250ms;
+  }
+  .page-enter,
+  .page-leave-to,
+  .layout-enter,
+  .layout-leave-to {
+    opacity: 0;
+  }
+  .page-enter-active,
+  .layout-enter-active {
+    animation-duration: 250ms;
+    animation-name: fadeIn;
+    animation-timing-function: linear;
+    backface-visibility: hidden;
+  }
+  .page-leave-active,
+  .layout-leave-active {
+    animation-name: fadeOut;
+    animation-duration: 0.25s;
+  }
+  /* Scale Y */
+  .scale-y-enter-active,
+  .scale-y-leave-active {
+    transition: all 300ms linear;
+    will-change: max-height, opacity;
+    max-height: 160px;
+    overflow: hidden;
+    opacity: 1;
+  }
+  .scale-y-enter-from,
+  .scale-y-leave-to {
+    max-height: 0;
     opacity: 0;
   }
 </style>
