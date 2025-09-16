@@ -143,17 +143,6 @@ export function useSupabaseAuth() {
         firstname: string,
         lastname: string,
     ) => {
-        const { data: existingUser, error: fetchError } = await supabase
-            .from('user_details')
-            .select('subscription_status, subscription_plan')
-            .eq('id', id)
-            .maybeSingle()
-
-        if (fetchError) {
-            console.error('Error fetching existing user:', fetchError)
-            throw fetchError
-        }
-
         const { data, error } = await supabase
             .from('user_details')
             .upsert(
