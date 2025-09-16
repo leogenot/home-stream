@@ -1,0 +1,35 @@
+.theme-sand {
+  --fg-color: var(--black);
+  --bg-color: var(--sand);
+  --menu-color: var(--fg-color);
+}
+
+.theme-white {
+  --fg-color: var(--black);
+  --bg-color: var(--white);
+  --menu-color: var(--fg-color);
+}
+
+.theme-black {
+  --fg-color: var(--white);
+  --bg-color: var(--black);
+  --menu-color: var(--fg-color);
+}
+
+.theme-transparent-light {
+  --fg-color: var(--white);
+  --bg-color: transparent;
+  --menu-color: var(--fg-color);
+}
+
+.theme-transparent-dark {
+  --fg-color: var(--black);
+  --bg-color: transparent;
+  --menu-color: var(--fg-color);
+}
+
+.theme-mixed {
+  --fg-color: var(--white);
+  --bg-color: transparent;
+  --menu-color: var(--black);
+}

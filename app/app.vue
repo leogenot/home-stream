@@ -1,0 +1,52 @@
+<script lang="ts" setup>
+  import fallback from '~/transitions/fallback'
+
+  const usePageIsTransitioning = () =>
+    useState('page-is-transitioning', () => false)
+  const pageIsTransitioning = usePageIsTransitioning()
+
+  const { currentScroll } = useSmoothScroll(true)
+  // const isTransitioning = ref(false)
+
+  const pageTransitions = usePageTransition({
+    defaultTransition: fallback,
+    globalHooks: {
+      onBeforeLeave(el) {
+        pageIsTransitioning.value = true
+
+        // place the old page in the place it was,
+        // so it's safe to scroll to the top
+        el.style.position = 'fixed'
+        el.style.width = '100vw'
+        el.style.left = 0
+        el.style.top = currentScroll.value * -1 + 'px'
+      },
+      onAfterEnter(el) {
+        pageIsTransitioning.value = false
+        el.removeAttribute('style')
+      },
+    },
+  })
+</script>
+
+<template>
+  <div>
+    <!-- <SiteHeader /> -->
+    <NuxtLayout>
+      <DevGrid />
+      <NuxtPage :transition="pageTransitions" />
+    </NuxtLayout>
+  </div>
+</template>
+
+<style lang="postcss">
+  .fade-leave-active,
+  .fade-enter-active {
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
+</style>
