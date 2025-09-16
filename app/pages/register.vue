@@ -9,7 +9,6 @@
   const password = ref('')
   const name = ref('')
   const lastname = ref('')
-  const company = ref('')
   const client = useSupabaseClient()
   const user = useSupabaseUser()
   const loading = ref(false)
@@ -32,7 +31,6 @@
         data: {
           first_name: name.value,
           last_name: lastname.value,
-          company: company.value,
         },
       },
     })
@@ -70,16 +68,6 @@
               class=""
               type="text"
               placeholder="Last name"
-            />
-          </div>
-        </label>
-        <label class="">
-          <div class="">
-            <input
-              v-model="company"
-              class=""
-              type="text"
-              placeholder="Company (Optional)"
             />
           </div>
         </label>
