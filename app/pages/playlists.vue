@@ -11,6 +11,7 @@
   const musics = ref<any[]>([])
   const selectedMusicIds = ref<number[]>([])
   const newPlaylistTitle = ref('')
+  const newPlaylistMediaType = ref('')
   const newPlaylistDescription = ref('')
   const playlistSuccess = ref('')
   const playlistError = ref('')
@@ -69,7 +70,7 @@
         .insert({
           title: newPlaylistTitle.value,
           user_id: user.value.id,
-          media_type: 'music',
+          media_type: newPlaylistMediaType.value,
         })
         .select()
         .single()
@@ -201,6 +202,13 @@
         />
 
         <select
+          v-model="newPlaylistMediaType"
+          class="border border-(--sand) p-2 uppercase"
+        >
+          <option value="music" selected>Music</option>
+          <option value="movies">Movies</option>
+        </select>
+        <select
           v-model="selectedMusicIds"
           multiple
           class="border border-(--sand) p-2 uppercase"
@@ -241,7 +249,7 @@
             :key="item.id"
             class="flex items-center justify-between"
           >
-            {{ item.music?.file || item.movies?.title || 'Unknown' }}
+            {{ item.music?.file || item.movies?.file || 'Unknown' }}
             <button
               class="text-xs text-red-500"
               @click="removeItemFromPlaylist(item.id)"
@@ -274,5 +282,6 @@
     </div>
 
     <p v-else class="text-gray-500">No playlists yet.</p>
+    <upload />
   </div>
 </template>
