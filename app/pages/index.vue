@@ -25,10 +25,12 @@
 </script>
 
 <template>
-  <div class="">
-    <p v-if="user" class="font-serif text-3xl">
-      Hi {{ user.user_metadata.first_name }}
-    </p>
+  <div
+    class="mx-auto grid w-fit items-center justify-center justify-items-center gap-4"
+  >
+    <nuxt-link v-if="user" to="/profile" class="font-serif text-3xl">
+      Hi {{ user.user_metadata.full_name }}
+    </nuxt-link>
     <p v-else class="font-serif text-3xl">unauthenticated</p>
     <div v-if="user" class="">
       <button
