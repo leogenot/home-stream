@@ -1,6 +1,6 @@
 <script setup lang="ts">
   useHead({
-    title: 'Profile | supaAuth',
+    title: 'Profile',
   })
 
   const user = useSupabaseUser()
