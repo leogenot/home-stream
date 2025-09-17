@@ -7,15 +7,9 @@
 </script>
 
 <template>
-  <Transition name="scale-y">
-    <div v-if="successMsg">
-      <div class="">
-        <div class="">Success!</div>
-        <p class="">{{ successMsg }}</p>
-        <div class="">
-          <div class="" @click="clearSuccess">Clear success</div>
-        </div>
-      </div>
-    </div>
-  </Transition>
+  <div v-if="successMsg">
+    <div class="">Success!</div>
+    <p class="">{{ successMsg }}</p>
+    <div class="" @click="clearSuccess">Clear success</div>
+  </div>
 </template>

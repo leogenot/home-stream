@@ -41,26 +41,41 @@
 </script>
 
 <template>
-  <div class="">
-    <h1 class="">Forgot password</h1>
-    <form @submit.prevent="resetPassword">
+  <div
+    class="mx-auto grid w-fit items-center justify-center justify-items-center gap-4"
+  >
+    <h1 class="font-serif text-3xl">Forgot password</h1>
+    <form
+      class="grid w-fit items-center justify-between gap-4"
+      @submit.prevent="resetPassword"
+    >
       <ErrorAlert :error-msg="authError" @clear-error="clearError" />
       <SuccessAlert :success-msg="authSuccess" @clear-success="clearSuccess" />
       <div class="">
         <label class="">
-          <div class="">
-            <input
-              v-model="email"
-              class=""
-              type="text"
-              placeholder="Email address"
-            />
-          </div>
+          <input
+            v-model="email"
+            class="border border-(--sand) p-2 uppercase"
+            type="text"
+            placeholder="Email address"
+          />
         </label>
       </div>
-      <button class="" type="submit" :disabled="loading">
-        <div class="" :class="{ loading: loading }">Request</div>
+      <button
+        class="cursor-pointer border border-(--sand) p-2 uppercase"
+        type="submit"
+        :disabled="loading"
+      >
+        <div class="" :class="{ 'pointer-events-none opacity-50': loading }">
+          Request
+        </div>
       </button>
+      <NuxtLink
+        class="border border-(--sand) p-2 text-center uppercase"
+        to="/login"
+      >
+        Login
+      </NuxtLink>
     </form>
   </div>
 </template>

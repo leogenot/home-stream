@@ -6,14 +6,8 @@
   }
 </script>
 <template>
-  <Transition name="scale-y">
-    <div v-if="errorMsg">
-      <div class="">
-        <p class="">{{ errorMsg }}</p>
-        <div class="">
-          <div class="" @click="clearError">Clear errors</div>
-        </div>
-      </div>
-    </div>
-  </Transition>
+  <div v-if="errorMsg">
+    <p class="">{{ errorMsg }}</p>
+    <div class="" @click="clearError">Clear errors</div>
+  </div>
 </template>

@@ -47,38 +47,49 @@
 </script>
 
 <template>
-  <div class="">
-    <h1 class="">New password</h1>
-    <form @submit.prevent="updatepassword">
+  <div
+    class="mx-auto grid w-fit items-center justify-center justify-items-center gap-4"
+  >
+    <h1 class="font-serif text-3xl">New password</h1>
+    <form
+      class="grid w-fit items-center justify-between gap-4"
+      @submit.prevent="updatepassword"
+    >
       <ErrorAlert :error-msg="authError" @clear-error="clearError" />
       <SuccessAlert :success-msg="authSuccess" @clear-success="clearSuccess" />
       <div class="">
         <label class="">
-          <div class="">
-            <input
-              v-model="password"
-              class=""
-              type="password"
-              placeholder="Password"
-            />
-          </div>
+          <input
+            v-model="password"
+            class="border border-(--sand) p-2 uppercase"
+            type="password"
+            placeholder="Password"
+          />
         </label>
         <label class="">
-          <div class="">
-            <input
-              v-model="passwordConfirm"
-              class=""
-              type="password"
-              placeholder="Repeat"
-            />
-          </div>
+          <input
+            v-model="passwordConfirm"
+            class="border border-(--sand) p-2 uppercase"
+            type="password"
+            placeholder="Repeat"
+          />
         </label>
       </div>
-      <div class="">
-        <button class="" type="submit" :disabled="loading">
-          <div class="" :class="{ loading: loading }">Save</div>
-        </button>
-      </div>
+      <button
+        class="cursor-pointer border border-(--sand) p-2 uppercase"
+        type="submit"
+        :disabled="loading"
+      >
+        <div class="" :class="{ 'pointer-events-none opacity-50': loading }">
+          Save
+        </div>
+      </button>
+      <NuxtLink
+        class="border border-(--sand) p-2 text-center uppercase"
+        to="/login"
+      >
+        Login
+      </NuxtLink>
     </form>
   </div>
 </template>

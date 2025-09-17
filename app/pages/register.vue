@@ -46,77 +46,64 @@
 </script>
 
 <template>
-  <div class="">
-    <h1 class="">Create an account</h1>
-    <form @submit.prevent="signUp">
+  <div
+    class="mx-auto grid w-fit items-center justify-center justify-items-center gap-4"
+  >
+    <h1 class="font-serif text-3xl">Create an account</h1>
+    <form
+      class="grid w-fit items-center justify-between gap-4"
+      @submit.prevent="signUp"
+    >
       <ErrorAlert :error-msg="authError" @clear-error="clearError" />
-      <div class="">
-        <label class="">
-          <div class="">
-            <input
-              v-model="name"
-              class=""
-              type="text"
-              placeholder="First name"
-            />
-          </div>
-        </label>
-        <label class="">
-          <div class="">
-            <input
-              v-model="lastname"
-              class=""
-              type="text"
-              placeholder="Last name"
-            />
-          </div>
-        </label>
-        <label class="">
-          <div class="">
-            <input
-              v-model="email"
-              class=""
-              type="text"
-              placeholder="Email address"
-            />
-          </div>
-        </label>
-        <label class="">
-          <div class="">
-            <input
-              v-model="password"
-              class=""
-              type="password"
-              placeholder="Password"
-            />
-          </div>
-        </label>
-      </div>
-      <div class="">
-        <button class="" type="submit" :disabled="loading">
-          <div class="" :class="{ loading: loading }">Sign up</div>
-        </button>
-        <div class="">
-          By signing up you agree to our
-          <a
-            href="https://policies.google.com/terms"
-            target="_blank"
-            rel="noopener noreferrer"
-            class=""
-          >
-            <span>API Terms of Service</span>
-          </a>
-          and
-          <a
-            href="https://policies.google.com/privacy"
-            target="_blank"
-            rel="noopener noreferrer"
-            class=""
-          >
-            <span>Privacy Policy</span>
-          </a>
-          .
+      <label class="">
+        <input
+          v-model="name"
+          class="border border-(--sand) p-2 uppercase"
+          type="text"
+          placeholder="First name"
+        />
+      </label>
+      <label class="">
+        <input
+          v-model="lastname"
+          class="border border-(--sand) p-2 uppercase"
+          type="text"
+          placeholder="Last name"
+        />
+      </label>
+      <label class="">
+        <input
+          v-model="email"
+          class="border border-(--sand) p-2 uppercase"
+          type="text"
+          placeholder="Email address"
+        />
+      </label>
+      <label class="">
+        <input
+          v-model="password"
+          class="border border-(--sand) p-2 uppercase"
+          type="password"
+          placeholder="Password"
+        />
+      </label>
+      <button
+        class="cursor-pointer border border-(--sand) p-2 uppercase"
+        type="submit"
+        :disabled="loading"
+      >
+        <div :class="{ 'pointer-events-none opacity-50': loading }">
+          Sign up
         </div>
+      </button>
+      <div class="grid items-center justify-between justify-items-center gap-4">
+        <p class="">I already have an account:</p>
+        <NuxtLink
+          class="border border-(--sand) p-2 text-center uppercase"
+          to="/login"
+        >
+          Login
+        </NuxtLink>
       </div>
     </form>
   </div>
