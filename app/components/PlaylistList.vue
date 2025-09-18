@@ -16,6 +16,7 @@
     deletePlaylist,
     addItemsToPlaylist,
   } = usePlaylist()
+  const { queue, playAt } = useQueue()
 
   const normalizedPlaylists = computed(() =>
     playlists.value.map((pl) => ({
@@ -26,6 +27,29 @@
           : pl.movies_playlist_items,
     })),
   )
+
+  const buildQueueFromPlaylist = (pl: any) => {
+    const items =
+      pl.items && Array.isArray(pl.items) ? pl.items : pl.playlist_items || []
+    return items
+      .map((item: any) => {
+        const file = item.file || item.music || item.movies
+        if (!file) return null
+        return {
+          id: file.id,
+          src: `/uploads/${file.file}`,
+          title: file.file || file.title || 'Unknown',
+        }
+      })
+      .filter(Boolean)
+  }
+
+  const playPlaylist = (pl: any) => {
+    const list = buildQueueFromPlaylist(pl)
+    if (!list.length) return
+    queue.value = list
+    playAt(0)
+  }
 
   watch(
     () => props.currentTab,
@@ -47,12 +71,17 @@
             {{ pl.title }}
           </NuxtLink>
         </h3>
-        <button
-          class="text-sm text-red-600"
-          @click="deletePlaylist(currentTab, pl.id)"
-        >
-          Delete Playlist
-        </button>
+        <div class="flex items-center gap-2">
+          <button class="border px-2 py-1 text-xs" @click="playPlaylist(pl)">
+            Play
+          </button>
+          <button
+            class="text-sm text-red-600"
+            @click="deletePlaylist(currentTab, pl.id)"
+          >
+            Delete
+          </button>
+        </div>
       </div>
 
       <ul v-if="pl.items?.length">

@@ -19,6 +19,16 @@
       )
     }
   }
+
+  const playAllNow = () => {
+    if (!musics.value.length) return
+    queue.value = musics.value.map((m) => ({
+      id: m.id,
+      src: `/uploads/${m.file}`,
+      title: m.file,
+    }))
+    playAt(0)
+  }
 </script>
 
 <template>
@@ -31,9 +41,14 @@
     <div>
       <div class="flex items-center justify-between">
         <h2 class="font-serif text-2xl">All Music</h2>
-        <button class="border px-3 py-1 text-sm" @click="enqueueAllIfEmpty">
-          Enqueue All
-        </button>
+        <div class="flex items-center gap-2">
+          <button class="border px-3 py-1 text-sm" @click="enqueueAllIfEmpty">
+            Enqueue All
+          </button>
+          <button class="border px-3 py-1 text-sm" @click="playAllNow">
+            Play All
+          </button>
+        </div>
       </div>
       <div
         v-for="(song, i) in musics"
