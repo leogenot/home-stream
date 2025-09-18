@@ -47,7 +47,6 @@
           Delete Playlist
         </button>
       </div>
-      <p class="text-xs">Media type: {{ pl.media_type }}</p>
 
       <ul v-if="pl.items?.length">
         <PlaylistItem

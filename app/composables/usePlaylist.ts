@@ -61,21 +61,21 @@ export default function usePlaylist() {
     // Fetch playlists with normalized items
     const fetchPlaylists = async (currentTab: 'music' | 'movies') => {
         if (!userData.value) return
-        const { playlists: playlistTable, items: itemsTable, itemKey, fetchItemsAlias } = TABLES[currentTab]
+        const { playlists: playlistTable, items: itemsTable, itemKey } = TABLES[currentTab]
 
         const { data, error } = await supabase
             .from(playlistTable)
             .select(`
-        id,
-        title,
-        created_at,
-        ${itemsTable} (
-          id,
-          position,
-          ${itemKey},
-          ${currentTab} (id, file)
-        )
-      `)
+                    id,
+                    title,
+                    created_at,
+                    ${itemsTable} (
+                    id,
+                    position,
+                    ${itemKey},
+                    ${currentTab} (id, file)
+                    )
+                `)
             .eq('user_id', userData.value.auth_user_id)
             .order('created_at', { ascending: false })
 
