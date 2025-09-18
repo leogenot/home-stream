@@ -3,6 +3,22 @@
     title: 'Music',
   })
   const { musics } = usePlaylist()
+  const { addToQueue, playAt, queue } = useQueue()
+
+  const playSong = (idx: number) => {
+    playAt(idx)
+  }
+  const enqueueAllIfEmpty = () => {
+    if (!queue.value.length && musics.value.length) {
+      addToQueue(
+        musics.value.map((m) => ({
+          id: m.id,
+          src: `/uploads/${m.file}`,
+          title: m.file,
+        })),
+      )
+    }
+  }
 </script>
 
 <template>
@@ -13,15 +29,35 @@
     </div>
 
     <div>
-      <h2 class="font-serif text-2xl">All Music</h2>
-      <div v-for="song in musics" :key="song.id" class="mb-4">
-        <p>{{ song.file }}</p>
-        <audio
-          :src="`/uploads/${song.file}`"
-          controls
-          preload="none"
-          class="w-full"
-        ></audio>
+      <div class="flex items-center justify-between">
+        <h2 class="font-serif text-2xl">All Music</h2>
+        <button class="border px-3 py-1 text-sm" @click="enqueueAllIfEmpty">
+          Enqueue All
+        </button>
+      </div>
+      <div
+        v-for="(song, i) in musics"
+        :key="song.id"
+        class="mb-3 flex items-center justify-between gap-3"
+      >
+        <div class="truncate">{{ song.file }}</div>
+        <div class="flex items-center gap-2">
+          <button
+            class="border px-2 py-1 text-xs"
+            @click="
+              addToQueue({
+                id: song.id,
+                src: `/uploads/${song.file}`,
+                title: song.file,
+              })
+            "
+          >
+            Add
+          </button>
+          <button class="border px-2 py-1 text-xs" @click="playSong(i)">
+            Play
+          </button>
+        </div>
       </div>
     </div>
   </div>
