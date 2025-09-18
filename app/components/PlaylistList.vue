@@ -16,11 +16,28 @@
     deletePlaylist,
     addItemsToPlaylist,
   } = usePlaylist()
+
+  const normalizedPlaylists = computed(() =>
+    playlists.value.map((pl) => ({
+      ...pl,
+      items:
+        props.currentTab === 'music'
+          ? pl.music_playlist_items
+          : pl.movies_playlist_items,
+    })),
+  )
+
+  watch(
+    () => props.currentTab,
+    () => {
+      console.log('props.currentTab', props.currentTab, playlists.value)
+    },
+  )
 </script>
 
 <template>
   <div v-if="playlists.length" class="mt-4 grid gap-2">
-    <div v-for="pl in playlists" :key="pl.id" class="border p-2">
+    <div v-for="pl in normalizedPlaylists" :key="pl.id" class="border p-2">
       <div class="flex items-center justify-between">
         <h3 class="font-serif text-lg">{{ pl.title }}</h3>
         <button
@@ -32,9 +49,9 @@
       </div>
       <p class="text-xs">Media type: {{ pl.media_type }}</p>
 
-      <ul v-if="pl.playlist_items?.length">
+      <ul v-if="pl.items?.length">
         <PlaylistItem
-          v-for="item in pl.playlist_items"
+          v-for="item in pl.items"
           :key="item.id"
           :item="item"
           :current-tab="currentTab"
@@ -55,9 +72,7 @@
         </select>
         <button
           class="mt-1 border p-2 text-sm"
-          @click.prevent="
-            addItemsToPlaylist(currentTab, pl.id, selectedMusicIds)
-          "
+          @click.prevent="addItemsToPlaylist('music', pl.id, selectedMusicIds)"
         >
           Add Selected Items
         </button>
@@ -75,7 +90,7 @@
         <button
           class="mt-1 border p-2 text-sm"
           @click.prevent="
-            addItemsToPlaylist(currentTab, pl.id, selectedMusicIds)
+            addItemsToPlaylist('movies', pl.id, selectedMoviesIds)
           "
         >
           Add Selected Items
