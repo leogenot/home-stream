@@ -6,6 +6,7 @@ import { serverSupabaseClient } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
     const files = await readMultipartFormData(event)
+    console.log('files', files)
     if (!files || !files.length) {
         return { error: 'No file found' }
     }

@@ -3,41 +3,8 @@
     layout: 'auth',
   })
   useHead({
-    title: 'Forgot Password | supaAuth',
+    title: 'Forgot Password',
   })
-  const email = ref('')
-  const client = useSupabaseClient()
-  const loading = ref(false)
-  const authSuccess = ref('')
-  const authError = ref('')
-
-  const resetPassword = async () => {
-    loading.value = true
-    const { error } = await client.auth.resetPasswordForEmail(email.value, {
-      redirectTo: `${window.location.origin}/new-password`,
-    })
-    if (error) {
-      loading.value = false
-      authError.value = error.message
-      setTimeout(() => {
-        authError.value = ''
-      }, 5000)
-    } else {
-      loading.value = false
-      authSuccess.value = `We've sent your an email.`
-      setTimeout(() => {
-        authSuccess.value = ''
-      }, 5000)
-    }
-  }
-
-  const clearError = () => {
-    authError.value = ''
-  }
-
-  const clearSuccess = () => {
-    authSuccess.value = ''
-  }
 </script>
 
 <template>
@@ -45,37 +12,6 @@
     class="mx-auto grid w-fit items-center justify-center justify-items-center gap-4"
   >
     <h1 class="font-serif text-3xl">Forgot password</h1>
-    <form
-      class="grid w-fit items-center justify-between gap-4"
-      @submit.prevent="resetPassword"
-    >
-      <ErrorAlert :error-msg="authError" @clear-error="clearError" />
-      <SuccessAlert :success-msg="authSuccess" @clear-success="clearSuccess" />
-      <div class="">
-        <label class="">
-          <input
-            v-model="email"
-            class="border border-(--sand) p-2 uppercase"
-            type="text"
-            placeholder="Email address"
-          />
-        </label>
-      </div>
-      <button
-        class="cursor-pointer border border-(--sand) p-2 uppercase"
-        type="submit"
-        :disabled="loading"
-      >
-        <div class="" :class="{ 'pointer-events-none opacity-50': loading }">
-          Request
-        </div>
-      </button>
-      <NuxtLink
-        class="border border-(--sand) p-2 text-center uppercase"
-        to="/login"
-      >
-        Login
-      </NuxtLink>
-    </form>
+    <FormsRequestPassword />
   </div>
 </template>

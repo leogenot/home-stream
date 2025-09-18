@@ -1,17 +1,4 @@
 <script setup lang="ts">
-  const client = useSupabaseClient()
-  const user = useSupabaseUser()
-  const loading = ref(false)
-
-  const logout = async () => {
-    loading.value = true
-    const { error } = await client.auth.signOut()
-    if (error) {
-      loading.value = false
-      return alert('Something went wrong !')
-    }
-  }
-
   useHead({
     title: 'supaAuth',
     meta: [
@@ -22,25 +9,36 @@
       },
     ],
   })
+
+  const { signOut } = useSupabaseAuth()
+  const { userData } = useUser()
+  const { refreshUserData } = useUser()
+  const router = useRouter()
+
+  onMounted(() => {
+    if (userData.value) {
+      // Refresh user data to ensure subscription status is current
+      refreshUserData()
+    } else {
+      router.push('/login')
+    }
+  })
 </script>
 
 <template>
   <div
     class="mx-auto grid w-fit items-center justify-center justify-items-center gap-4"
   >
-    <nuxt-link v-if="user" to="/profile" class="font-serif text-3xl">
-      Hi {{ user.user_metadata.full_name }}
+    <nuxt-link v-if="userData" to="/profile" class="font-serif text-3xl">
+      Hi {{ userData.username }}
     </nuxt-link>
     <p v-else class="font-serif text-3xl">unauthenticated</p>
-    <div v-if="user" class="">
+    <div v-if="userData" class="">
       <button
         class="cursor-pointer border border-(--sand) p-2 uppercase"
-        :disabled="loading"
-        @click="logout"
+        @click="signOut"
       >
-        <span class="" :class="{ 'pointer-events-none opacity-50': loading }">
-          Log out
-        </span>
+        <span>Log out</span>
       </button>
     </div>
     <div v-else class="grid w-fit items-center justify-between gap-4">

@@ -1,3 +1,15 @@
+<script lang="ts" setup>
+  import { useSupabaseAuth } from '~/composables/useSupabaseAuth'
+  const { initAuthListener, unsubscribeAuthListener } = useSupabaseAuth()
+  onMounted(async () => {
+    await initAuthListener()
+  })
+
+  onUnmounted(() => {
+    unsubscribeAuthListener()
+  })
+</script>
+
 <template>
   <NuxtLayout>
     <NuxtPage />
