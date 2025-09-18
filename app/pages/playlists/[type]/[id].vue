@@ -34,17 +34,13 @@
     },
   )
 
-  // Player state
-  const currentIndex = ref(0)
+  // Player state (driven by queue)
   const isPlayingAll = ref(false)
+  const mediaPlaying = ref(false)
   const mediaEl = ref<HTMLAudioElement | HTMLVideoElement | null>(null)
   const items = computed(() => playlist.value?.playlist_items || [])
-  const currentItem = computed(() => items.value[currentIndex.value])
-  const currentSrc = computed(() =>
-    currentItem.value?.file?.file
-      ? `/uploads/${currentItem.value.file.file}`
-      : '',
-  )
+  const currentQueueItem = computed(() => queue.value[queueIndex.value])
+  const currentSrc = computed(() => currentQueueItem.value?.src || '')
 
   // Queue helpers (map playlist items to queue items)
   const mapToQueueItem = (it: { file?: { id: number; file: string } }) => ({
@@ -64,56 +60,66 @@
     addToQueue(mapToQueueItem(it))
   }
 
-  watchEffect(() => {
-    // Reset to first item when playlist changes
-    if (items.value.length) {
-      currentIndex.value = 0
-    }
-  })
+  // No local index; queue drives playback
 
-  const playIndex = (idx: number) => {
-    if (idx < 0 || idx >= items.value.length) return
-    currentIndex.value = idx
-    // allow media element to update src before playing
+  const playQueueAt = (idx: number) => {
+    if (!queue.value.length) return
+    if (idx < 0 || idx >= queue.value.length) return
+    playAt(idx)
     nextTick(() => {
       if (mediaEl.value) {
-        // Some browsers require load before play when src changes
         ;(mediaEl.value as HTMLMediaElement).load()
         ;(mediaEl.value as HTMLMediaElement).play().catch(() => {})
       }
     })
   }
 
-  const playAll = () => {
-    if (!items.value.length) return
-    isPlayingAll.value = true
-    playIndex(currentIndex.value || 0)
-  }
-
-  const pauseAll = () => {
-    isPlayingAll.value = false
-    if (mediaEl.value) (mediaEl.value as HTMLMediaElement).pause()
-  }
+  // Legacy helpers kept for reference, no longer used
+  // const playAll = () => {}
+  // const pauseAll = () => {}
 
   const nextItem = () => {
-    if (!items.value.length) return
-    const next = currentIndex.value + 1
-    if (next < items.value.length) {
-      playIndex(next)
+    if (!queue.value.length) return
+    const next = queueIndex.value + 1
+    if (next < queue.value.length) {
+      playQueueAt(next)
     } else {
-      // reached end
       isPlayingAll.value = false
     }
   }
 
   const prevItem = () => {
-    if (!items.value.length) return
-    const prev = currentIndex.value - 1
-    if (prev >= 0) playIndex(prev)
+    if (!queue.value.length) return
+    const prev = queueIndex.value - 1
+    if (prev >= 0) playQueueAt(prev)
   }
 
   const handleEnded = () => {
     if (isPlayingAll.value) nextItem()
+    else mediaPlaying.value = false
+  }
+
+  const handlePlay = () => {
+    mediaPlaying.value = true
+  }
+
+  const handlePause = () => {
+    mediaPlaying.value = false
+  }
+
+  const togglePlayPause = () => {
+    if (!queue.value.length) return
+    if (!mediaEl.value) return
+    const el = mediaEl.value as HTMLMediaElement
+    if (mediaPlaying.value) {
+      isPlayingAll.value = false
+      el.pause()
+    } else {
+      isPlayingAll.value = true
+      // ensure correct src is loaded
+      el.load()
+      el.play().catch(() => {})
+    }
   }
 
   watchEffect(() => {
@@ -173,31 +179,26 @@
         <div class="flex items-center gap-2">
           <button
             class="border px-2 py-1 text-sm"
+            :disabled="!queue.length || queueIndex === 0"
             @click="prevItem"
-            :disabled="currentIndex === 0"
           >
             Prev
           </button>
-          <button
-            v-if="!isPlayingAll"
-            class="border px-2 py-1 text-sm"
-            @click="playAll"
-          >
-            Play All
-          </button>
-          <button v-else class="border px-2 py-1 text-sm" @click="pauseAll">
-            Pause
+          <button class="border px-2 py-1 text-sm" @click="togglePlayPause">
+            {{ mediaPlaying ? 'Pause' : 'Play' }}
           </button>
           <button
             class="border px-2 py-1 text-sm"
+            :disabled="!queue.length || queueIndex >= queue.length - 1"
             @click="nextItem"
-            :disabled="currentIndex >= items.length - 1"
           >
             Next
           </button>
           <span class="ml-2 text-xs text-gray-600">
-            {{ currentItem?.file?.file || 'Unknown' }}
-            ({{ currentIndex + 1 }}/{{ items.length }})
+            {{ currentQueueItem?.title || 'No selection' }}
+            <template v-if="queue.length">
+              ({{ queueIndex + 1 }}/{{ queue.length }})
+            </template>
           </span>
           <button
             class="ml-auto border px-2 py-1 text-sm"
@@ -215,6 +216,8 @@
             :src="currentSrc"
             controls
             @ended="handleEnded"
+            @play="handlePlay"
+            @pause="handlePause"
           />
           <video
             v-else
@@ -223,6 +226,8 @@
             class="max-h-[60vh] w-full bg-black"
             controls
             @ended="handleEnded"
+            @play="handlePlay"
+            @pause="handlePause"
           />
         </div>
       </div>
@@ -235,7 +240,7 @@
         >
           <span
             class="cursor-pointer font-serif text-lg"
-            @click="playIndex(playlist.playlist_items.indexOf(item))"
+            @click="addSingleToQueue(playlist.playlist_items.indexOf(item))"
           >
             {{ item.file?.file || 'Unknown' }}
           </span>
@@ -258,8 +263,8 @@
           <div class="flex items-center gap-2">
             <button
               class="border px-2 py-1 text-xs"
-              @click="clearQueue"
               :disabled="!queue.length"
+              @click="clearQueue"
             >
               Clear
             </button>
@@ -269,24 +274,27 @@
           <li
             v-for="(q, idx) in queue"
             :key="q.id + '-' + idx"
-            class="flex items-center gap-2 p-2 text-sm"
+            :class="[
+              'flex items-center gap-2 p-2 text-sm',
+              idx === queueIndex ? 'bg-blue-50' : '',
+            ]"
           >
             <button
               class="border px-2 py-0.5"
-              @click="moveItem(idx, Math.max(0, idx - 1))"
               :disabled="idx === 0"
+              @click="moveItem(idx, Math.max(0, idx - 1))"
             >
               ↑
             </button>
             <button
               class="border px-2 py-0.5"
-              @click="moveItem(idx, Math.min(queue.length - 1, idx + 1))"
               :disabled="idx === queue.length - 1"
+              @click="moveItem(idx, Math.min(queue.length - 1, idx + 1))"
             >
               ↓
             </button>
             <span class="flex-1 truncate">{{ q.title }}</span>
-            <button class="border px-2 py-0.5" @click="playAt(idx)">
+            <button class="border px-2 py-0.5" @click="playQueueAt(idx)">
               Play
             </button>
             <button
