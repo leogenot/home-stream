@@ -5,6 +5,7 @@ const USER_STORAGE_KEY = 'stream-user'
 
 export type User = {
     id: string
+    auth_user_id: string
     created_at: string
     email: string
     username: string | null
