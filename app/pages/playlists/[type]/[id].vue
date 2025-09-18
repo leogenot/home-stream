@@ -234,7 +234,7 @@
           class="flex items-center justify-between border p-2 hover:bg-gray-50"
         >
           <span
-            class="cursor-pointer"
+            class="cursor-pointer font-serif text-lg"
             @click="playIndex(playlist.playlist_items.indexOf(item))"
           >
             {{ item.file?.file || 'Unknown' }}
