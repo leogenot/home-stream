@@ -2,40 +2,27 @@
   useHead({
     title: 'Music',
   })
-  const user = useSupabaseUser()
-  const client = useSupabaseClient()
-  const musics = ref<any[]>([])
-
-  const fetchMusics = async () => {
-    if (!user.value) return
-    const { data, error } = await client
-      .from('music')
-      .select('id, file, created_at')
-      .eq('user_id', user.value.id)
-      .order('created_at', { ascending: false })
-
-    if (!error && data) {
-      musics.value = data
-    }
-  }
-
-  onMounted(() => {
-    fetchMusics()
-  })
+  const { musics } = usePlaylist()
 </script>
 
 <template>
-  <div>
-    <h1 class="font-serif text-3xl">Music:</h1>
-    <div v-for="song in musics" :key="song.id" class="mb-4">
-      <p>{{ song.file }}</p>
-      <!-- Stream the music file -->
-      <audio
-        :src="`/uploads/${song.file}`"
-        controls
-        preload="none"
-        class="w-full"
-      ></audio>
+  <div class="grid gap-6">
+    <div>
+      <h2 class="font-serif text-2xl">Playlists</h2>
+      <PlaylistList current-tab="music" />
+    </div>
+
+    <div>
+      <h2 class="font-serif text-2xl">All Music</h2>
+      <div v-for="song in musics" :key="song.id" class="mb-4">
+        <p>{{ song.file }}</p>
+        <audio
+          :src="`/uploads/${song.file}`"
+          controls
+          preload="none"
+          class="w-full"
+        ></audio>
+      </div>
     </div>
   </div>
 </template>
