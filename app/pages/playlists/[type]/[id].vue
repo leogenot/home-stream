@@ -1,5 +1,14 @@
 <script setup lang="ts">
   import type { Playlist } from '@/composables/usePlaylist'
+  const {
+    queue,
+    currentIndex: queueIndex,
+    addToQueue,
+    removeFromQueue,
+    clearQueue,
+    moveItem,
+    playAt,
+  } = useQueue()
 
   const route = useRoute()
   const router = useRouter()
@@ -36,6 +45,24 @@
       ? `/uploads/${currentItem.value.file.file}`
       : '',
   )
+
+  // Queue helpers (map playlist items to queue items)
+  const mapToQueueItem = (it: { file?: { id: number; file: string } }) => ({
+    id: it.file?.id || 0,
+    src: it.file?.file ? `/uploads/${it.file.file}` : '',
+    title: it.file?.file || 'Unknown',
+  })
+
+  const addAllToQueue = () => {
+    if (!items.value.length) return
+    addToQueue(items.value.map(mapToQueueItem))
+  }
+
+  const addSingleToQueue = (idx: number) => {
+    const it = items.value[idx]
+    if (!it) return
+    addToQueue(mapToQueueItem(it))
+  }
 
   watchEffect(() => {
     // Reset to first item when playlist changes
@@ -172,6 +199,12 @@
             {{ currentItem?.file?.file || 'Unknown' }}
             ({{ currentIndex + 1 }}/{{ items.length }})
           </span>
+          <button
+            class="ml-auto border px-2 py-1 text-sm"
+            @click="addAllToQueue"
+          >
+            Add All to Queue
+          </button>
         </div>
 
         <!-- Media Element -->
@@ -198,13 +231,74 @@
         <li
           v-for="item in playlist.playlist_items"
           :key="item.id"
-          class="cursor-pointer border p-2 hover:bg-gray-50"
-          @click="playIndex(playlist.playlist_items.indexOf(item))"
+          class="flex items-center justify-between border p-2 hover:bg-gray-50"
         >
-          {{ item.file?.file || 'Unknown' }}
+          <span
+            class="cursor-pointer"
+            @click="playIndex(playlist.playlist_items.indexOf(item))"
+          >
+            {{ item.file?.file || 'Unknown' }}
+          </span>
+          <button
+            class="border px-2 py-1 text-xs"
+            @click.stop="
+              addSingleToQueue(playlist.playlist_items.indexOf(item))
+            "
+          >
+            + Queue
+          </button>
         </li>
       </ul>
       <p v-else class="mt-4 text-gray-500">No items in this playlist.</p>
+
+      <!-- Queue Panel -->
+      <div class="mt-6 rounded border">
+        <div class="flex items-center justify-between border-b p-2">
+          <h2 class="font-serif">Queue</h2>
+          <div class="flex items-center gap-2">
+            <button
+              class="border px-2 py-1 text-xs"
+              @click="clearQueue"
+              :disabled="!queue.length"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+        <ul v-if="queue.length" class="divide-y">
+          <li
+            v-for="(q, idx) in queue"
+            :key="q.id + '-' + idx"
+            class="flex items-center gap-2 p-2 text-sm"
+          >
+            <button
+              class="border px-2 py-0.5"
+              @click="moveItem(idx, Math.max(0, idx - 1))"
+              :disabled="idx === 0"
+            >
+              ↑
+            </button>
+            <button
+              class="border px-2 py-0.5"
+              @click="moveItem(idx, Math.min(queue.length - 1, idx + 1))"
+              :disabled="idx === queue.length - 1"
+            >
+              ↓
+            </button>
+            <span class="flex-1 truncate">{{ q.title }}</span>
+            <button class="border px-2 py-0.5" @click="playAt(idx)">
+              Play
+            </button>
+            <button
+              class="border px-2 py-0.5 text-red-600"
+              @click="removeFromQueue(idx)"
+            >
+              Remove
+            </button>
+          </li>
+        </ul>
+        <p v-else class="p-2 text-sm text-gray-500">Queue is empty.</p>
+      </div>
     </div>
   </div>
 </template>
