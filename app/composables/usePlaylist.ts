@@ -211,6 +211,44 @@ export default function usePlaylist() {
         }
     }
 
+    const fetchPlaylistById = async (
+        currentTab: 'music' | 'movies',
+        playlistId: number,
+    ): Promise<Playlist | null> => {
+        const { playlists: playlistTable, items: itemsTable, itemKey } = TABLES[currentTab]
+        const { data, error: fetchError } = await supabase
+            .from(playlistTable)
+            .select(`
+                id,
+                title,
+                created_at,
+                ${itemsTable} (
+                    id,
+                    position,
+                    ${itemKey},
+                    ${currentTab} (id, file)
+                )
+            `)
+            .eq('id', playlistId)
+            .single()
+
+        if (fetchError || !data) {
+            if (fetchError) console.error(fetchError)
+            return null
+        }
+
+        return {
+            id: data.id,
+            title: data.title,
+            created_at: data.created_at,
+            playlist_items: (data as any)[itemsTable].map((item: any) => ({
+                id: item.id,
+                position: item.position,
+                file: item[currentTab],
+            })),
+        }
+    }
+
     onMounted(() => {
         fetchMusics()
         fetchMovies()
@@ -236,5 +274,6 @@ export default function usePlaylist() {
         deletePlaylist,
         addItemsToPlaylist,
         removeItemFromPlaylist,
+        fetchPlaylistById,
     }
 }

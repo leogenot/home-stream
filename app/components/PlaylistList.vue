@@ -39,7 +39,14 @@
   <div v-if="playlists.length" class="mt-4 grid gap-2">
     <div v-for="pl in normalizedPlaylists" :key="pl.id" class="border p-2">
       <div class="flex items-center justify-between">
-        <h3 class="font-serif text-lg">{{ pl.title }}</h3>
+        <h3 class="font-serif text-lg">
+          <NuxtLink
+            :to="`/playlists/${currentTab}/${pl.id}`"
+            class="underline decoration-dotted hover:decoration-solid"
+          >
+            {{ pl.title }}
+          </NuxtLink>
+        </h3>
         <button
           class="text-sm text-red-600"
           @click="deletePlaylist(currentTab, pl.id)"
