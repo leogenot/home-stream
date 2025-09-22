@@ -48,17 +48,18 @@ export default function useUser() {
     )
 
     // load details when user logs in
-    const loadUser = async (user: unknown) => {
+    const loadUser = async (user: User) => {
         if (!user) return
 
         loadingUserDetails.value = true
         error.value = null
+        console.log('user id', user.id)
 
         try {
             const { data, error: queryError } = await supabase
                 .from('user_details')
                 .select('*')
-                .eq('id', user.id)
+                .eq('auth_user_id', user.id)
                 .single()
 
             if (queryError) throw new Error(queryError.message)
@@ -79,7 +80,6 @@ export default function useUser() {
     // Force clear localStorage and reload from database
     const forceRefreshUserData = async () => {
         if (!userData.value || !userData.value.id) return
-
         // Clear localStorage first
         localStorage.removeItem(USER_STORAGE_KEY)
 
@@ -90,7 +90,7 @@ export default function useUser() {
             const { data, error: queryError } = await supabase
                 .from('user_details')
                 .select('*')
-                .eq('id', userData.value.id)
+                .eq('auth_user_id', userData.value.id)
                 .single()
 
             if (queryError) throw new Error(queryError.message)
@@ -114,7 +114,7 @@ export default function useUser() {
             const { data, error: queryError } = await supabase
                 .from('user_details')
                 .select('*')
-                .eq('id', userData.value.id)
+                .eq('auth_user_id', userData.value.id)
                 .single()
 
             if (queryError) throw new Error(queryError.message)

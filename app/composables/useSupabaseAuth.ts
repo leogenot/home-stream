@@ -71,7 +71,7 @@ export function useSupabaseAuth() {
             })
             clearTimeout(loaderTimeout)
             isLoading.value = false
-
+            console.log(data)
             if (error) throw new Error(error.message)
 
             return { data, error: null }

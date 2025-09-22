@@ -5,15 +5,16 @@
 
   const { signOut } = useSupabaseAuth()
   const { userData } = useUser()
-  const { refreshUserData } = useUser()
+  const { forceRefreshUserData } = useUser()
   const router = useRouter()
 
   onMounted(() => {
+    console.log('userData', userData.value)
     if (userData.value) {
       // Refresh user data to ensure subscription status is current
-      refreshUserData()
+      forceRefreshUserData()
     } else {
-      router.push('/auth/login')
+      // router.push('/auth/login')
     }
   })
 </script>
