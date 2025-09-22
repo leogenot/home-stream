@@ -11,7 +11,7 @@
         {{ currentRoute }}
       </h1>
     </nav>
-    <div class="pt-16">
+    <div class="min-h-screen pt-16">
       <slot />
     </div>
     <site-navbar />

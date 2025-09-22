@@ -10,6 +10,6 @@
   <div class="grid w-full gap-8">
     <FormsPlaylist />
     <PlaylistList />
-    <upload />
+    <upload-wrapper />
   </div>
 </template>
