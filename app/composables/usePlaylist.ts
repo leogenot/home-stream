@@ -11,7 +11,6 @@ export type User = {
 }
 
 export type Music = { id: number; file: string; created_at: string }
-export type Movie = { id: number; file: string; created_at: string }
 
 export type PlaylistItem = { id: number; position: number; file: { id: number; file: string } }
 export type Playlist = { id: number; title: string; created_at: string; playlist_items: PlaylistItem[] }
@@ -21,12 +20,6 @@ const TABLES = {
         playlists: 'music_playlists',
         items: 'music_playlist_items',
         itemKey: 'music_id',
-        fetchItemsAlias: 'playlist_items',
-    },
-    movies: {
-        playlists: 'movies_playlists',
-        items: 'movies_playlist_items',
-        itemKey: 'movie_id',
         fetchItemsAlias: 'playlist_items',
     },
 }
@@ -51,17 +44,15 @@ export default function usePlaylist() {
 
     const playlists = ref<Playlist[]>([])
     const musics = ref<Music[]>([])
-    const movies = ref<Movie[]>([])
     const selectedMusicIds = ref<number[]>([])
-    const selectedMoviesIds = ref<number[]>([])
     const newPlaylistTitle = ref('')
     const playlistSuccess = ref('')
     const playlistError = ref('')
 
     // Fetch playlists with normalized items
-    const fetchPlaylists = async (currentTab: 'music' | 'movies') => {
+    const fetchPlaylists = async () => {
         if (!userData.value) return
-        const { playlists: playlistTable, items: itemsTable, itemKey } = TABLES[currentTab]
+        const { playlists: playlistTable, items: itemsTable, itemKey } = TABLES['music']
 
         const { data, error } = await supabase
             .from(playlistTable)
@@ -73,7 +64,7 @@ export default function usePlaylist() {
                     id,
                     position,
                     ${itemKey},
-                    ${currentTab} (id, file)
+                    music (id, file)
                     )
                 `)
             .eq('user_id', userData.value.auth_user_id)
@@ -90,7 +81,7 @@ export default function usePlaylist() {
             playlist_items: p[itemsTable].map((item: any) => ({
                 id: item.id,
                 position: item.position,
-                file: item[currentTab],
+                file: item['music'],
             })),
         }))
     }
@@ -105,23 +96,13 @@ export default function usePlaylist() {
         if (!error && data) musics.value = data
     }
 
-    const fetchMovies = async () => {
-        if (!userData.value) return
-        const { data, error } = await supabase
-            .from('movies')
-            .select('id, file, created_at')
-            .eq('user_id', userData.value.auth_user_id)
-            .order('created_at', { ascending: false })
-        if (!error && data) movies.value = data
-    }
-
-    const createPlaylist = async (currentTab: 'music' | 'movies') => {
+    const createPlaylist = async () => {
         playlistError.value = ''
         playlistSuccess.value = ''
         if (!userData.value) return
 
         try {
-            const { playlists: playlistTable, items: itemsTable, itemKey } = TABLES[currentTab]
+            const { playlists: playlistTable, items: itemsTable, itemKey } = TABLES['music']
 
             const { data: playlistData, error: insertError } = await supabase
                 .from(playlistTable)
@@ -135,7 +116,7 @@ export default function usePlaylist() {
             if (insertError) throw insertError
 
             const playlistId = playlistData.id
-            const ids = currentTab === 'music' ? selectedMusicIds.value : selectedMoviesIds.value
+            const ids = selectedMusicIds.value
 
             if (ids.length) {
                 const playlistItems = ids.map((id, index) => ({
@@ -149,23 +130,22 @@ export default function usePlaylist() {
             playlistSuccess.value = 'Playlist created!'
             newPlaylistTitle.value = ''
             selectedMusicIds.value = []
-            selectedMoviesIds.value = []
-            fetchPlaylists(currentTab)
+            fetchPlaylists()
         } catch (err: any) {
             console.error(err)
             playlistError.value = err.message
         }
     }
 
-    const deletePlaylist = async (currentTab: 'music' | 'movies', playlistId: number) => {
+    const deletePlaylist = async (playlistId: number) => {
         playlistError.value = ''
         playlistSuccess.value = ''
         try {
-            const { playlists: playlistTable, items: itemsTable } = TABLES[currentTab]
+            const { playlists: playlistTable, items: itemsTable } = TABLES['music']
             await supabase.from(itemsTable).delete().eq('playlist_id', playlistId)
             await supabase.from(playlistTable).delete().eq('id', playlistId)
             playlistSuccess.value = 'Playlist deleted successfully!'
-            fetchPlaylists(currentTab)
+            fetchPlaylists()
         } catch (err: any) {
             console.error(err)
             playlistError.value = err.message
@@ -173,12 +153,11 @@ export default function usePlaylist() {
     }
 
     const addItemsToPlaylist = async (
-        currentTab: 'music' | 'movies',
         playlistId: number,
         fileIds: number[],
     ) => {
         try {
-            const { items: itemsTable, itemKey } = TABLES[currentTab]
+            const { items: itemsTable, itemKey } = TABLES['music']
             const currentItems = playlists.value.find((p) => p.id === playlistId)?.playlist_items || []
             const startPosition = currentItems.length + 1
 
@@ -192,19 +171,19 @@ export default function usePlaylist() {
             }
 
             playlistSuccess.value = 'Items added to playlist!'
-            fetchPlaylists(currentTab)
+            fetchPlaylists()
         } catch (err: any) {
             console.error(err)
             playlistError.value = err.message
         }
     }
 
-    const removeItemFromPlaylist = async (currentTab: 'music' | 'movies', itemId: number) => {
+    const removeItemFromPlaylist = async (itemId: number) => {
         try {
-            const { items: itemsTable } = TABLES[currentTab]
+            const { items: itemsTable } = TABLES['music']
             await supabase.from(itemsTable).delete().eq('id', itemId)
             playlistSuccess.value = 'Item removed from playlist!'
-            fetchPlaylists(currentTab)
+            fetchPlaylists()
         } catch (err: any) {
             console.error(err)
             playlistError.value = err.message
@@ -212,10 +191,9 @@ export default function usePlaylist() {
     }
 
     const fetchPlaylistById = async (
-        currentTab: 'music' | 'movies',
         playlistId: number,
     ): Promise<Playlist | null> => {
-        const { playlists: playlistTable, items: itemsTable, itemKey } = TABLES[currentTab]
+        const { playlists: playlistTable, items: itemsTable, itemKey } = TABLES['music']
         const { data, error: fetchError } = await supabase
             .from(playlistTable)
             .select(`
@@ -226,7 +204,7 @@ export default function usePlaylist() {
                     id,
                     position,
                     ${itemKey},
-                    ${currentTab} (id, file)
+                    music (id, file)
                 )
             `)
             .eq('id', playlistId)
@@ -244,32 +222,28 @@ export default function usePlaylist() {
             playlist_items: (data as any)[itemsTable].map((item: any) => ({
                 id: item.id,
                 position: item.position,
-                file: item[currentTab],
+                file: item['music'],
             })),
         }
     }
 
     onMounted(() => {
         fetchMusics()
-        fetchMovies()
     })
 
     watchEffect(() => {
-        if (userData.value) fetchPlaylists('music')
+        if (userData.value) fetchPlaylists()
     })
 
     return {
         playlists,
         musics,
-        movies,
         selectedMusicIds,
-        selectedMoviesIds,
         newPlaylistTitle,
         playlistSuccess,
         playlistError,
         fetchPlaylists,
         fetchMusics,
-        fetchMovies,
         createPlaylist,
         deletePlaylist,
         addItemsToPlaylist,

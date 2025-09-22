@@ -4,7 +4,7 @@ import { unlink } from 'fs/promises'
 import { serverSupabaseClient } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
-    const { filename, table } = await readBody(event) as { filename: string, table: 'music' | 'movies' }
+    const { filename, table } = await readBody(event) as { filename: string, table: 'music' }
     if (!filename || !table) return { error: 'fileId and table are required' }
     const client = await serverSupabaseClient(event)
     const { data: { user }, error: userError } = await client.auth.getUser()
@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
         console.log('filename', filename, data)
         if (error || !data) return { error: 'File not found' }
 
-        const filePath = join(process.cwd(), 'public', 'uploads', data.file)
+        const filePath = join(process.cwd(), 'public', 'uploads', 'music', data.file)
 
         // Delete file from disk
         await unlink(filePath)

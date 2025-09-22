@@ -6,6 +6,6 @@
 
 <template>
   <div class="px-bleed mx-auto w-full">
-    <upload />
+    <upload-wrapper />
   </div>
 </template>

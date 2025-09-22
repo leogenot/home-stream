@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
     const results: any[] = []
 
     for (const file of files) {
-        const filePath = join(process.cwd(), 'public', 'uploads', file.filename as string)
+        const filePath = join(process.cwd(), 'public', 'uploads', 'music', file.filename as string)
 
         // Save file to disk
         await writeFile(filePath, file.data)
@@ -32,14 +32,11 @@ export default defineEventHandler(async (event) => {
         const mime = file.type?.toLowerCase() || ''
 
         const musicExts = ['.mp3', '.wav', '.flac', '.aac', '.ogg']
-        const movieExts = ['.mp4', '.mkv', '.avi', '.mov', '.wmv']
 
-        let tableToInsert: 'music' | 'movies' | null = null
+        let tableToInsert: 'music' | null = null
 
         if (mime.startsWith('audio') || musicExts.includes(ext)) {
             tableToInsert = 'music'
-        } else if (mime.startsWith('video') || movieExts.includes(ext)) {
-            tableToInsert = 'movies'
         } else {
             // Skip unknown file types
             continue

@@ -1,7 +1,7 @@
 // composables/useUpload.ts
 import { useSupabaseClient, useSupabaseUser } from '#imports'
 
-export function useUpload(currentTab: 'music' | 'movies' = 'music') {
+export function useUpload() {
     const user = useSupabaseUser()
     const client = useSupabaseClient()
 
@@ -11,11 +11,10 @@ export function useUpload(currentTab: 'music' | 'movies' = 'music') {
     const uploadSuccess = ref('')
     const uploading = ref(false)
 
-    const fetchFiles = async (currentTab: 'music' | 'movies' = 'music') => {
+    const fetchFiles = async () => {
         if (!user.value) return
-        console.log(currentTab)
         const { data, error } = await client
-            .from(currentTab)
+            .from('music')
             .select('id, file, created_at')
             .eq('user_id', user.value.id)
             .order('created_at', { ascending: false })
@@ -54,7 +53,7 @@ export function useUpload(currentTab: 'music' | 'movies' = 'music') {
         try {
             const res = await $fetch('/api/deleteFile', {
                 method: 'POST',
-                body: { filename, table: currentTab },
+                body: { filename, table: 'music' },
             })
             if (res.error) throw new Error(res.error)
             fetchFiles()

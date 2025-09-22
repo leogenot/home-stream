@@ -11,10 +11,7 @@
   } = useQueue()
 
   const route = useRoute()
-  const router = useRouter()
-  const typeParam = computed(() =>
-    (route.params.type as string) === 'movies' ? 'movies' : 'music',
-  )
+
   const playlistId = computed(() => Number(route.params.id))
 
   const { fetchPlaylistById } = usePlaylist()
@@ -24,13 +21,10 @@
     pending,
     error,
   } = await useAsyncData<Playlist | null>(
-    () => `playlist-${typeParam.value}-${playlistId.value}`,
+    () => `playlist-${playlistId.value}`,
     async () => {
       if (!playlistId.value || Number.isNaN(playlistId.value)) return null
-      return await fetchPlaylistById(
-        typeParam.value as 'music' | 'movies',
-        playlistId.value,
-      )
+      return await fetchPlaylistById(playlistId.value)
     },
   )
 
@@ -45,7 +39,7 @@
   // Queue helpers (map playlist items to queue items)
   const mapToQueueItem = (it: { file?: { id: number; file: string } }) => ({
     id: it.file?.id || 0,
-    src: it.file?.file ? `/uploads/${it.file.file}` : '',
+    src: it.file?.file ? `/uploads/music/${it.file.file}` : '',
     title: it.file?.file || 'Unknown',
   })
 
@@ -73,10 +67,6 @@
       }
     })
   }
-
-  // Legacy helpers kept for reference, no longer used
-  // const playAll = () => {}
-  // const pauseAll = () => {}
 
   const nextItem = () => {
     if (!queue.value.length) return
@@ -116,7 +106,6 @@
       el.pause()
     } else {
       isPlayingAll.value = true
-      // ensure correct src is loaded
       el.load()
       el.play().catch(() => {})
     }
@@ -125,36 +114,32 @@
   watchEffect(() => {
     if (playlist.value) {
       useHead({
-        title: `${playlist.value.title} · ${typeParam.value === 'music' ? 'Music' : 'Movies'} Playlist`,
+        title: `${playlist.value.title} · Playlist`,
         meta: [
           {
             name: 'description',
-            content: `Listen to ${playlist.value.title} ${typeParam.value} playlist.`,
+            content: `Listen to ${playlist.value.title} playlist.`,
           },
           { property: 'og:title', content: `${playlist.value.title}` },
           {
             property: 'og:description',
-            content: `Listen to this ${typeParam.value} playlist on Curin.`,
+            content: `Listen to this playlist on Home Stream.`,
           },
           { property: 'og:type', content: 'website' },
           {
             property: 'og:url',
-            content: `${useRuntimeConfig().public.BASE_URL}/playlists/${typeParam.value}/${playlistId.value}`,
+            content: `${useRuntimeConfig().public.BASE_URL}/playlists/${playlistId.value}`,
           },
           { name: 'twitter:card', content: 'summary' },
           { name: 'twitter:title', content: `${playlist.value.title}` },
           {
             name: 'twitter:description',
-            content: `Listen to this ${typeParam.value} playlist on Curin.`,
+            content: `Listen to this playlist on Home Stream.`,
           },
         ],
       })
     }
   })
-
-  if (!['music', 'movies'].includes(typeParam.value)) {
-    router.replace('/playlists')
-  }
 </script>
 
 <template>
@@ -170,9 +155,7 @@
 
     <div v-else class="mt-4">
       <h1 class="font-serif text-2xl">{{ playlist.title }}</h1>
-      <p class="text-xs text-gray-500 uppercase">
-        {{ typeParam === 'music' ? 'Music' : 'Movies' }} playlist
-      </p>
+      <p class="text-xs text-gray-500 uppercase">Playlist</p>
 
       <div v-if="items.length" class="mt-4 grid gap-2">
         <!-- Player Controls -->
@@ -211,19 +194,8 @@
         <!-- Media Element -->
         <div>
           <audio
-            v-if="typeParam === 'music'"
             ref="mediaEl"
             :src="currentSrc"
-            controls
-            @ended="handleEnded"
-            @play="handlePlay"
-            @pause="handlePause"
-          />
-          <video
-            v-else
-            ref="mediaEl"
-            :src="currentSrc"
-            class="max-h-[60vh] w-full bg-black"
             controls
             @ended="handleEnded"
             @play="handlePlay"

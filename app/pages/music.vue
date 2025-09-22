@@ -13,7 +13,7 @@
       addToQueue(
         musics.value.map((m) => ({
           id: m.id,
-          src: `/uploads/${m.file}`,
+          src: `/uploads/music/${m.file}`,
           title: m.file,
         })),
       )
@@ -24,7 +24,7 @@
     if (!musics.value.length) return
     queue.value = musics.value.map((m) => ({
       id: m.id,
-      src: `/uploads/${m.file}`,
+      src: `/uploads/music/${m.file}`,
       title: m.file,
     }))
     playAt(0)
@@ -62,7 +62,7 @@
             @click="
               addToQueue({
                 id: song.id,
-                src: `/uploads/${song.file}`,
+                src: `/uploads/music/${song.file}`,
                 title: song.file,
               })
             "

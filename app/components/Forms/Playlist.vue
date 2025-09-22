@@ -1,19 +1,8 @@
 <script setup lang="ts">
-  const props = withDefaults(
-    defineProps<{
-      currentTab?: 'music' | 'movies'
-    }>(),
-    {
-      currentTab: 'music',
-    },
-  )
-
   const {
     newPlaylistTitle,
     selectedMusicIds,
-    selectedMoviesIds,
     musics,
-    movies,
     playlistError,
     playlistSuccess,
     createPlaylist,
@@ -23,36 +12,16 @@
 <template>
   <div class="w-full">
     <h2 class="font-serif text-xl">Create Playlist</h2>
-    <form class="grid gap-2" @submit.prevent="createPlaylist(currentTab)">
+    <form class="grid gap-2" @submit.prevent="createPlaylist()">
       <input
         v-model="newPlaylistTitle"
         class="border p-2 text-sm uppercase"
         placeholder="Title"
         required
       />
-      <select
-        v-if="currentTab === 'music'"
-        v-model="selectedMusicIds"
-        multiple
-        class="border p-2 uppercase"
-      >
+      <select v-model="selectedMusicIds" multiple class="border p-2 uppercase">
         <option
           v-for="file in musics"
-          :key="file.id"
-          :value="file.id"
-          class="text-sm"
-        >
-          {{ file.file }}
-        </option>
-      </select>
-      <select
-        v-if="currentTab === 'movies'"
-        v-model="selectedMoviesIds"
-        multiple
-        class="border p-2 uppercase"
-      >
-        <option
-          v-for="file in movies"
           :key="file.id"
           :value="file.id"
           class="text-sm"

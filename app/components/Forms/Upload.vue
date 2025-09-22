@@ -1,11 +1,6 @@
 <script setup lang="ts">
-  const props = withDefaults(
-    defineProps<{ currentTab?: 'music' | 'movies' }>(),
-    { currentTab: 'music' },
-  )
-
   const { fileInput, uploadError, uploadSuccess, uploading, uploadFile } =
-    useUpload(props.currentTab)
+    useUpload()
 </script>
 
 <template>
@@ -14,7 +9,7 @@
     enctype="multipart/form-data"
     @submit.prevent="uploadFile"
   >
-    <h2 class="font-serif text-xl">Upload {{ props.currentTab }}</h2>
+    <h2 class="font-serif text-xl">Upload music</h2>
     <input
       ref="fileInput"
       class="border p-2 uppercase"

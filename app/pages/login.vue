@@ -3,7 +3,7 @@
     layout: 'auth',
   })
   useHead({
-    title: 'Login | supaAuth',
+    title: 'Login',
   })
 </script>
 

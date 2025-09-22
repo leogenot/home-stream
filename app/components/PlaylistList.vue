@@ -1,18 +1,8 @@
 <script setup lang="ts">
-  const props = withDefaults(
-    defineProps<{
-      currentTab?: 'music' | 'movies'
-    }>(),
-    {
-      currentTab: 'music',
-    },
-  )
   const {
     playlists,
     musics,
-    movies,
     selectedMusicIds,
-    selectedMoviesIds,
     deletePlaylist,
     addItemsToPlaylist,
   } = usePlaylist()
@@ -21,10 +11,7 @@
   const normalizedPlaylists = computed(() =>
     playlists.value.map((pl) => ({
       ...pl,
-      items:
-        props.currentTab === 'music'
-          ? pl.music_playlist_items
-          : pl.movies_playlist_items,
+      items: pl.playlist_items,
     })),
   )
 
@@ -33,11 +20,11 @@
       pl.items && Array.isArray(pl.items) ? pl.items : pl.playlist_items || []
     return items
       .map((item: any) => {
-        const file = item.file || item.music || item.movies
+        const file = item.file || item.music
         if (!file) return null
         return {
           id: file.id,
-          src: `/uploads/${file.file}`,
+          src: `/uploads/music/${file.file}`,
           title: file.file || file.title || 'Unknown',
         }
       })
@@ -50,13 +37,6 @@
     queue.value = list
     playAt(0)
   }
-
-  watch(
-    () => props.currentTab,
-    () => {
-      console.log('props.currentTab', props.currentTab, playlists.value)
-    },
-  )
 </script>
 
 <template>
@@ -69,7 +49,7 @@
       <div class="flex items-center justify-between">
         <h3 class="font-serif text-xl">
           <NuxtLink
-            :to="`/playlists/${currentTab}/${pl.id}`"
+            :to="`/playlists/${pl.id}`"
             class="underline decoration-dotted hover:decoration-solid"
           >
             {{ pl.title }}
@@ -79,27 +59,19 @@
           <button class="border px-2 py-1" @click="playPlaylist(pl)">
             Play
           </button>
-          <button
-            class="text-red-600"
-            @click="deletePlaylist(currentTab, pl.id)"
-          >
+          <button class="text-red-600" @click="deletePlaylist(pl.id)">
             Delete
           </button>
         </div>
       </div>
 
       <ul v-if="pl.items?.length">
-        <PlaylistItem
-          v-for="item in pl.items"
-          :key="item.id"
-          :item="item"
-          :current-tab="currentTab"
-        />
+        <PlaylistItem v-for="item in pl.items" :key="item.id" :item="item" />
       </ul>
       <p v-else class="text-sm text-gray-500">No items in this playlist.</p>
 
       <!-- Add items -->
-      <div v-if="currentTab === 'music'" class="mt-2 grid gap-2">
+      <div class="mt-2 grid gap-2">
         <select
           v-model="selectedMusicIds"
           multiple
@@ -116,31 +88,7 @@
         </select>
         <button
           class="border p-2 text-sm"
-          @click.prevent="addItemsToPlaylist('music', pl.id, selectedMusicIds)"
-        >
-          Add Selected Items
-        </button>
-      </div>
-      <div v-if="currentTab === 'movies'" class="mt-2 grid gap-2">
-        <select
-          v-model="selectedMoviesIds"
-          multiple
-          class="border p-2 uppercase"
-        >
-          <option
-            v-for="file in movies"
-            :key="file.id"
-            :value="file.id"
-            class="text-sm"
-          >
-            {{ file.file }}
-          </option>
-        </select>
-        <button
-          class="border p-2 text-sm"
-          @click.prevent="
-            addItemsToPlaylist('movies', pl.id, selectedMoviesIds)
-          "
+          @click.prevent="addItemsToPlaylist(pl.id, selectedMusicIds)"
         >
           Add Selected Items
         </button>
