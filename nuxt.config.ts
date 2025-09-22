@@ -15,16 +15,18 @@ export default defineNuxtConfig({
       RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
     },
   },
-  site: {
-    url: process.env.BASE_URL,
-    name: 'Curin',
-  },
   devtools: { enabled: true },
-  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxtjs/supabase',],
+  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxtjs/supabase', "@nuxtjs/device"],
+  device: {
+    refreshOnResize: true,
+  },
   app: {
     layoutTransition: { name: 'layout', mode: 'out-in' },
     pageTransition: { name: 'page', mode: 'out-in' },
     head: {
+      meta: [
+        { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
+      ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },

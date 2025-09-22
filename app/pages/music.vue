@@ -32,7 +32,7 @@
 </script>
 
 <template>
-  <div class="grid gap-6">
+  <div class="px-bleed grid w-full gap-6">
     <div>
       <h2 class="font-serif text-2xl">Playlists</h2>
       <PlaylistList current-tab="music" />

@@ -8,7 +8,7 @@
 </script>
 
 <template>
-  <div class="mx-auto grid w-fit gap-8">
+  <div class="px-bleed mx-auto grid w-full gap-8">
     <div class="flex w-full justify-around gap-4 pb-2">
       <button
         class="px-4 py-2 font-serif uppercase"

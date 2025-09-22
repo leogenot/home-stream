@@ -60,10 +60,14 @@
 </script>
 
 <template>
-  <div v-if="playlists.length" class="mt-4 grid gap-2">
-    <div v-for="pl in normalizedPlaylists" :key="pl.id" class="border p-2">
+  <div v-if="playlists.length" class="mt-4 flex w-full flex-col gap-2 lg:grid">
+    <div
+      v-for="pl in normalizedPlaylists"
+      :key="pl.id"
+      class="col flex flex-col border p-2 lg:flex-row"
+    >
       <div class="flex items-center justify-between">
-        <h3 class="font-serif text-lg">
+        <h3 class="font-serif text-xl">
           <NuxtLink
             :to="`/playlists/${currentTab}/${pl.id}`"
             class="underline decoration-dotted hover:decoration-solid"
@@ -71,12 +75,12 @@
             {{ pl.title }}
           </NuxtLink>
         </h3>
-        <div class="flex items-center gap-2">
-          <button class="border px-2 py-1 text-xs" @click="playPlaylist(pl)">
+        <div class="flex items-center gap-2 text-xs">
+          <button class="border px-2 py-1" @click="playPlaylist(pl)">
             Play
           </button>
           <button
-            class="text-sm text-red-600"
+            class="text-red-600"
             @click="deletePlaylist(currentTab, pl.id)"
           >
             Delete
@@ -92,38 +96,48 @@
           :current-tab="currentTab"
         />
       </ul>
-      <p v-else class="text-gray-500">No items in this playlist.</p>
+      <p v-else class="text-sm text-gray-500">No items in this playlist.</p>
 
       <!-- Add items -->
-      <div v-if="currentTab === 'music'" class="mt-2">
+      <div v-if="currentTab === 'music'" class="mt-2 grid gap-2">
         <select
           v-model="selectedMusicIds"
           multiple
           class="border p-2 uppercase"
         >
-          <option v-for="file in musics" :key="file.id" :value="file.id">
+          <option
+            v-for="file in musics"
+            :key="file.id"
+            :value="file.id"
+            class="text-sm"
+          >
             {{ file.file }}
           </option>
         </select>
         <button
-          class="mt-1 border p-2 text-sm"
+          class="border p-2 text-sm"
           @click.prevent="addItemsToPlaylist('music', pl.id, selectedMusicIds)"
         >
           Add Selected Items
         </button>
       </div>
-      <div v-if="currentTab === 'movies'" class="mt-2">
+      <div v-if="currentTab === 'movies'" class="mt-2 grid gap-2">
         <select
           v-model="selectedMoviesIds"
           multiple
           class="border p-2 uppercase"
         >
-          <option v-for="file in movies" :key="file.id" :value="file.id">
+          <option
+            v-for="file in movies"
+            :key="file.id"
+            :value="file.id"
+            class="text-sm"
+          >
             {{ file.file }}
           </option>
         </select>
         <button
-          class="mt-1 border p-2 text-sm"
+          class="border p-2 text-sm"
           @click.prevent="
             addItemsToPlaylist('movies', pl.id, selectedMoviesIds)
           "
@@ -133,5 +147,5 @@
       </div>
     </div>
   </div>
-  <p v-else class="text-gray-500">No playlists yet.</p>
+  <p v-else class="text-sm text-gray-500">No playlists yet.</p>
 </template>

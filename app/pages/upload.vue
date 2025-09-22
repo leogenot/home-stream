@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <div class="mx-auto">
+  <div class="px-bleed mx-auto w-full">
     <upload />
   </div>
 </template>

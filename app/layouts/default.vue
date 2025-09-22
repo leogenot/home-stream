@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="relative h-full">
     <slot />
     <FloatyPlayer />
   </main>

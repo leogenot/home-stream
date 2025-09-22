@@ -1,15 +1,34 @@
 <script setup lang="ts">
+  import { useWindowSize } from '@vueuse/core'
   const audioRef = ref<HTMLAudioElement | null>(null)
   const isPlaying = ref(false)
-  const progress = ref(0)
-  const volume = useState<number>('player-volume', () => 1)
+  const progress = ref(0) // percent (0-100)
+  const duration = ref(0) // seconds
+  const currentTime = ref(0) // seconds
 
   const { queue, currentIndex, currentItem, playAt } = useQueue()
 
+  // Track if the user has interacted with the page yet (required for autoplay policies)
+  const hasUserGesture = ref(false)
+
   const play = () => {
     if (!audioRef.value) return
-    audioRef.value.play()
-    isPlaying.value = true
+    const playPromise = audioRef.value.play()
+    if (
+      playPromise &&
+      typeof (playPromise as Promise<void>).then === 'function'
+    ) {
+      ;(playPromise as Promise<void>)
+        .then(() => {
+          isPlaying.value = true
+        })
+        .catch(() => {
+          // Likely NotAllowedError due to missing user gesture. Keep paused state.
+          isPlaying.value = false
+        })
+    } else {
+      isPlaying.value = true
+    }
   }
   const pause = () => {
     if (!audioRef.value) return
@@ -28,12 +47,30 @@
   const onTimeUpdate = () => {
     if (!audioRef.value) return
     const a = audioRef.value
+    duration.value = a.duration || 0
+    currentTime.value = a.currentTime || 0
     progress.value = a.duration ? (a.currentTime / a.duration) * 100 : 0
+  }
+
+  // New: Set duration as soon as possible
+  const onLoadedMetadata = () => {
+    if (!audioRef.value) return
+    duration.value = audioRef.value.duration || 0
   }
 
   const onEnded = () => {
     if (currentIndex.value < queue.value.length - 1) next()
     else isPlaying.value = false
+  }
+
+  // When user drags the progress bar
+  const onProgressInput = (e: Event) => {
+    if (!audioRef.value || !duration.value) return
+    const percent = Number((e.target as HTMLInputElement).value)
+    const newTime = (percent / 100) * duration.value
+    audioRef.value.currentTime = newTime
+    progress.value = percent
+    currentTime.value = newTime
   }
 
   watch(currentItem, () => {
@@ -42,52 +79,154 @@
       if (audioRef.value) {
         audioRef.value.currentTime = 0
         audioRef.value.load()
-        play()
+        // Always set volume to 1
+        audioRef.value.volume = 1
+        // Only attempt autoplay if the user has interacted with the page
+        if (hasUserGesture.value) play()
       }
     })
   })
 
+  // Always set volume to 1 when audioRef is available
   watch(
-    volume,
-    (v) => {
-      if (audioRef.value) audioRef.value.volume = Math.min(1, Math.max(0, v))
+    audioRef,
+    (a) => {
+      if (a && a instanceof HTMLAudioElement) a.volume = 1
     },
     { immediate: true },
   )
+
+  // --- Swipe gesture handling for mobile ---
+  const { isMobileOrTablet } = useDevice()
+  const { width: innerWidth } = useWindowSize()
+
+  const isMobile = computed(() => {
+    if (import.meta.server) return isMobileOrTablet
+    return innerWidth.value < 900
+  })
+
+  // Touch event state
+  const touchStartX = ref<number | null>(null)
+  const touchEndX = ref<number | null>(null)
+  const swipeThreshold = 50 // px
+
+  function onTouchStart(e: TouchEvent) {
+    if (!isMobile.value) return
+    if (!e.touches || e.touches.length === 0) return
+    const firstTouch = e.touches.item(0)
+    if (!firstTouch) return
+    touchStartX.value = firstTouch.clientX
+    touchEndX.value = null
+  }
+
+  function onTouchMove(e: TouchEvent) {
+    if (!isMobile.value) return
+    if (!e.touches || e.touches.length === 0) return
+    const firstTouch = e.touches.item(0)
+    if (!firstTouch) return
+    touchEndX.value = firstTouch.clientX
+  }
+
+  function onTouchEnd() {
+    if (
+      !isMobile.value ||
+      touchStartX.value === null ||
+      touchEndX.value === null
+    )
+      return
+    const deltaX = touchEndX.value - touchStartX.value
+    if (Math.abs(deltaX) > swipeThreshold) {
+      if (deltaX > 0) {
+        prev()
+      } else {
+        next()
+      }
+    }
+    touchStartX.value = null
+    touchEndX.value = null
+  }
+
+  // Helper to format seconds as mm:ss
+  function formatTime(secs: number): string {
+    if (!secs || isNaN(secs) || !isFinite(secs)) return '0:00'
+    const m = Math.floor(secs / 60)
+    const s = Math.floor(secs % 60)
+    return `${m}:${s.toString().padStart(2, '0')}`
+  }
+
+  // Mark user gesture on first interaction to allow future autoplay attempts
+  onMounted(() => {
+    const markGesture = () => {
+      hasUserGesture.value = true
+      document.removeEventListener('pointerdown', markGesture)
+      document.removeEventListener('touchstart', markGesture)
+      document.removeEventListener('keydown', markGesture)
+      document.removeEventListener('click', markGesture, true)
+    }
+    document.addEventListener('pointerdown', markGesture)
+    document.addEventListener('touchstart', markGesture)
+    document.addEventListener('keydown', markGesture)
+    // capture click as a fallback
+    document.addEventListener('click', markGesture, true)
+  })
 </script>
 
 <template>
   <div
     v-if="currentItem"
-    class="fixed right-4 bottom-4 z-50 w-[320px] rounded-md border bg-white p-3 shadow-xl"
+    class="sticky bottom-0 left-0 z-50 w-full border-t border-t-(--sand) p-3 backdrop-blur-3xl"
   >
-    <div class="mb-2 truncate font-serif text-sm">{{ currentItem.title }}</div>
-    <div class="flex items-center gap-2">
-      <button class="border px-2 py-1 text-xs" @click="prev">Prev</button>
-      <button class="border px-2 py-1 text-xs" @click="toggle">
-        {{ isPlaying ? 'Pause' : 'Play' }}
-      </button>
-      <button class="border px-2 py-1 text-xs" @click="next">Next</button>
-    </div>
-    <div class="mt-2">
-      <div class="h-1 w-full bg-gray-200">
-        <div class="h-1 bg-gray-800" :style="{ width: progress + '%' }" />
+    <div
+      class="wrapper"
+      :class="{ 'select-none': isMobile }"
+      @touchstart="onTouchStart"
+      @touchmove="onTouchMove"
+      @touchend="onTouchEnd"
+    >
+      <div class="mb-2 flex items-center justify-between">
+        <div class="truncate font-serif text-sm">
+          {{ currentItem.title }}
+        </div>
+        <!-- Only show play button on mobile, show all buttons on desktop -->
+        <div v-if="isMobile" class="ml-2">
+          <button class="border px-2 py-1 text-xs" @click="toggle">
+            {{ isPlaying ? 'Pause' : 'Play' }}
+          </button>
+        </div>
+        <div v-else class="ml-2 flex items-center gap-2">
+          <button class="border px-2 py-1 text-xs" @click="prev">Prev</button>
+          <button class="border px-2 py-1 text-xs" @click="toggle">
+            {{ isPlaying ? 'Pause' : 'Play' }}
+          </button>
+          <button class="border px-2 py-1 text-xs" @click="next">Next</button>
+        </div>
       </div>
+      <div class="mt-2 flex items-center gap-2">
+        <span class="min-w-[40px] text-xs text-gray-500 tabular-nums">
+          {{ formatTime(currentTime) }}
+        </span>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          step="0.1"
+          :value="progress"
+          class="w-full accent-gray-800"
+          @input="onProgressInput"
+        />
+
+        <span class="min-w-[40px] text-xs text-gray-500 tabular-nums">
+          {{ formatTime(duration) }}
+        </span>
+      </div>
+      <audio
+        ref="audioRef"
+        :src="currentItem?.src"
+        preload="none"
+        @ended="onEnded"
+        @timeupdate="onTimeUpdate"
+        @loadedmetadata="onLoadedMetadata"
+      />
     </div>
-    <div class="mt-2 flex items-center gap-2">
-      <span class="text-xs">Vol</span>
-      <input type="range" min="0" max="1" step="0.01" v-model.number="volume" />
-    </div>
-    <audio
-      ref="audioRef"
-      :src="currentItem?.src"
-      @timeupdate="onTimeUpdate"
-      @ended="onEnded"
-      preload="none"
-    />
   </div>
 </template>
-
-<style scoped>
-  /* minimal, rely on tailwind utility classes */
-</style>

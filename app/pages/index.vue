@@ -27,7 +27,7 @@
 
 <template>
   <div
-    class="mx-auto grid w-fit items-center justify-center justify-items-center gap-4"
+    class="px-bleed mx-auto grid w-full items-center justify-center justify-items-center gap-4"
   >
     <nuxt-link v-if="userData" to="/profile" class="font-serif text-3xl">
       Hi {{ userData.username }}

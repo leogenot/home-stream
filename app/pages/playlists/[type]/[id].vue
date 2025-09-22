@@ -158,7 +158,7 @@
 </script>
 
 <template>
-  <div class="mx-auto w-full max-w-2xl p-4">
+  <div class="px-bleed mx-auto w-full py-4">
     <NuxtLink to="/playlists" class="text-sm text-gray-500">
       ← Back to Playlists
     </NuxtLink>

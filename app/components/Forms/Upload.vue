@@ -10,14 +10,14 @@
 
 <template>
   <form
-    class="grid gap-4"
+    class="grid w-full gap-4 text-sm"
     enctype="multipart/form-data"
     @submit.prevent="uploadFile"
   >
     <h2 class="font-serif text-xl">Upload {{ props.currentTab }}</h2>
     <input
       ref="fileInput"
-      class="border border-(--sand) p-2 uppercase"
+      class="border p-2 uppercase"
       type="file"
       name="files"
       multiple
@@ -25,7 +25,7 @@
     />
     <button
       type="submit"
-      class="cursor-pointer border border-(--sand) p-2 uppercase"
+      class="h-fit cursor-pointer border p-2 uppercase"
       :disabled="uploading"
     >
       <span v-if="uploading">Uploading...</span>
