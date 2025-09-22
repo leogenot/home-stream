@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import type { Playlist } from '@/composables/usePlaylist'
+
   const {
     queue,
     currentIndex: queueIndex,
@@ -138,12 +139,15 @@
           },
         ],
       })
+      // definePageMeta({
+      //   title: 'Playlist' + ' · ' + (playlist.value?.title || ''),
+      // })
     }
   })
 </script>
 
 <template>
-  <div class="px-bleed mx-auto w-full py-4">
+  <div class="w-full py-4">
     <NuxtLink to="/playlists" class="text-sm text-gray-500">
       ← Back to Playlists
     </NuxtLink>

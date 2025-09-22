@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   import { useSupabaseAuth } from '~/composables/useSupabaseAuth'
   const { initAuthListener, unsubscribeAuthListener } = useSupabaseAuth()
+  const { userData } = useUser()
   onMounted(async () => {
     await initAuthListener()
   })
@@ -8,12 +9,15 @@
   onUnmounted(() => {
     unsubscribeAuthListener()
   })
+  const authLayout = computed(() => {
+    return userData.value ? 'default' : 'auth'
+  })
 </script>
 
 <template>
   <div>
     <DevGrid />
-    <NuxtLayout>
+    <NuxtLayout :name="authLayout">
       <NuxtPage />
     </NuxtLayout>
   </div>

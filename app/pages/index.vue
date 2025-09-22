@@ -1,6 +1,9 @@
 <script setup lang="ts">
   useHead({
-    title: 'Home Strem',
+    title: 'Music',
+  })
+  definePageMeta({
+    title: 'Music',
   })
 
   const { signOut } = useSupabaseAuth()
@@ -14,15 +17,13 @@
       // Refresh user data to ensure subscription status is current
       forceRefreshUserData()
     } else {
-      // router.push('/auth/login')
+      router.push('/auth/login')
     }
   })
 </script>
 
 <template>
-  <div
-    class="px-bleed mx-auto grid w-full items-center justify-center justify-items-center gap-4"
-  >
+  <div class="grid w-full gap-4">
     <nuxt-link v-if="userData" to="/profile" class="font-serif text-3xl">
       Hi {{ userData.username }}
     </nuxt-link>

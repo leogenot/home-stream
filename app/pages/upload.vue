@@ -2,10 +2,13 @@
   useHead({
     title: 'Upload',
   })
+  definePageMeta({
+    title: 'Upload',
+  })
 </script>
 
 <template>
-  <div class="px-bleed mx-auto w-full">
+  <div class="w-full">
     <upload-wrapper />
   </div>
 </template>

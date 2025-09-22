@@ -20,7 +20,7 @@
 </script>
 
 <template>
-  <div class="px-bleed mx-auto grid w-full gap-8">
+  <div class="grid w-full gap-8">
     <FormsUpdateUser
       v-bind="{ ...userData, userId: user?.id }"
       @data-changed="userData = $event[0]"
