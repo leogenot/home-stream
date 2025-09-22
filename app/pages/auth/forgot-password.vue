@@ -1,6 +1,7 @@
 <script setup lang="ts">
   definePageMeta({
     layout: 'auth',
+    title: 'Forgot Password',
   })
   useHead({
     title: 'Forgot Password',
@@ -8,10 +9,7 @@
 </script>
 
 <template>
-  <div
-    class="px-bleed mx-auto grid w-full items-center justify-center justify-items-center gap-4"
-  >
-    <h1 class="font-serif text-3xl">Forgot password</h1>
+  <div class="grid w-full gap-4">
     <FormsRequestPassword />
   </div>
 </template>

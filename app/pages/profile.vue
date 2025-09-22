@@ -1,4 +1,7 @@
 <script setup lang="ts">
+  definePageMeta({
+    title: 'Profile',
+  })
   useHead({
     title: 'Profile',
   })
@@ -11,7 +14,7 @@
       // Refresh user data to ensure subscription status is current
       refreshUserData()
     } else {
-      router.push('/login')
+      router.push('/auth/login')
     }
   })
 </script>
@@ -22,6 +25,5 @@
       v-bind="{ ...userData, userId: user?.id }"
       @data-changed="userData = $event[0]"
     />
-    <FormsResetPassword />
   </div>
 </template>

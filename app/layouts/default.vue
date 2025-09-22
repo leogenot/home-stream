@@ -1,6 +1,7 @@
 <template>
   <main class="relative h-full">
     <slot />
-    <FloatyPlayer />
+    <site-navbar />
+    <floaty-player />
   </main>
 </template>

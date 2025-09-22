@@ -1,11 +1,10 @@
 <script setup lang="ts">
-  const { signInWithEmail, isLoading } = useSupabaseAuth()
+  const { signInWithEmail } = useSupabaseAuth()
   const router = useRouter()
   const email = ref('')
   const password = ref('')
   const message = ref('')
   const hasError = ref<boolean>(false)
-  // const isLoading = ref<boolean>(false)
 
   const handleLogin = async () => {
     message.value = ''
@@ -17,20 +16,20 @@
     if (error) {
       message.value = error
     } else {
-      router.push('/profile')
+      router.push('/')
     }
   }
 </script>
 
 <template>
-  <div class="relative pb-1">
-    <form class="font-sans uppercase" @submit.prevent="handleLogin">
+  <div class="relative w-full text-sm">
+    <form class="font-sans" @submit.prevent="handleLogin">
       <CommonInput
         v-bind="{
           modelValue: email,
           type: 'email',
           id: 'email',
-          name: 'email',
+          name: 'Email',
           autocomplete: 'username',
           required: true,
           label: 'Email',
@@ -42,14 +41,27 @@
           modelValue: password,
           type: 'password',
           id: 'password',
-          name: 'password',
+          name: 'Password',
           autocomplete: 'current-password',
           required: true,
           label: 'Password',
         }"
         @update:model-value="($event) => (password = $event)"
       />
-      <button type="submit" aria-label="Submit to log in" class="w-full">
+      <div class="relative mt-5 flex justify-center uppercase">
+        <nuxt-link
+          to="/auth/forgot-password"
+          aria-label="Forgot password"
+          class="text-xs"
+        >
+          Forgot password?
+        </nuxt-link>
+      </div>
+      <button
+        type="submit"
+        aria-label="Submit to log in"
+        class="mt-5 w-full border border-(--sand) p-2 text-center uppercase"
+      >
         Log in
       </button>
 
@@ -60,12 +72,6 @@
       >
         {{ message }}
       </p>
-
-      <div class="relative mt-5 flex justify-center">
-        <nuxt-link to="/forgot-password" aria-label="Forgot password">
-          Forgot password?
-        </nuxt-link>
-      </div>
     </form>
   </div>
 </template>

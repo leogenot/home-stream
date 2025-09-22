@@ -23,22 +23,25 @@
 </script>
 
 <template>
-  <div class="f-request-password">
-    <h1 class="mb-5 text-sm font-medium uppercase">Request new password</h1>
-    <form class="font-sans uppercase" @submit.prevent="handleRequest">
+  <div class="relative w-full text-sm">
+    <form class="font-sans" @submit.prevent="handleRequest">
       <CommonInput
         v-bind="{
           modelValue: email,
           type: 'email',
           id: 'email',
-          name: 'email',
+          name: 'Email',
           autocomplete: 'username',
           required: true,
           label: 'Email',
         }"
         @update:model-value="($event) => (email = $event)"
       />
-      <button aria-label="Request new password" type="submit" class="w-full">
+      <button
+        aria-label="Request new password"
+        type="submit"
+        class="w-full border border-(--sand) p-2 text-center uppercase"
+      >
         Request
       </button>
       <p

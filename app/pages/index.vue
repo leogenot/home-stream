@@ -1,13 +1,6 @@
 <script setup lang="ts">
   useHead({
-    title: 'supaAuth',
-    meta: [
-      {
-        name: 'description',
-        content:
-          'Authentication template with email and password, using Supabase. If you want to a quick start to your next Nuxt3 app, please feel free to use this template.',
-      },
-    ],
+    title: 'Home Strem',
   })
 
   const { signOut } = useSupabaseAuth()
@@ -20,7 +13,7 @@
       // Refresh user data to ensure subscription status is current
       refreshUserData()
     } else {
-      router.push('/login')
+      router.push('/auth/login')
     }
   })
 </script>
@@ -42,10 +35,13 @@
       </button>
     </div>
     <div v-else class="grid w-fit items-center justify-between gap-4">
-      <NuxtLink class="border border-(--sand) p-2 uppercase" to="/login">
+      <NuxtLink class="border border-(--sand) p-2 uppercase" to="/auth/login">
         Login
       </NuxtLink>
-      <NuxtLink class="border border-(--sand) p-2 uppercase" to="/register">
+      <NuxtLink
+        class="border border-(--sand) p-2 uppercase"
+        to="/auth/register"
+      >
         Sign up
       </NuxtLink>
     </div>

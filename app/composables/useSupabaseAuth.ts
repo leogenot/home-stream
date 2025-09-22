@@ -102,7 +102,7 @@ export function useSupabaseAuth() {
     const resetPassword = async (email: string) => {
         try {
             const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: `${useRuntimeConfig().public.BASE_URL}/new-password`,
+                redirectTo: `${useRuntimeConfig().public.BASE_URL}/auth/new-password`,
             })
 
             if (error) throw new Error(error.message)

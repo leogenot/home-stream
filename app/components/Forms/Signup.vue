@@ -30,14 +30,14 @@
 </script>
 
 <template>
-  <div>
-    <form class="font-sans uppercase" @submit.prevent="handleSignUp">
+  <div class="relative w-full text-sm">
+    <form class="font-sans" @submit.prevent="handleSignUp">
       <CommonInput
         v-bind="{
           modelValue: email,
           type: 'email',
           id: 'email',
-          name: 'email',
+          name: 'Email',
           autocomplete: 'username',
           required: true,
           label: 'Email',
@@ -47,10 +47,9 @@
       <CommonInput
         v-bind="{
           modelValue: password,
-
           type: 'password',
           id: 'password',
-          name: 'password',
+          name: 'Password',
           autocomplete: 'off',
           required: true,
           label: 'Password',
@@ -62,14 +61,18 @@
           modelValue: confirmPassword,
           type: 'password',
           id: 'confirmPassword',
-          name: 'confirmPassword',
+          name: 'Confirm Password',
           autocomplete: 'off',
           required: true,
           label: 'Confirm password',
         }"
         @update:model-value="($event) => (confirmPassword = $event)"
       />
-      <button type="submit" aria-label="Submit to signup" class="w-full">
+      <button
+        type="submit"
+        aria-label="Submit to signup"
+        class="w-full border border-(--sand) p-2 text-center uppercase"
+      >
         Sign up
       </button>
       <p
