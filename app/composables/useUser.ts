@@ -65,6 +65,7 @@ export default function useUser() {
             if (queryError) throw new Error(queryError.message)
             console.log('Setting user data', data)
             userData.value = data
+            if (!data) throw new Error('No user data found')
         } catch (err: any) {
             error.value = err.message || 'Failed to load user'
         } finally {
