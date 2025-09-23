@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     console.log('event', event)
     console.log('headers', getHeaders(event)['x-user-id'])
 
-    if (userError || !user) {
+    if (!getHeaders(event)['x-user-id'] || userError || !user) {
         return { error: 'User not authenticated' }
     }
 
