@@ -10,6 +10,8 @@ export function useUpload() {
     const uploadError = ref('')
     const uploadSuccess = ref('')
     const uploading = ref(false)
+    const userData = ref(<User | null | undefined>(null))
+    const USER_STORAGE_KEY = 'stream-user'
 
     const fetchFiles = async () => {
         if (!user.value) return
@@ -32,7 +34,15 @@ export function useUpload() {
 
         uploading.value = true
         try {
-            const res = await $fetch('/api/upload', { method: 'POST', body: formData, credentials: 'include', headers: useRequestHeaders(['cookie']) })
+            const stored = localStorage.getItem(USER_STORAGE_KEY)
+            if (stored) {
+                try {
+                    userData.value = JSON.parse(stored)
+                } catch (e) {
+                    console.warn('Failed to parse user from localStorage', e)
+                }
+            }
+            const res = await $fetch('/api/upload', { method: 'POST', body: formData, credentials: 'include', headers: userData.value ? { 'x-user-id': userData.value.auth_user_id } : {}, })
             if (res.error) throw new Error(res.error)
 
             uploadSuccess.value = 'Files uploaded successfully!'
