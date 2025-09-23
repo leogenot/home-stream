@@ -48,7 +48,7 @@ export default defineEventHandler(async (event) => {
                 .from(tableToInsert)
                 .insert({
                     file: file.filename,
-                    user_id: user?.id,
+                    user_id: getHeaders(event)['x-user-id'] || user.id,
                 })
                 .select()
                 .single()
