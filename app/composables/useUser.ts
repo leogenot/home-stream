@@ -63,7 +63,7 @@ export default function useUser() {
                 .maybeSingle()
 
             if (queryError) throw new Error(queryError.message)
-            console.log('Setting user data')
+            console.log('Setting user data', data)
             userData.value = data
         } catch (err: any) {
             error.value = err.message || 'Failed to load user'
