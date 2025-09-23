@@ -32,7 +32,7 @@ export function useUpload() {
 
         uploading.value = true
         try {
-            const res = await $fetch('/api/upload', { method: 'POST', body: formData, credentials: 'include', })
+            const res = await $fetch('/api/upload', { method: 'POST', body: formData, credentials: 'include', headers: useRequestHeaders(['cookie']) })
             if (res.error) throw new Error(res.error)
 
             uploadSuccess.value = 'Files uploaded successfully!'
@@ -55,6 +55,7 @@ export function useUpload() {
                 method: 'POST',
                 body: { filename, table: 'music' },
                 credentials: 'include',
+                headers: useRequestHeaders(['cookie'])
             })
             if (res.error) throw new Error(res.error)
             fetchFiles()

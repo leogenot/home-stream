@@ -13,6 +13,7 @@ export default defineEventHandler(async (event) => {
     const client = await serverSupabaseClient(event)
     const { data: { user }, error: userError } = await client.auth.getUser()
     console.log('UPLOAD API USER:', user, userError)
+
     if (userError || !user) {
         return { error: 'User not authenticated' }
     }
