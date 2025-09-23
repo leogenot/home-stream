@@ -60,7 +60,7 @@ export default function useUser() {
                 .from('user_details')
                 .select('*')
                 .eq('auth_user_id', user.id)
-                .single()
+                .maybeSingle()
 
             if (queryError) throw new Error(queryError.message)
             console.log('Setting user data')
@@ -91,7 +91,7 @@ export default function useUser() {
                 .from('user_details')
                 .select('*')
                 .eq('auth_user_id', userData.value.auth_user_id)
-                .single()
+                .maybeSingle()
 
             if (queryError) throw new Error(queryError.message)
             console.log('Force refreshing user data from database')
@@ -115,7 +115,7 @@ export default function useUser() {
                 .from('user_details')
                 .select('*')
                 .eq('auth_user_id', userData.value.id)
-                .single()
+                .maybeSingle()
 
             if (queryError) throw new Error(queryError.message)
             console.log('Refreshing user data')
