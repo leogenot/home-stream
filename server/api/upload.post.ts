@@ -12,6 +12,9 @@ export default defineEventHandler(async (event) => {
 
     const client = await serverSupabaseClient(event)
     const { data: { user }, error: userError } = await client.auth.getUser()
+    console.log('event', event)
+    console.log('headers', getHeaders(event))
+    console.log('cookies', parseCookies(event))
     console.log('UPLOAD API USER:', user, userError)
 
     if (userError || !user) {
