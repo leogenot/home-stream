@@ -82,7 +82,7 @@ export default function useUser() {
         if (!userData.value || !userData.value.id) return
         // Clear localStorage first
         localStorage.removeItem(USER_STORAGE_KEY)
-
+        console.log('userData.value', userData.value)
         loadingUserDetails.value = true
         error.value = null
 
@@ -90,7 +90,7 @@ export default function useUser() {
             const { data, error: queryError } = await supabase
                 .from('user_details')
                 .select('*')
-                .eq('auth_user_id', userData.value.id)
+                .eq('auth_user_id', userData.value.auth_user_id)
                 .single()
 
             if (queryError) throw new Error(queryError.message)
