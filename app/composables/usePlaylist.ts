@@ -51,7 +51,7 @@ export default function usePlaylist() {
 
     // Fetch playlists with normalized items
     const fetchPlaylists = async () => {
-        if (!userData.value) return
+        if (!userData.value && !userData.value?.auth_user_id) return
         const { playlists: playlistTable, items: itemsTable, itemKey } = TABLES['music']
 
         const { data, error } = await supabase
@@ -67,7 +67,6 @@ export default function usePlaylist() {
                     music (id, file)
                     )
                 `)
-            .eq('user_id', userData.value.auth_user_id)
             .order('created_at', { ascending: false })
 
         if (error) {
@@ -87,11 +86,10 @@ export default function usePlaylist() {
     }
 
     const fetchMusics = async () => {
-        if (!userData.value) return
+        if (!userData.value && !userData.value?.auth_user_id) return
         const { data, error } = await supabase
             .from('music')
             .select('id, file, created_at')
-            .eq('user_id', userData.value.auth_user_id)
             .order('created_at', { ascending: false })
         if (!error && data) musics.value = data
     }

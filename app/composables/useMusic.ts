@@ -33,14 +33,11 @@ export default function useMusic() {
     const songs = ref<Song[]>([])
 
     const fetchMusics = async () => {
-        if (!userData.value) return
-        console.log('Fetching musics for user:', userData.value)
+        if (!userData.value && !userData.value?.auth_user_id) return
         const { data, error } = await supabase
             .from('music')
             .select('id, file, created_at')
-            .eq('user_id', userData.value.auth_user_id)
             .order('created_at', { ascending: false })
-        console.log('Fetched musics:', { data, error })
         if (!error && data) songs.value = data
     }
 
