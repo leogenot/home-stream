@@ -48,6 +48,9 @@ export default defineNuxtConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      allowedHosts: ['home-stream.fallwinter.dk'],
+    },
   },
   nitro: {
     compressPublicAssets: true,
