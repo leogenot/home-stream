@@ -190,6 +190,32 @@ export default function usePlaylist() {
         }
     }
 
+    // Helpers for shareable slugs: 
+    // e.g. "/playlists/my-great-mix-42" where 42 is the playlist id
+    const slugify = (input: string): string => {
+        return (input || '')
+            .toString()
+            .normalize('NFKD')
+            .replace(/[\u0300-\u036f]/g, '') // remove accents
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+    }
+
+    const makePlaylistSlug = (title: string, id: number): string => {
+        const base = slugify(title)
+        return `${base}-${id}`
+    }
+
+    const parsePlaylistIdFromSlug = (slug: string | string[] | undefined): number | null => {
+        if (!slug) return null
+        const s = Array.isArray(slug) ? slug[0] : slug
+        const match = s.match(/-(\d+)$/)
+        if (!match) return null
+        const id = Number(match[1])
+        return Number.isFinite(id) ? id : null
+    }
+
     const fetchPlaylistById = async (
         playlistId: number,
     ): Promise<Playlist | null> => {
@@ -249,5 +275,8 @@ export default function usePlaylist() {
         addItemsToPlaylist,
         removeItemFromPlaylist,
         fetchPlaylistById,
+        slugify,
+        makePlaylistSlug,
+        parsePlaylistIdFromSlug,
     }
 }
