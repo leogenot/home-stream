@@ -54,7 +54,12 @@ export default defineNuxtConfig({
   },
   nitro: {
     compressPublicAssets: true,
-    serveStatic: true,
+    serverAssets: [
+      {
+        baseName: 'uploads',
+        dir: 'uploads'
+      }
+    ],
     preset: 'node-server',
     routeRules: {
       '/**': {
