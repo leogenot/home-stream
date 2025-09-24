@@ -21,6 +21,7 @@
 
 <template>
   <div class="grid w-full gap-8">
+    <h1 class="font-serif text-3xl">Hi {{ userData?.username }}</h1>
     <FormsUpdateUser
       v-bind="{ ...userData, userId: user?.id }"
       @data-changed="userData = $event[0]"
