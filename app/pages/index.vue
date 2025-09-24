@@ -3,75 +3,56 @@
   useHead({
     title: 'Music',
   })
-  const { musics } = usePlaylist()
-  const { addToQueue, playAt, queue } = useQueue()
+  const { user } = useSupabaseAuth()
+  const { refreshUserData } = useUser()
+  const router = useRouter()
 
-  const playSong = (idx: number) => {
-    playAt(idx)
-  }
-  const enqueueAllIfEmpty = () => {
-    if (!queue.value.length && musics.value.length) {
-      addToQueue(
-        musics.value.map((m) => ({
-          id: m.id,
-          src: `/uploads/music/${m.file}`,
-          title: m.file,
-        })),
-      )
+  onMounted(() => {
+    if (user.value) {
+      // Refresh user data to ensure subscription status is current
+      refreshUserData()
+    } else {
+      router.push('/auth/login')
     }
-  }
-
-  const playAllNow = () => {
-    if (!musics.value.length) return
-    queue.value = musics.value.map((m) => ({
-      id: m.id,
-      src: `/uploads/music/${m.file}`,
-      title: m.file,
-    }))
-    playAt(0)
-  }
+  })
+  const { songs } = useMusic()
+  const {
+    playAllNow,
+    playAllRandomNow,
+    playSong,
+    addToQueue,
+  } = useQueue()
 </script>
 
 <template>
   <div class="grid w-full gap-6">
     <div>
-      <h2 class="font-serif text-2xl">Playlists</h2>
-      <PlaylistList current-tab="music" />
+      <h2 class="font-serif text-2xl">Music</h2>
     </div>
 
     <div>
       <div class="flex items-center justify-between">
-        <h2 class="font-serif text-2xl">All Music</h2>
         <div class="flex items-center gap-2">
-          <button class="border px-3 py-1 text-sm" @click="enqueueAllIfEmpty">
-            Enqueue All
-          </button>
-          <button class="border px-3 py-1 text-sm" @click="playAllNow">
+          <button class="border px-3 py-1 text-sm" @click="playAllNow(songs)">
             Play All
+          </button>
+          <button class="border px-3 py-1 text-sm" @click="playAllRandomNow(songs)">
+            Random
           </button>
         </div>
       </div>
       <div
-        v-for="(song, i) in musics"
+        v-for="(song, i) in songs"
         :key="song.id"
         class="mb-3 flex max-w-screen flex-wrap items-center justify-between gap-3"
       >
         <div class="truncate font-serif text-sm">{{ song.file }}</div>
         <div class="flex items-center gap-2">
-          <button
-            class="border px-2 py-1 text-xs"
-            @click="
-              addToQueue({
-                id: song.id,
-                src: `/uploads/music/${song.file}`,
-                title: song.file,
-              })
-            "
-          >
-            Add
-          </button>
-          <button class="border px-2 py-1 text-xs" @click="playSong(i)">
+          <button class="border px-2 py-1 text-xs" @click="playSong(i, songs)">
             Play
+          </button>
+          <button class="border px-2 py-1 text-xs" @click="addToQueue(song)">
+            Add
           </button>
         </div>
       </div>

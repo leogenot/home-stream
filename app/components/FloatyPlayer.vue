@@ -6,7 +6,18 @@
   const duration = ref(0) // seconds
   const currentTime = ref(0) // seconds
 
-  const { queue, currentIndex, currentItem, playAt } = useQueue()
+  const {
+    queue,
+    currentIndex,
+    currentItem,
+    playAt,
+    playFrom,
+    isManagerOpen,
+    removeAt,
+    moveItem,
+    clearQueue,
+    toggleManager,
+  } = useQueue()
 
   // Track if the user has interacted with the page yet (required for autoplay policies)
   const hasUserGesture = ref(false)
@@ -188,7 +199,10 @@
           {{ currentItem.title }}
         </div>
         <!-- Only show play button on mobile, show all buttons on desktop -->
-        <div v-if="isMobile" class="ml-2">
+        <div v-if="isMobile" class="ml-2 flex items-center gap-2">
+          <button class="border px-2 py-1 text-xs" @click="toggleManager">
+            Queue
+          </button>
           <button class="border px-2 py-1 text-xs" @click="toggle">
             {{ isPlaying ? 'Pause' : 'Play' }}
           </button>
@@ -199,6 +213,9 @@
             {{ isPlaying ? 'Pause' : 'Play' }}
           </button>
           <button class="border px-2 py-1 text-xs" @click="next">Next</button>
+          <button class="border px-2 py-1 text-xs" @click="toggleManager">
+            Queue
+          </button>
         </div>
       </div>
       <div class="mt-2 flex items-center gap-2">
@@ -227,6 +244,48 @@
         @timeupdate="onTimeUpdate"
         @loadedmetadata="onLoadedMetadata"
       />
+      <!-- Queue Manager -->
+      <div v-if="isManagerOpen" class="mt-3 border-t pt-3">
+        <div class="mb-2 flex items-center justify-between">
+          <div class="text-xs text-gray-500">Queue ({{ queue.length }})</div>
+          <div class="flex items-center gap-2">
+            <button class="border px-2 py-1 text-xs" @click="clearQueue">Clear</button>
+            <button class="border px-2 py-1 text-xs" @click="toggleManager">Close</button>
+          </div>
+        </div>
+        <ul class="max-h-60 overflow-auto pr-1 text-sm">
+          <li
+            v-for="(item, i) in queue"
+            :key="item.id + '-' + i"
+            class="mb-1 flex items-center justify-between gap-2 rounded border px-2 py-1"
+            :class="{ 'bg-gray-100': i === currentIndex }"
+          >
+            <div class="truncate">
+              <button class="mr-2 text-xs underline" @click="playFrom(i)">Play</button>
+              <span class="truncate">{{ item.title }}</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <button
+                class="border px-1 py-0.5 text-[10px]"
+                :disabled="i === 0"
+                @click="moveItem(i, i - 1)"
+              >
+                ↑
+              </button>
+              <button
+                class="border px-1 py-0.5 text-[10px]"
+                :disabled="i === queue.length - 1"
+                @click="moveItem(i, i + 1)"
+              >
+                ↓
+              </button>
+              <button class="border px-1 py-0.5 text-[10px]" @click="removeAt(i)">
+                ✕
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
