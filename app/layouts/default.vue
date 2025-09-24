@@ -5,13 +5,13 @@
   })
 </script>
 <template>
-  <main class="px-bleed relative h-full pt-4 pb-52">
+  <main class="px-bleed relative h-full pt-4">
     <nav class="header gap-gap inline-flex w-full items-center">
       <h1 class="current-route text-center font-serif text-xl">
         {{ currentRoute }}
       </h1>
     </nav>
-    <div class="min-h-screen pt-16">
+    <div class="min-h-screen pt-16 pb-32">
       <slot />
     </div>
     <site-navbar />
