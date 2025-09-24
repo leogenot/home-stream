@@ -54,6 +54,10 @@ export default defineNuxtConfig({
     },
   },
   nitro: {
+    prerender: {
+      crawlLinks: false, // Prevent Nitro from crawling and generating routes
+      routes: [], // No pre-rendered routes
+    },
     compressPublicAssets: true,
     serverAssets: [
       {
