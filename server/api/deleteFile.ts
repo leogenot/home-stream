@@ -22,8 +22,7 @@ export default defineEventHandler(async (event) => {
         console.log('filename', filename, data)
         if (error || !data) return { error: 'File not found' }
 
-
-        const filePath = join(process.cwd(), 'uploads', 'music', data.file!)
+        const filePath = join(process.cwd(), 'public', 'uploads', 'music', data.file)
 
         // Delete file from disk
         await unlink(filePath)
