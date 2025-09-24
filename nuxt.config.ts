@@ -59,7 +59,7 @@ export default defineNuxtConfig({
       '/**': {
         headers: {
           'Content-Security-Policy': [
-            "default-src * data: blob:; script-src * 'self' 'unsafe-inline' 'unsafe-eval'; style-src * 'self' 'unsafe-inline'; connect-src * 'self';",
+            "default-src * data: blob:; script-src * 'self' 'unsafe-inline' 'unsafe-eval'; style-src * 'self' 'unsafe-inline'; connect-src * 'self';worker-src 'self' blob:;",
           ].join('; '),
         },
       },
