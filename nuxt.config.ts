@@ -54,6 +54,7 @@ export default defineNuxtConfig({
   },
   nitro: {
     compressPublicAssets: true,
+    serveStatic: true,
     preset: 'node-server',
     routeRules: {
       '/**': {
