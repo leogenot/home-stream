@@ -174,7 +174,7 @@
 <template>
   <div
     v-if="currentItem"
-    class="sticky bottom-18 left-0 z-50 w-full border-t border-t-(--sand) p-3 backdrop-blur-3xl"
+    class="sticky bottom-18 left-0 z-50 w-full border border-(--sand) p-3 backdrop-blur-3xl"
   >
     <div
       class="wrapper"

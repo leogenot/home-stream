@@ -54,9 +54,9 @@
       <div
         v-for="(song, i) in musics"
         :key="song.id"
-        class="mb-3 flex items-center justify-between gap-3"
+        class="mb-3 flex max-w-screen flex-wrap items-center justify-between gap-3"
       >
-        <div class="truncate">{{ song.file }}</div>
+        <div class="truncate font-serif text-sm">{{ song.file }}</div>
         <div class="flex items-center gap-2">
           <button
             class="border px-2 py-1 text-xs"

@@ -5,7 +5,7 @@
   })
 </script>
 <template>
-  <main class="px-bleed relative h-full pt-4">
+  <main class="px-bleed relative h-full pt-4 pb-52">
     <nav class="header gap-gap inline-flex w-full items-center">
       <h1 class="current-route text-center font-serif text-xl">
         {{ currentRoute }}
