@@ -1,51 +1,80 @@
 <script setup lang="ts">
+  definePageMeta({ title: 'Home Stream' })
   useHead({
     title: 'Music',
   })
-  definePageMeta({
-    title: 'Music',
-  })
+  const { musics } = usePlaylist()
+  const { addToQueue, playAt, queue } = useQueue()
 
-  const { signOut } = useSupabaseAuth()
-  const { userData } = useUser()
-  const { forceRefreshUserData } = useUser()
-  const router = useRouter()
-
-  onMounted(() => {
-    console.log('userData', userData.value)
-    if (userData.value) {
-      // Refresh user data to ensure subscription status is current
-      forceRefreshUserData()
-    } else {
-      router.push('/auth/login')
+  const playSong = (idx: number) => {
+    playAt(idx)
+  }
+  const enqueueAllIfEmpty = () => {
+    if (!queue.value.length && musics.value.length) {
+      addToQueue(
+        musics.value.map((m) => ({
+          id: m.id,
+          src: `/uploads/music/${m.file}`,
+          title: m.file,
+        })),
+      )
     }
-  })
+  }
+
+  const playAllNow = () => {
+    if (!musics.value.length) return
+    queue.value = musics.value.map((m) => ({
+      id: m.id,
+      src: `/uploads/music/${m.file}`,
+      title: m.file,
+    }))
+    playAt(0)
+  }
 </script>
 
 <template>
-  <div class="grid w-full gap-4">
-    <nuxt-link v-if="userData" to="/profile" class="font-serif text-3xl">
-      Hi {{ userData.username }}
-    </nuxt-link>
-    <p v-else class="font-serif text-3xl">unauthenticated</p>
-    <div v-if="userData" class="">
-      <button
-        class="cursor-pointer border border-(--sand) p-2 uppercase"
-        @click="signOut"
-      >
-        <span>Log out</span>
-      </button>
+  <div class="grid w-full gap-6">
+    <div>
+      <h2 class="font-serif text-2xl">Playlists</h2>
+      <PlaylistList current-tab="music" />
     </div>
-    <div v-else class="grid w-fit items-center justify-between gap-4">
-      <NuxtLink class="border border-(--sand) p-2 uppercase" to="/auth/login">
-        Login
-      </NuxtLink>
-      <NuxtLink
-        class="border border-(--sand) p-2 uppercase"
-        to="/auth/register"
+
+    <div>
+      <div class="flex items-center justify-between">
+        <h2 class="font-serif text-2xl">All Music</h2>
+        <div class="flex items-center gap-2">
+          <button class="border px-3 py-1 text-sm" @click="enqueueAllIfEmpty">
+            Enqueue All
+          </button>
+          <button class="border px-3 py-1 text-sm" @click="playAllNow">
+            Play All
+          </button>
+        </div>
+      </div>
+      <div
+        v-for="(song, i) in musics"
+        :key="song.id"
+        class="mb-3 flex items-center justify-between gap-3"
       >
-        Sign up
-      </NuxtLink>
+        <div class="truncate">{{ song.file }}</div>
+        <div class="flex items-center gap-2">
+          <button
+            class="border px-2 py-1 text-xs"
+            @click="
+              addToQueue({
+                id: song.id,
+                src: `/uploads/music/${song.file}`,
+                title: song.file,
+              })
+            "
+          >
+            Add
+          </button>
+          <button class="border px-2 py-1 text-xs" @click="playSong(i)">
+            Play
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
