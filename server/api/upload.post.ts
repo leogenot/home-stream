@@ -22,8 +22,12 @@ export default defineEventHandler(async (event) => {
     const results: any[] = []
 
     for (const file of files) {
-        const filePath = join(process.cwd(), 'uploads', 'music', file.filename!)
+        const filePath = join(process.cwd(), 'public', 'uploads', 'music', file.filename as string)
+
+        // ✅ Ensure folder exists
         await mkdir(dirname(filePath), { recursive: true })
+
+        // Save file to disk
         await writeFile(filePath, file.data)
 
         // Detect type
