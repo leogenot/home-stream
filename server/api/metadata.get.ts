@@ -1,0 +1,36 @@
+import { parseFile } from 'music-metadata'
+import { defineEventHandler, getQuery, createError } from 'h3'
+import path from 'path'
+
+const MUSIC_DIR = path.resolve(process.cwd(), 'public/uploads/music')
+
+export default defineEventHandler(async (event) => {
+    const { file } = getQuery(event)
+
+    if (!file || typeof file !== 'string') {
+        throw createError({ statusCode: 400, statusMessage: 'Missing file parameter' })
+    }
+
+    const safeFile = decodeURIComponent(file)
+
+    try {
+        const filePath = path.join(MUSIC_DIR, safeFile)
+        const metadata = await parseFile(filePath)
+
+        let pictureBase64: string | null = null
+        if (metadata.common.picture && metadata.common.picture.length > 0) {
+            const picture = metadata.common.picture[0]
+            pictureBase64 = `data:${picture.format};base64,${picture.data.toString('base64')}`
+        }
+
+        return {
+            title: metadata.common.title ?? null,
+            artist: metadata.common.artist ?? null,
+            album: metadata.common.album ?? null,
+            picture: pictureBase64,
+            duration: metadata.format.duration ?? null,
+        }
+    } catch (err: any) {
+        throw createError({ statusCode: 500, statusMessage: `Metadata parse failed: ${err.message}` })
+    }
+})

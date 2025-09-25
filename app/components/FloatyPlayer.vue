@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import * as mm from 'music-metadata'
   import { useWindowSize } from '@vueuse/core'
   const audioRef = ref<HTMLAudioElement | null>(null)
   const isPlaying = ref(false)
@@ -180,65 +181,105 @@
     // capture click as a fallback
     document.addEventListener('click', markGesture, true)
   })
+
+  const artist = ref<string | null>(null)
+  const pictureUrl = ref<string | null>(null)
+  const album = ref<string | null>(null)
+
+  watch(currentItem, async () => {
+    if (!currentItem.value?.src) return
+    artist.value = null
+    pictureUrl.value = null
+    album.value = null
+
+    try {
+      const filename = currentItem.value.src.split('/').pop()
+      const res = await $fetch(
+        `/api/metadata?file=${encodeURIComponent(filename!)}`,
+      )
+      console.log(res)
+      artist.value = res.artist
+      pictureUrl.value = `/api/cover/${encodeURIComponent(filename!)}`
+      album.value = res.album
+
+      if (!res.title) res.title = currentItem.value.title
+    } catch (err) {
+      console.warn('Failed to fetch metadata:', err)
+    }
+  })
 </script>
 
 <template>
   <div
     v-if="currentItem"
-    class="sticky bottom-18 left-0 z-50 w-full border border-black/40 p-3 backdrop-blur-3xl"
+    class="sticky bottom-18 left-0 z-50 w-full overflow-x-clip border border-black/40 p-3 backdrop-blur-3xl"
   >
     <div
-      class="wrapper"
+      class="wrapper grid w-full"
       :class="{ 'select-none': isMobile }"
       @touchstart="onTouchStart"
       @touchmove="onTouchMove"
       @touchend="onTouchEnd"
     >
-      <div class="mb-2 flex items-center justify-between">
-        <div class="truncate font-serif text-sm">
-          {{ currentItem.title }}
+      <div
+        class="mb-4 flex w-full items-center justify-between overflow-x-clip"
+      >
+        <div
+          class="grid w-full items-center justify-center gap-3 overflow-x-clip"
+        >
+          <img
+            v-if="pictureUrl"
+            :src="pictureUrl"
+            alt="cover"
+            class="object-fit aspect-square h-auto w-full max-w-full overflow-clip bg-transparent"
+          />
+          <div class="grid items-center justify-center gap-1 truncate">
+            <div class="truncate text-center font-serif text-sm">
+              {{ currentItem.title }}
+            </div>
+            <div
+              v-if="artist"
+              class="truncate text-center text-xs text-gray-500"
+            >
+              {{ artist }}
+            </div>
+          </div>
         </div>
-        <!-- Only show play button on mobile, show all buttons on desktop -->
-        <div v-if="isMobile" class="ml-2 flex items-center gap-2">
-          <button
-            class="border border-black/40 px-2 py-1 text-xs"
-            @click="toggleManager"
-          >
-            Queue
-          </button>
-          <button
-            class="border border-black/40 px-2 py-1 text-xs"
-            @click="toggle"
-          >
-            {{ isPlaying ? 'Pause' : 'Play' }}
-          </button>
-        </div>
-        <div v-else class="ml-2 flex items-center gap-2">
-          <button
-            class="border border-black/40 px-2 py-1 text-xs"
-            @click="prev"
-          >
-            Prev
-          </button>
-          <button
-            class="border border-black/40 px-2 py-1 text-xs"
-            @click="toggle"
-          >
-            {{ isPlaying ? 'Pause' : 'Play' }}
-          </button>
-          <button
-            class="border border-black/40 px-2 py-1 text-xs"
-            @click="next"
-          >
-            Next
-          </button>
-          <button
-            class="border border-black/40 px-2 py-1 text-xs"
-            @click="toggleManager"
-          >
-            Queue
-          </button>
-        </div>
+      </div>
+      <!-- Only show play button on mobile, show all buttons on desktop -->
+      <div v-if="isMobile" class="flex items-center justify-center gap-2">
+        <button
+          class="border border-black/40 px-2 py-1 text-xs"
+          @click="toggleManager"
+        >
+          Queue
+        </button>
+        <button
+          class="border border-black/40 px-2 py-1 text-xs"
+          @click="toggle"
+        >
+          {{ isPlaying ? 'Pause' : 'Play' }}
+        </button>
+      </div>
+      <div v-else class="ml-2 flex items-center gap-2">
+        <button class="border border-black/40 px-2 py-1 text-xs" @click="prev">
+          Prev
+        </button>
+        <button
+          class="border border-black/40 px-2 py-1 text-xs"
+          @click="toggle"
+        >
+          {{ isPlaying ? 'Pause' : 'Play' }}
+        </button>
+        <button class="border border-black/40 px-2 py-1 text-xs" @click="next">
+          Next
+        </button>
+        <button
+          class="border border-black/40 px-2 py-1 text-xs"
+          @click="toggleManager"
+        >
+          Queue
+        </button>
       </div>
       <div class="mt-2 flex items-center gap-2">
         <span class="min-w-[40px] text-xs text-gray-500 tabular-nums">
