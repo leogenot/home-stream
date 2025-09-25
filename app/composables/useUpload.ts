@@ -18,7 +18,6 @@ export function useUpload() {
         const { data, error } = await client
             .from('music')
             .select('id, file, created_at')
-            .eq('user_id', user.value.id)
             .order('created_at', { ascending: false })
         if (!error && data) {
             files.value = data
