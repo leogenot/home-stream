@@ -247,7 +247,10 @@
         </div>
       </div>
       <!-- Only show play button on mobile, show all buttons on desktop -->
-      <div v-if="isMobile" class="flex items-center justify-center gap-2">
+      <div
+        v-if="isMobile"
+        class="flex w-full items-center justify-center gap-2"
+      >
         <button
           class="border border-black/40 px-2 py-1 text-xs"
           @click="toggleManager"
@@ -261,7 +264,7 @@
           {{ isPlaying ? 'Pause' : 'Play' }}
         </button>
       </div>
-      <div v-else class="ml-2 flex items-center gap-2">
+      <div v-else class="ml-2 flex w-full items-center gap-2">
         <button class="border border-black/40 px-2 py-1 text-xs" @click="prev">
           Prev
         </button>
@@ -281,8 +284,8 @@
           Queue
         </button>
       </div>
-      <div class="mt-2 flex items-center gap-2">
-        <span class="min-w-[40px] text-xs text-gray-500 tabular-nums">
+      <div class="mt-2 flex w-full items-center gap-2">
+        <span class="text-xs text-gray-500 tabular-nums">
           {{ formatTime(currentTime) }}
         </span>
         <input
@@ -295,12 +298,13 @@
           @input="onProgressInput"
         />
 
-        <span class="min-w-[40px] text-xs text-gray-500 tabular-nums">
+        <span class="text-xs text-gray-500 tabular-nums">
           {{ formatTime(duration) }}
         </span>
       </div>
       <audio
         ref="audioRef"
+        class="w-full"
         :src="currentItem?.src"
         preload="none"
         @ended="onEnded"
@@ -308,8 +312,8 @@
         @loadedmetadata="onLoadedMetadata"
       />
       <!-- Queue Manager -->
-      <div v-if="isManagerOpen" class="mt-3 border-t pt-3">
-        <div class="mb-2 flex items-center justify-between">
+      <div v-if="isManagerOpen" class="mt-3 w-full border-t pt-3">
+        <div class="mb-2 flex w-full items-center justify-between">
           <div class="text-xs text-gray-500">Queue ({{ queue.length }})</div>
           <div class="flex items-center gap-2">
             <button
@@ -326,20 +330,17 @@
             </button>
           </div>
         </div>
-        <ul class="max-h-60 overflow-auto pr-1 text-sm">
+        <ul class="max-h-60 w-full overflow-y-auto text-sm">
           <li
             v-for="(item, i) in queue"
             :key="item.id + '-' + i"
-            class="mb-1 flex items-center justify-between gap-2 rounded border border-black/40 px-2 py-1"
+            class="mb-1 flex w-full max-w-full items-center gap-2 rounded border border-black/40 px-2 py-1"
             :class="{ 'bg-gray-100': i === currentIndex }"
           >
-            <div class="truncate">
-              <button class="mr-2 text-xs underline" @click="playFrom(i)">
-                Play
-              </button>
+            <div class="max-w-10 truncate" @click="playFrom(i)">
               <span class="truncate">{{ item.title }}</span>
             </div>
-            <div class="flex items-center gap-1">
+            <div class="flex shrink-0 items-center gap-1">
               <button
                 class="text-xxs border border-black/40 px-1 py-0.5"
                 :disabled="i === 0"
