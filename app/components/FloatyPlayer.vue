@@ -184,6 +184,7 @@
   const artist = ref<string | null>(null)
   const pictureUrl = ref<string | null>(null)
   const album = ref<string | null>(null)
+  const showCover = ref(false)
 
   function updateMediaSessionMetadata() {
     if (import.meta.server) return
@@ -241,6 +242,7 @@
     artist.value = null
     pictureUrl.value = null
     album.value = null
+    showCover.value = false
 
     try {
       const filename = currentItem.value.src.split('/').pop()
@@ -317,13 +319,13 @@
           class="grid w-full items-center justify-center gap-3 overflow-x-clip"
         >
           <img
-            v-if="pictureUrl"
+            v-if="pictureUrl && showCover"
             :src="pictureUrl"
             alt="cover"
             class="object-fit aspect-square h-auto w-full max-w-full overflow-clip bg-transparent"
           />
           <div class="grid items-center justify-center gap-1 truncate">
-            <div class="truncate text-center font-serif text-sm">
+            <div class="truncate text-center font-serif text-sm cursor-pointer" @click="showCover = !showCover">
               {{ currentItem.title }}
             </div>
             <div
