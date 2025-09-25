@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import * as mm from 'music-metadata'
   import { useWindowSize } from '@vueuse/core'
   const audioRef = ref<HTMLAudioElement | null>(null)
   const isPlaying = ref(false)
@@ -186,6 +185,57 @@
   const pictureUrl = ref<string | null>(null)
   const album = ref<string | null>(null)
 
+  function updateMediaSessionMetadata() {
+    if (import.meta.server) return
+    if (!('mediaSession' in navigator)) return
+    const title = currentItem.value?.title || ''
+    const artistName = artist.value || ''
+    const albumName = album.value || ''
+    const cover = pictureUrl.value || ''
+    try {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title,
+        artist: artistName,
+        album: albumName,
+        artwork: cover
+          ? [
+              { src: cover, sizes: '96x96', type: 'image/jpeg' },
+              { src: cover, sizes: '192x192', type: 'image/jpeg' },
+              { src: cover, sizes: '256x256', type: 'image/jpeg' },
+              { src: cover, sizes: '384x384', type: 'image/jpeg' },
+              { src: cover, sizes: '512x512', type: 'image/jpeg' },
+            ]
+          : [],
+      })
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  function updateMediaSessionPlaybackState() {
+    if (import.meta.server) return
+    if (!('mediaSession' in navigator)) return
+    try {
+      navigator.mediaSession.playbackState = isPlaying.value ? 'playing' : 'paused'
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  function updateMediaSessionPositionState() {
+    if (import.meta.server) return
+    if (!('mediaSession' in navigator)) return
+    if (!('setPositionState' in navigator.mediaSession)) return
+    try {
+      navigator.mediaSession.setPositionState({
+        duration: duration.value || 0,
+        position: currentTime.value || 0,
+      })
+    } catch (e) {
+      // ignore
+    }
+  }
+
   watch(currentItem, async () => {
     if (!currentItem.value?.src) return
     artist.value = null
@@ -194,17 +244,56 @@
 
     try {
       const filename = currentItem.value.src.split('/').pop()
-      const res = await $fetch(
+      const res = (await $fetch(
         `/api/metadata?file=${encodeURIComponent(filename!)}`,
-      )
+      )) as { artist?: string | null; album?: string | null; title?: string | null }
       console.log(res)
-      artist.value = res.artist
+      artist.value = res.artist || null
       pictureUrl.value = `/api/cover/${encodeURIComponent(filename!)}`
-      album.value = res.album
+      album.value = res.album || null
 
       if (!res.title) res.title = currentItem.value.title
+      // Update media session metadata when we have track info
+      updateMediaSessionMetadata()
     } catch (err) {
       console.warn('Failed to fetch metadata:', err)
+    }
+  })
+
+  // Keep Media Session state in sync
+  watch(isPlaying, () => {
+    updateMediaSessionPlaybackState()
+  })
+
+  watch([duration, currentTime], () => {
+    updateMediaSessionPositionState()
+  })
+
+  onMounted(() => {
+    if (import.meta.server) return
+    if (!('mediaSession' in navigator)) return
+    // Action handlers for lockscreen / OS controls
+    try {
+      navigator.mediaSession.setActionHandler?.('play', () => {
+        play()
+      })
+      navigator.mediaSession.setActionHandler?.('pause', () => {
+        pause()
+      })
+      navigator.mediaSession.setActionHandler?.('previoustrack', () => {
+        prev()
+      })
+      navigator.mediaSession.setActionHandler?.('nexttrack', () => {
+        next()
+      })
+      navigator.mediaSession.setActionHandler?.('seekto', (details: any) => {
+        if (!audioRef.value) return
+        if (typeof details?.seekTime === 'number') {
+          audioRef.value.currentTime = details.seekTime
+        }
+      })
+    } catch (e) {
+      // ignore
     }
   })
 </script>
