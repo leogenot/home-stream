@@ -15,11 +15,15 @@
     <form class="grid gap-2" @submit.prevent="createPlaylist()">
       <input
         v-model="newPlaylistTitle"
-        class="border p-2 text-sm uppercase"
+        class="border border-black/40 p-2 text-sm uppercase"
         placeholder="Title"
         required
       />
-      <select v-model="selectedMusicIds" multiple class="border p-2 uppercase">
+      <select
+        v-model="selectedMusicIds"
+        multiple
+        class="border border-black/40 p-2 uppercase"
+      >
         <option
           v-for="file in musics"
           :key="file.id"
@@ -30,7 +34,10 @@
         </option>
       </select>
 
-      <button type="submit" class="cursor-pointer border p-2 text-sm uppercase">
+      <button
+        type="submit"
+        class="cursor-pointer border border-black/40 p-2 text-sm uppercase"
+      >
         Create
       </button>
     </form>

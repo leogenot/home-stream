@@ -44,7 +44,7 @@
     <div
       v-for="pl in normalizedPlaylists"
       :key="pl.id"
-      class="col flex flex-col border p-2 lg:flex-row"
+      class="col flex flex-col border border-black/40 p-2 lg:flex-row"
     >
       <div class="flex items-center justify-between">
         <h3 class="font-serif text-xl">
@@ -56,7 +56,10 @@
           </NuxtLink>
         </h3>
         <div class="flex items-center gap-2 text-xs">
-          <button class="border px-2 py-1" @click="playPlaylist(pl)">
+          <button
+            class="border border-black/40 px-2 py-1"
+            @click="playPlaylist(pl)"
+          >
             Play
           </button>
           <button class="text-red-600" @click="deletePlaylist(pl.id)">
@@ -75,7 +78,7 @@
         <select
           v-model="selectedMusicIds"
           multiple
-          class="border p-2 uppercase"
+          class="border border-black/40 p-2 uppercase"
         >
           <option
             v-for="file in musics"
@@ -87,7 +90,7 @@
           </option>
         </select>
         <button
-          class="border p-2 text-sm"
+          class="border border-black/40 p-2 text-sm"
           @click.prevent="addItemsToPlaylist(pl.id, selectedMusicIds)"
         >
           Add Selected Items

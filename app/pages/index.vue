@@ -16,12 +16,7 @@
     }
   })
   const { songs } = useMusic()
-  const {
-    playAllNow,
-    playAllRandomNow,
-    playSong,
-    addToQueue,
-  } = useQueue()
+  const { playAllNow, playAllRandomNow, playSong, addToQueue } = useQueue()
 </script>
 
 <template>
@@ -33,10 +28,16 @@
     <div>
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <button class="border px-3 py-1 text-sm" @click="playAllNow(songs)">
+          <button
+            class="border border-black/40 px-3 py-1 text-sm"
+            @click="playAllNow(songs)"
+          >
             Play All
           </button>
-          <button class="border px-3 py-1 text-sm" @click="playAllRandomNow(songs)">
+          <button
+            class="border border-black/40 px-3 py-1 text-sm"
+            @click="playAllRandomNow(songs)"
+          >
             Random
           </button>
         </div>
@@ -44,14 +45,20 @@
       <div
         v-for="(song, i) in songs"
         :key="song.id"
-        class="mb-3 flex max-w-screen flex-wrap items-center justify-between gap-3"
+        class="my-6 flex max-w-screen flex-wrap items-center justify-between gap-3"
       >
         <div class="truncate font-serif text-sm">{{ song.file }}</div>
         <div class="flex items-center gap-2">
-          <button class="border px-2 py-1 text-xs" @click="playSong(i, songs)">
+          <button
+            class="border border-black/40 px-2 py-1 text-xs"
+            @click="playSong(i, songs)"
+          >
             Play
           </button>
-          <button class="border px-2 py-1 text-xs" @click="addToQueue(song)">
+          <button
+            class="border border-black/40 px-2 py-1 text-xs"
+            @click="addToQueue(song)"
+          >
             Add
           </button>
         </div>

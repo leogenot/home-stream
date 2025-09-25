@@ -36,8 +36,8 @@
 </script>
 
 <template>
-  <div class="">
-    <h4 class="font-serif text-2xl">Profile settings</h4>
+  <div class="grid gap-2">
+    <h4 class="font-serif text-lg">Profile settings</h4>
     <form class="font-sans uppercase" @submit.prevent="updateUser">
       <fieldset class="gap-gap grid lg:grid-cols-2">
         <CommonInput
@@ -54,7 +54,11 @@
         />
       </fieldset>
 
-      <button class="w-full" aria-label="Save changes" :disabled="btnDisabled">
+      <button
+        class="w-full border border-black/40 py-1"
+        aria-label="Save changes"
+        :disabled="btnDisabled"
+      >
         Save changes
       </button>
       <p

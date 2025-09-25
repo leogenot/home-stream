@@ -185,7 +185,7 @@
 <template>
   <div
     v-if="currentItem"
-    class="sticky bottom-18 left-0 z-50 w-full border border-(--sand) p-3 backdrop-blur-3xl"
+    class="sticky bottom-18 left-0 z-50 w-full border border-black/40 p-3 backdrop-blur-3xl"
   >
     <div
       class="wrapper"
@@ -200,20 +200,42 @@
         </div>
         <!-- Only show play button on mobile, show all buttons on desktop -->
         <div v-if="isMobile" class="ml-2 flex items-center gap-2">
-          <button class="border px-2 py-1 text-xs" @click="toggleManager">
+          <button
+            class="border border-black/40 px-2 py-1 text-xs"
+            @click="toggleManager"
+          >
             Queue
           </button>
-          <button class="border px-2 py-1 text-xs" @click="toggle">
+          <button
+            class="border border-black/40 px-2 py-1 text-xs"
+            @click="toggle"
+          >
             {{ isPlaying ? 'Pause' : 'Play' }}
           </button>
         </div>
         <div v-else class="ml-2 flex items-center gap-2">
-          <button class="border px-2 py-1 text-xs" @click="prev">Prev</button>
-          <button class="border px-2 py-1 text-xs" @click="toggle">
+          <button
+            class="border border-black/40 px-2 py-1 text-xs"
+            @click="prev"
+          >
+            Prev
+          </button>
+          <button
+            class="border border-black/40 px-2 py-1 text-xs"
+            @click="toggle"
+          >
             {{ isPlaying ? 'Pause' : 'Play' }}
           </button>
-          <button class="border px-2 py-1 text-xs" @click="next">Next</button>
-          <button class="border px-2 py-1 text-xs" @click="toggleManager">
+          <button
+            class="border border-black/40 px-2 py-1 text-xs"
+            @click="next"
+          >
+            Next
+          </button>
+          <button
+            class="border border-black/40 px-2 py-1 text-xs"
+            @click="toggleManager"
+          >
             Queue
           </button>
         </div>
@@ -249,37 +271,52 @@
         <div class="mb-2 flex items-center justify-between">
           <div class="text-xs text-gray-500">Queue ({{ queue.length }})</div>
           <div class="flex items-center gap-2">
-            <button class="border px-2 py-1 text-xs" @click="clearQueue">Clear</button>
-            <button class="border px-2 py-1 text-xs" @click="toggleManager">Close</button>
+            <button
+              class="border border-black/40 px-2 py-1 text-xs"
+              @click="clearQueue"
+            >
+              Clear
+            </button>
+            <button
+              class="border border-black/40 px-2 py-1 text-xs"
+              @click="toggleManager"
+            >
+              Close
+            </button>
           </div>
         </div>
         <ul class="max-h-60 overflow-auto pr-1 text-sm">
           <li
             v-for="(item, i) in queue"
             :key="item.id + '-' + i"
-            class="mb-1 flex items-center justify-between gap-2 rounded border px-2 py-1"
+            class="mb-1 flex items-center justify-between gap-2 rounded border border-black/40 px-2 py-1"
             :class="{ 'bg-gray-100': i === currentIndex }"
           >
             <div class="truncate">
-              <button class="mr-2 text-xs underline" @click="playFrom(i)">Play</button>
+              <button class="mr-2 text-xs underline" @click="playFrom(i)">
+                Play
+              </button>
               <span class="truncate">{{ item.title }}</span>
             </div>
             <div class="flex items-center gap-1">
               <button
-                class="border px-1 py-0.5 text-[10px]"
+                class="text-xxs border border-black/40 px-1 py-0.5"
                 :disabled="i === 0"
                 @click="moveItem(i, i - 1)"
               >
                 ↑
               </button>
               <button
-                class="border px-1 py-0.5 text-[10px]"
+                class="text-xxs border border-black/40 px-1 py-0.5"
                 :disabled="i === queue.length - 1"
                 @click="moveItem(i, i + 1)"
               >
                 ↓
               </button>
-              <button class="border px-1 py-0.5 text-[10px]" @click="removeAt(i)">
+              <button
+                class="text-xxs border border-black/40 px-1 py-0.5"
+                @click="removeAt(i)"
+              >
                 ✕
               </button>
             </div>

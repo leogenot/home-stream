@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const {
+  const {
     playlists,
     musics,
     selectedMusicIds,
@@ -12,36 +12,39 @@ const {
     addItemsToPlaylist,
     deletePlaylist,
     makePlaylistSlug,
-} = usePlaylist()
+  } = usePlaylist()
 
-const { playAllNow, playAllRandomNow } = useQueue()
+  const { playAllNow, playAllRandomNow } = useQueue()
 
-onMounted(() => {
+  onMounted(() => {
     fetchPlaylists()
     fetchMusics()
-})
+  })
 
-const addToExisting = async (playlistId: number, musicId: number) => {
+  const addToExisting = async (playlistId: number, musicId: number) => {
     await addItemsToPlaylist(playlistId, [musicId])
-}
+  }
 
-// Track which playlist is selected for each song row
-const selectedPlaylistBySong = reactive<Record<number, number | null>>({})
-const addSongToSelected = async (songId: number) => {
-  const pid = selectedPlaylistBySong[songId]
-  if (!pid) return
-  await addItemsToPlaylist(pid, [songId])
-}
+  // Track which playlist is selected for each song row
+  const selectedPlaylistBySong = reactive<Record<number, number | null>>({})
+  const addSongToSelected = async (songId: number) => {
+    const pid = selectedPlaylistBySong[songId]
+    if (!pid) return
+    await addItemsToPlaylist(pid, [songId])
+  }
 
-const songsFromPlaylist = (p: { playlist_items: { file: { id: number; file: string } }[] }) =>
-  p.playlist_items.map((it) => it.file)
+  const songsFromPlaylist = (p: {
+    playlist_items: { file: { id: number; file: string } }[]
+  }) => p.playlist_items.map((it) => it.file)
 </script>
 
 <template>
-  <div class="p-4 grid gap-6">
+  <div class="grid gap-6 py-4">
     <div>
       <h1 class="font-serif text-2xl">Playlists</h1>
-      <p class="text-sm text-gray-600">Create and manage your playlists. Share links are public.</p>
+      <p class="text-sm text-gray-600">
+        Create and manage your playlists. Share links are public.
+      </p>
     </div>
 
     <div class="grid gap-2">
@@ -49,41 +52,86 @@ const songsFromPlaylist = (p: { playlist_items: { file: { id: number; file: stri
       <form class="grid gap-2" @submit.prevent="createPlaylist()">
         <input
           v-model="newPlaylistTitle"
-          class="border p-2 text-sm uppercase"
+          class="border border-black/40 p-2 text-sm uppercase"
           placeholder="Title"
           required
         />
-        <select v-model="selectedMusicIds" multiple class="border p-2 uppercase">
-          <option v-for="file in musics" :key="file.id" :value="file.id" class="text-sm">
+        <select
+          v-model="selectedMusicIds"
+          multiple
+          class="border border-black/40 p-2 uppercase"
+        >
+          <option
+            v-for="file in musics"
+            :key="file.id"
+            :value="file.id"
+            class="mb-2 text-sm"
+          >
             {{ file.file }}
           </option>
         </select>
-        <button type="submit" class="cursor-pointer border p-2 text-sm uppercase">Create</button>
+        <button
+          type="submit"
+          class="cursor-pointer border border-black/40 p-2 text-sm uppercase"
+        >
+          Create
+        </button>
       </form>
 
-      <p v-if="playlistError" class="text-sm text-red-600">{{ playlistError }}</p>
-      <p v-if="playlistSuccess" class="text-sm text-green-600">{{ playlistSuccess }}</p>
+      <p v-if="playlistError" class="text-sm text-red-600">
+        {{ playlistError }}
+      </p>
+      <p v-if="playlistSuccess" class="text-sm text-green-600">
+        {{ playlistSuccess }}
+      </p>
     </div>
 
     <div class="grid gap-3">
       <h2 class="font-serif text-xl">Your Playlists</h2>
-      <div v-if="!playlists.length" class="text-sm text-gray-500">No playlists yet.</div>
+      <div v-if="!playlists.length" class="text-sm text-gray-500">
+        No playlists yet.
+      </div>
       <ul class="grid gap-3">
-        <li v-for="p in playlists" :key="p.id" class="border p-3">
-          <div class="flex items-center justify-between gap-2">
-            <NuxtLink class="underline" :to="`/playlists/${makePlaylistSlug(p.title, p.id)}`">
-              {{ p.title }}
-            </NuxtLink>
-            <div class="flex items-center gap-2">
-              <button class="text-xs uppercase border px-2 py-1" @click="playAllNow(songsFromPlaylist(p))">Play All</button>
-              <button class="text-xs uppercase border px-2 py-1" @click="playAllRandomNow(songsFromPlaylist(p))">Random</button>
-              <button class="text-xs uppercase border px-2 py-1" @click="deletePlaylist(p.id)">Delete</button>
+        <li
+          v-for="p in playlists"
+          :key="p.id"
+          class="border border-black/40 p-3"
+        >
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="title-wrapper inline-flex w-full justify-between">
+              <NuxtLink
+                class="underline"
+                :to="`/playlists/${makePlaylistSlug(p.title, p.id)}`"
+              >
+                {{ p.title }}
+              </NuxtLink>
+              <button
+                class="border border-black/40 px-2 py-1 text-xs uppercase"
+                @click="deletePlaylist(p.id)"
+              >
+                Delete
+              </button>
+            </div>
+            <div class="flex w-full items-center gap-2">
+              <button
+                class="border border-black/40 px-2 py-1 text-xs uppercase"
+                @click="playAllNow(songsFromPlaylist(p))"
+              >
+                Play All
+              </button>
+              <button
+                class="border border-black/40 px-2 py-1 text-xs uppercase"
+                @click="playAllRandomNow(songsFromPlaylist(p))"
+              >
+                Random
+              </button>
             </div>
           </div>
           <div class="mt-2">
-            <h3 class="text-sm font-semibold">Items ({{ p.playlist_items.length }})</h3>
-            <ul class="text-sm list-disc ml-4">
-              <li v-for="it in p.playlist_items" :key="it.id">{{ it.file.file }}</li>
+            <ul class="ml-4 list-disc text-sm">
+              <li v-for="it in p.playlist_items" :key="it.id">
+                {{ it.file.file }}
+              </li>
             </ul>
           </div>
         </li>
@@ -93,22 +141,31 @@ const songsFromPlaylist = (p: { playlist_items: { file: { id: number; file: stri
     <div class="grid gap-2">
       <h2 class="font-serif text-xl">All Songs</h2>
       <ul class="grid gap-2">
-        <li v-for="m in musics" :key="m.id" class="flex items-center justify-between border p-2">
+        <li
+          v-for="m in musics"
+          :key="m.id"
+          class="grid items-center gap-2 border border-black/40 p-2"
+        >
           <span class="text-sm">{{ m.file }}</span>
           <div class="flex items-center gap-2">
             <select
               v-model="selectedPlaylistBySong[m.id]"
-              class="border p-1 text-xs uppercase"
+              class="border border-black/40 px-2 py-0.5 text-xs uppercase"
             >
               <option :value="null" disabled>Select playlist</option>
-              <option v-for="p in playlists" :key="p.id" :value="p.id">{{ p.title }}</option>
+              <option v-for="p in playlists" :key="p.id" :value="p.id">
+                {{ p.title }}
+              </option>
             </select>
-            <button class="text-xs uppercase border px-2 py-1" @click="addSongToSelected(m.id)">Add</button>
+            <button
+              class="border border-black/40 px-2 py-1 text-xs uppercase"
+              @click="addSongToSelected(m.id)"
+            >
+              Add
+            </button>
           </div>
         </li>
       </ul>
     </div>
   </div>
 </template>
-
-

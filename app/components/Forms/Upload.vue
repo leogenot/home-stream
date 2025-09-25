@@ -12,7 +12,7 @@
     <h2 class="font-serif text-xl">Upload music</h2>
     <input
       ref="fileInput"
-      class="border p-2 uppercase"
+      class="border border-black/40 p-2 uppercase"
       type="file"
       name="files"
       multiple
@@ -20,7 +20,7 @@
     />
     <button
       type="submit"
-      class="h-fit cursor-pointer border p-2 uppercase"
+      class="h-fit cursor-pointer border border-black/40 p-2 uppercase"
       :disabled="uploading"
     >
       <span v-if="uploading">Uploading...</span>

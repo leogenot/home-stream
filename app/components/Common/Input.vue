@@ -38,7 +38,7 @@
       :autocomplete="autocomplete"
       :required="required"
       :placeholder="name"
-      class="peer w-full border border-(--sand) p-2 text-sm focus:text-black focus:outline-none"
+      class="peer w-full border border-black/40 p-2 text-sm focus:text-black focus:outline-none"
       @input="emit('update:modelValue', $event.target.value)"
     />
 

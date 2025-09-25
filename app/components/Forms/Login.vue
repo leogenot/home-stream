@@ -60,7 +60,7 @@
       <button
         type="submit"
         aria-label="Submit to log in"
-        class="mt-5 w-full border border-(--sand) p-2 text-center uppercase"
+        class="mt-5 w-full border border-black/40 p-2 text-center uppercase"
       >
         Log in
       </button>

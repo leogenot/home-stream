@@ -9,37 +9,54 @@
       <nuxt-link
         to="/"
         class="menu-entry text-xxs flex flex-col items-center justify-center gap-1"
-        :class="{ 'text-black': isActive('/'), 'text-gray-500': !isActive('/') }"
+        :class="{
+          'text-black': isActive('/'),
+          'text-gray-500': !isActive('/'),
+        }"
       >
         <span
           class="material-symbols-outlined text-[24px] leading-none"
           :class="{ 'font-bold': isActive('/'), 'opacity-60': !isActive('/') }"
         >
-          music_note
+          play_circle
         </span>
         <span :class="{ 'font-medium': isActive('/') }">Music</span>
       </nuxt-link>
       <nuxt-link
         to="/playlists"
         class="menu-entry text-xxs flex flex-col items-center justify-center gap-1"
-        :class="{ 'text-black': isActive('/playlists'), 'text-gray-500': !isActive('/playlists') }"
+        :class="{
+          'text-black': isActive('/playlists'),
+          'text-gray-500': !isActive('/playlists'),
+        }"
       >
         <span
           class="material-symbols-outlined text-[24px] leading-none"
-          :class="{ 'font-bold': isActive('/playlists'), 'opacity-60': !isActive('/playlists') }"
+          :class="{
+            'font-bold': isActive('/playlists'),
+            'opacity-60': !isActive('/playlists'),
+          }"
         >
-          queue_music
+          library_music
         </span>
-        <span :class="{ 'font-medium': isActive('/playlists') }">Playlists</span>
+        <span :class="{ 'font-medium': isActive('/playlists') }">
+          Playlists
+        </span>
       </nuxt-link>
       <nuxt-link
         to="/upload"
         class="menu-entry text-xxs flex flex-col items-center justify-center gap-1"
-        :class="{ 'text-black': isActive('/upload'), 'text-gray-500': !isActive('/upload') }"
+        :class="{
+          'text-black': isActive('/upload'),
+          'text-gray-500': !isActive('/upload'),
+        }"
       >
         <span
           class="material-symbols-outlined text-[24px] leading-none"
-          :class="{ 'font-bold': isActive('/upload'), 'opacity-60': !isActive('/upload') }"
+          :class="{
+            'font-bold': isActive('/upload'),
+            'opacity-60': !isActive('/upload'),
+          }"
         >
           upload
         </span>
@@ -48,11 +65,17 @@
       <nuxt-link
         to="/profile"
         class="menu-entry text-xxs flex flex-col items-center justify-center gap-1"
-        :class="{ 'text-black': isActive('/profile'), 'text-gray-500': !isActive('/profile') }"
+        :class="{
+          'text-black': isActive('/profile'),
+          'text-gray-500': !isActive('/profile'),
+        }"
       >
         <span
           class="material-symbols-outlined text-[24px] leading-none"
-          :class="{ 'font-bold': isActive('/profile'), 'opacity-60': !isActive('/profile') }"
+          :class="{
+            'font-bold': isActive('/profile'),
+            'opacity-60': !isActive('/profile'),
+          }"
         >
           account_circle
         </span>
@@ -60,5 +83,4 @@
       </nuxt-link>
     </div>
   </nav>
-
 </template>

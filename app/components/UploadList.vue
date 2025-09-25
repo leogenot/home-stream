@@ -12,11 +12,11 @@
       <div
         v-for="file in files"
         :key="file.id"
-        class="flex items-center justify-between border border-(--sand) p-2"
+        class="flex items-center justify-between border border-black/40 p-2"
       >
         <h3 class="font-serif text-lg">{{ file.file }}</h3>
         <button
-          class="text-red-600 hover:underline"
+          class="text-sm text-red-600 hover:underline"
           @click="deleteFile(file.file)"
         >
           Delete
