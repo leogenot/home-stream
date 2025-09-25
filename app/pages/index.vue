@@ -47,7 +47,9 @@
         :key="song.id"
         class="my-6 flex max-w-screen flex-wrap items-center justify-between gap-3"
       >
-        <div class="truncate font-serif text-sm">{{ song.file }}</div>
+        <div class="truncate font-serif text-sm" @click="playSong(i, songs)">
+          {{ song.file }}
+        </div>
         <div class="flex items-center gap-2">
           <button
             class="border border-black/40 px-2 py-1 text-xs"
