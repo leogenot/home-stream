@@ -288,30 +288,10 @@
       navigator.mediaSession.setActionHandler?.('nexttrack', () => {
         next()
       })
-      // Disable 10-second seek actions to prevent conflicts with track navigation
-      navigator.mediaSession.setActionHandler?.('seekbackward', () => {
-        // Disabled - we want track navigation instead of 10s seek
-      })
-      navigator.mediaSession.setActionHandler?.('seekforward', () => {
-        // Disabled - we want track navigation instead of 10s seek
-      })
       navigator.mediaSession.setActionHandler?.('seekto', (details: any) => {
         if (!audioRef.value) return
         if (typeof details?.seekTime === 'number') {
-          // Check if this is a track navigation request (iOS often sends seekto for next/prev)
-          const currentTime = audioRef.value.currentTime
-          const duration = audioRef.value.duration
-          
-          if (details.seekTime === 0 && currentTime > 10) {
-            // Seeking to 0 while well into the track - likely previous track
-            prev()
-          } else if (details.seekTime >= duration - 1 && currentTime < duration - 10) {
-            // Seeking to near the end - likely next track
-            next()
-          } else {
-            // Normal seek operation
-            audioRef.value.currentTime = details.seekTime
-          }
+          audioRef.value.currentTime = details.seekTime
         }
       })
     } catch (e) {
