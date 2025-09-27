@@ -2,6 +2,7 @@
   definePageMeta({
     layout: 'auth',
     title: 'Login',
+    middleware: 'guest'
   })
   useHead({
     title: 'Login',

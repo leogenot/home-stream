@@ -2,6 +2,7 @@
   definePageMeta({
     layout: 'auth',
     title: 'Forgot Password',
+    middleware: 'guest'
   })
   useHead({
     title: 'Forgot Password',

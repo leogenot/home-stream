@@ -33,7 +33,7 @@ export default function useMusic() {
     const songs = ref<Song[]>([])
 
     const fetchMusics = async () => {
-        if (!userData.value && !userData.value?.auth_user_id) return
+        if (!userData.value || !userData.value?.auth_user_id) return
         const { data, error } = await supabase
             .from('music')
             .select('id, file, created_at')

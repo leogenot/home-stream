@@ -2,6 +2,7 @@
   definePageMeta({
     layout: 'auth',
     title: 'Create account',
+    middleware: 'guest'
   })
   useHead({
     title: 'Create account',

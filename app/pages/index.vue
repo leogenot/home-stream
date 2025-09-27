@@ -1,19 +1,16 @@
 <script setup lang="ts">
-  definePageMeta({ title: 'Home Stream' })
+  definePageMeta({ 
+    title: 'Home Stream',
+    middleware: 'auth'
+  })
   useHead({
     title: 'Music',
   })
-  const { user } = useSupabaseAuth()
   const { refreshUserData } = useUser()
-  const router = useRouter()
 
   onMounted(() => {
-    if (user.value) {
-      // Refresh user data to ensure subscription status is current
-      refreshUserData()
-    } else {
-      router.push('/auth/login')
-    }
+    // Refresh user data to ensure subscription status is current
+    refreshUserData()
   })
   const { songs } = useMusic()
   const { playAllNow, playAllRandomNow, playSong, addToQueue } = useQueue()
