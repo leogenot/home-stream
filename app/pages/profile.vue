@@ -1,7 +1,7 @@
 <script setup lang="ts">
   definePageMeta({
     title: 'Profile',
-    middleware: 'auth'
+    middleware: 'auth',
   })
   useHead({
     title: 'Profile',
@@ -16,8 +16,8 @@
 </script>
 
 <template>
-  <div class="grid w-full gap-8">
-    <h1 class="font-serif text-xl">Hi {{ userData?.username }}</h1>
+  <div class="grid w-full gap-6">
+    <h1 class="font-serif text-2xl">Hi {{ userData?.username }}</h1>
     <FormsUpdateUser
       v-bind="{ ...userData, userId: user?.id }"
       @data-changed="userData = $event[0]"

@@ -4,7 +4,7 @@
   })
   definePageMeta({
     title: 'Upload',
-    middleware: 'auth'
+    middleware: 'auth',
   })
   const { refreshUserData } = useUser()
 
@@ -15,7 +15,13 @@
 </script>
 
 <template>
-  <div class="w-full">
-    <upload-wrapper />
+  <div class="grid w-full gap-6">
+    <div>
+      <h2 class="font-serif text-2xl">Upload</h2>
+    </div>
+    <div class="grid w-full gap-8">
+      <FormsUpload />
+      <UploadList />
+    </div>
   </div>
 </template>

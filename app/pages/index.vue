@@ -1,7 +1,7 @@
 <script setup lang="ts">
-  definePageMeta({ 
+  definePageMeta({
     title: 'Home Stream',
-    middleware: 'auth'
+    middleware: 'auth',
   })
   useHead({
     title: 'Music',
@@ -42,12 +42,15 @@
       <div
         v-for="(song, i) in songs"
         :key="song.id"
-        class="my-6 flex max-w-screen flex-wrap items-center justify-between gap-3"
+        class="my-6 flex w-full items-center justify-between gap-3"
       >
-        <div class="truncate font-serif text-sm" @click="playSong(i, songs)">
+        <div
+          class="truncate font-serif text-sm text-wrap overflow-ellipsis"
+          @click="playSong(i, songs)"
+        >
           {{ song.file }}
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex shrink-0 items-center gap-2">
           <button
             class="border border-black/40 px-2 py-1 text-xs"
             @click="playSong(i, songs)"

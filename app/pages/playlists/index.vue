@@ -1,6 +1,6 @@
 <script setup lang="ts">
   definePageMeta({
-    middleware: 'auth'
+    middleware: 'auth',
   })
 
   const {
@@ -43,9 +43,9 @@
 </script>
 
 <template>
-  <div class="grid gap-6 py-4">
+  <div class="grid w-full gap-6">
     <div>
-      <h1 class="font-serif text-2xl">Playlists</h1>
+      <h2 class="font-serif text-2xl">Playlists</h2>
       <p class="text-sm text-gray-600">
         Create and manage your playlists. Share links are public.
       </p>
@@ -103,11 +103,8 @@
         >
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="title-wrapper inline-flex w-full justify-between">
-              <NuxtLink
-                class="underline"
-                :to="`/playlists/${makePlaylistSlug(p.title, p.id)}`"
-              >
-                {{ p.title }}
+              <NuxtLink :to="`/playlists/${makePlaylistSlug(p.title, p.id)}`">
+                <h3 class="font-serif underline">{{ p.title }}</h3>
               </NuxtLink>
               <button
                 class="border border-black/40 px-2 py-1 text-xs uppercase"
@@ -150,7 +147,9 @@
           :key="m.id"
           class="grid items-center gap-2 border border-black/40 p-2"
         >
-          <span class="text-sm">{{ m.file }}</span>
+          <span class="truncate font-serif text-sm text-wrap overflow-ellipsis">
+            {{ m.file }}
+          </span>
           <div class="flex items-center gap-2">
             <select
               v-model="selectedPlaylistBySong[m.id]"

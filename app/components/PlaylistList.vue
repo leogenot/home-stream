@@ -47,14 +47,11 @@
       class="col flex flex-col border border-black/40 p-2 lg:flex-row"
     >
       <div class="flex items-center justify-between">
-        <h3 class="font-serif text-xl">
-          <NuxtLink
-            :to="`/playlists/${pl.id}`"
-            class="underline decoration-dotted hover:decoration-solid"
-          >
+        <NuxtLink :to="`/playlists/${pl.id}`">
+          <h3 class="font-serif text-xl">
             {{ pl.title }}
-          </NuxtLink>
-        </h3>
+          </h3>
+        </NuxtLink>
         <div class="flex items-center gap-2 text-xs">
           <button
             class="border border-black/40 px-2 py-1"
