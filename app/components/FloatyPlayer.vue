@@ -217,7 +217,9 @@
     if (import.meta.server) return
     if (!('mediaSession' in navigator)) return
     try {
-      navigator.mediaSession.playbackState = isPlaying.value ? 'playing' : 'paused'
+      navigator.mediaSession.playbackState = isPlaying.value
+        ? 'playing'
+        : 'paused'
     } catch (e) {
       // ignore
     }
@@ -248,7 +250,11 @@
       const filename = currentItem.value.src.split('/').pop()
       const res = (await $fetch(
         `/api/metadata?file=${encodeURIComponent(filename!)}`,
-      )) as { artist?: string | null; album?: string | null; title?: string | null }
+      )) as {
+        artist?: string | null
+        album?: string | null
+        title?: string | null
+      }
       console.log(res)
       artist.value = res.artist || null
       pictureUrl.value = `/api/cover/${encodeURIComponent(filename!)}`
@@ -325,7 +331,10 @@
             class="object-fit aspect-square h-auto w-full max-w-full overflow-clip bg-transparent"
           />
           <div class="grid items-center justify-center gap-1 truncate">
-            <div class="truncate text-center font-serif text-sm cursor-pointer" @click="showCover = !showCover">
+            <div
+              class="cursor-pointer truncate text-center font-serif text-sm"
+              @click="showCover = !showCover"
+            >
               {{ currentItem.title }}
             </div>
             <div
@@ -425,29 +434,32 @@
           <li
             v-for="(item, i) in queue"
             :key="item.id + '-' + i"
-            class="mb-1 flex w-full max-w-full items-center gap-2 rounded border border-black/40 px-2 py-1"
+            class="mb-1 flex w-full items-center justify-between gap-2 rounded border border-black/40 p-2"
             :class="{ 'bg-gray-100': i === currentIndex }"
           >
-            <div class="max-w-10 truncate" @click="playFrom(i)">
-              <span class="truncate">{{ item.title }}</span>
+            <div
+              class="w-full truncate font-serif text-sm text-wrap overflow-ellipsis"
+              @click="playFrom(i)"
+            >
+              {{ item.title }}
             </div>
             <div class="flex shrink-0 items-center gap-1">
               <button
-                class="text-xxs border border-black/40 px-1 py-0.5"
+                class="border border-black/40 px-1 py-0.5 text-sm"
                 :disabled="i === 0"
                 @click="moveItem(i, i - 1)"
               >
                 ↑
               </button>
               <button
-                class="text-xxs border border-black/40 px-1 py-0.5"
+                class="border border-black/40 px-1 py-0.5 text-sm"
                 :disabled="i === queue.length - 1"
                 @click="moveItem(i, i + 1)"
               >
                 ↓
               </button>
               <button
-                class="text-xxs border border-black/40 px-1 py-0.5"
+                class="border border-black/40 px-1 py-0.5 text-sm"
                 @click="removeAt(i)"
               >
                 ✕
