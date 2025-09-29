@@ -24,8 +24,8 @@
         if (!file) return null
         return {
           id: file.id,
-          src: `/uploads/music/${file.file}`,
-          title: file.file || file.title || 'Unknown',
+          src: `/uploads/music/${file.title}`,
+          title: file.title || file.title || 'Unknown',
         }
       })
       .filter(Boolean)
@@ -83,7 +83,7 @@
             :value="file.id"
             class="text-sm"
           >
-            {{ file.file }}
+            {{ file.title }}
           </option>
         </select>
         <button

@@ -38,7 +38,7 @@
   }
 
   const songsFromPlaylist = (p: {
-    playlist_items: { file: { id: number; file: string } }[]
+    playlist_items: { file: { id: number; title: string } }[]
   }) => p.playlist_items.map((it) => it.file)
 </script>
 
@@ -71,7 +71,7 @@
             :value="file.id"
             class="mb-2 text-sm"
           >
-            {{ file.file }}
+            {{ file.title }}
           </option>
         </select>
         <button
@@ -131,7 +131,7 @@
           <div class="mt-2">
             <ul class="ml-4 list-disc text-sm">
               <li v-for="it in p.playlist_items" :key="it.id">
-                {{ it.file.file }}
+                {{ it.file.title }}
               </li>
             </ul>
           </div>
@@ -148,7 +148,7 @@
           class="grid items-center gap-2 border border-black/40 p-2"
         >
           <span class="truncate font-serif text-sm text-wrap overflow-ellipsis">
-            {{ m.file }}
+            {{ m.title }}
           </span>
           <div class="flex items-center gap-2">
             <select

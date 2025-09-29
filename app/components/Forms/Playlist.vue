@@ -30,7 +30,7 @@
           :value="file.id"
           class="text-sm"
         >
-          {{ file.file }}
+          {{ file.title }}
         </option>
       </select>
 

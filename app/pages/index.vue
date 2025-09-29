@@ -48,7 +48,7 @@
           class="truncate font-serif text-sm text-wrap overflow-ellipsis"
           @click="playSong(i, songs)"
         >
-          {{ song.file }}
+          {{ song.title }}
         </div>
         <div class="flex shrink-0 items-center gap-2">
           <button

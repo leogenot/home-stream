@@ -10,9 +10,9 @@ export type User = {
     username: string | null
 }
 
-export type Music = { id: number; file: string; created_at: string }
+export type Music = { id: number; title: string; created_at: string }
 
-export type PlaylistItem = { id: number; position: number; file: { id: number; file: string } }
+export type PlaylistItem = { id: number; position: number; file: { id: number; title: string } }
 export type Playlist = { id: number; title: string; created_at: string; playlist_items: PlaylistItem[] }
 
 const TABLES = {
@@ -64,7 +64,7 @@ export default function usePlaylist() {
                     id,
                     position,
                     ${itemKey},
-                    music (id, file)
+                    music (id, title,artist,album,cover)
                     )
                 `)
             .order('created_at', { ascending: false })
@@ -89,7 +89,7 @@ export default function usePlaylist() {
         if (!userData.value || !userData.value?.auth_user_id) return
         const { data, error } = await supabase
             .from('music')
-            .select('id, file, created_at')
+            .select('id, title,album,artist,cover, created_at')
             .order('created_at', { ascending: false })
         if (!error && data) musics.value = data
     }
@@ -228,7 +228,7 @@ export default function usePlaylist() {
                     id,
                     position,
                     ${itemKey},
-                    music (id, file)
+                    music (id, title,artist,album,cover)
                 )
             `)
             .eq('id', playlistId)

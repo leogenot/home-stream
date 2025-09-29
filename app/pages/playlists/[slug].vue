@@ -1,6 +1,6 @@
 <script setup lang="ts">
   definePageMeta({
-    middleware: 'auth'
+    middleware: 'auth',
   })
 
   const route = useRoute()
@@ -85,7 +85,7 @@
           :key="it.id"
           class="flex items-center justify-between border border-black/40 p-2"
         >
-          <span class="text-sm">{{ it.file.file }}</span>
+          <span class="text-sm">{{ it.file.title }}</span>
           <div class="flex items-center gap-2">
             <button
               class="border border-black/40 px-2 py-1 text-xs uppercase"

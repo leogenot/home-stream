@@ -46,25 +46,25 @@ export default function useQueue() {
 
   /**
    * Maps a song object to a player item object.
-   * @param {{ id: number; file: string }} song The song object to map.
+   * @param {{ id: number; title: string }} song The song object to map.
    * @returns {PlayerItem} The mapped player item object.
    * @example
-   * const song = { id: 1, file: 'song1.mp3' }
+   * const song = { id: 1, title: 'song1.mp3' }
    * const item = mapSongToPlayerItem(song)
    * item is { id: 1, title: 'song1', src: '/uploads/music/song1.mp3' }
    */
-  function mapSongToPlayerItem(song: { id: number; file: string }): PlayerItem {
-    const title = song.file.replace(/\.[^.]+$/, '')
-    const src = `/uploads/music/${song.file}`
+  function mapSongToPlayerItem(song: { id: number; title: string }): PlayerItem {
+    const title = song.title.replace(/\.[^.]+$/, '')
+    const src = `/uploads/music/${song.title}`
     return { id: song.id, title, src }
   }
 
   /**
    * Plays all songs in an array in order.
-   * @param {({ id: number; file: string }[])} songs An array of songs to play.
-   * @example playAllNow([{ id: 1, file: 'song1.mp3' }, { id: 2, file: 'song2.mp3' }])
+   * @param {({ id: number; title: string }[])} songs An array of songs to play.
+   * @example playAllNow([{ id: 1, title: 'song1.mp3' }, { id: 2, title: 'song2.mp3' }])
    */
-  function playAllNow(songs: { id: number; file: string }[]) {
+  function playAllNow(songs: { id: number; title: string }[]) {
     const items = songs.map(mapSongToPlayerItem)
     console.log('Playing all items', items)
     setQueue(items)
@@ -73,9 +73,9 @@ export default function useQueue() {
 
   /**
    * Plays all songs in a random order.
-   * @param {({ id: number; file: string }[])} songs An array of songs to play.
+   * @param {({ id: number; title: string }[])} songs An array of songs to play.
    */
-  function playAllRandomNow(songs: { id: number; file: string }[]) {
+  function playAllRandomNow(songs: { id: number; title: string }[]) {
     const items = shuffle(songs.map(mapSongToPlayerItem))
     console.log('Shuffled items', items)
     setQueue(items)
@@ -85,9 +85,9 @@ export default function useQueue() {
   /**
    * Plays a song at a given index from an array of songs.
    * @param {number} index The index of the song to play.
-   * @param {Array<{id: number, file: string}>} songs The array of songs.
+   * @param {Array<{id: number, title: string}>} songs The array of songs.
    */
-  function playSong(index: number, songs: { id: number; file: string }[]) {
+  function playSong(index: number, songs: { id: number; title: string }[]) {
     const items = songs.map(mapSongToPlayerItem)
     console.log('Playing song at index', index, 'from items', items)
     setQueue(items)
@@ -110,11 +110,11 @@ export default function useQueue() {
     queue.value = [...queue.value, ...items]
   }
 
-  function addToQueue(song: { id: number; file: string }) {
+  function addToQueue(song: { id: number; title: string }) {
     enqueue(mapSongToPlayerItem(song))
   }
 
-  function addManyToQueue(songs: { id: number; file: string }[]) {
+  function addManyToQueue(songs: { id: number; title: string }[]) {
     enqueueMany(songs.map(mapSongToPlayerItem))
   }
 

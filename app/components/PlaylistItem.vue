@@ -7,7 +7,7 @@
 
 <template>
   <li class="flex items-center justify-between">
-    {{ item?.file.file || 'Unknown' }}
+    {{ item?.file.title || 'Unknown' }}
     <button
       class="text-xs text-red-500"
       @click="removeItemFromPlaylist(item.id)"

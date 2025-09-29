@@ -14,8 +14,8 @@ export default defineEventHandler(async (event) => {
         // Fetch file info from DB
         const { data, error } = await client
             .from(table)
-            .select('file')
-            .eq('file', filename)
+            .select('title')
+            .eq('title', filename)
             .eq('user_id', user.id)
             .single()
 

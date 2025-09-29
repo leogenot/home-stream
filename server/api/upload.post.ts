@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
                 const { data, error } = await client
                     .from(tableToInsert)
                     .insert({
-                        file: file.filename,
+                        title: file.filename,
                         user_id: getHeaders(event)['x-user-id'] || user.id,
                     })
                     .select()

@@ -10,7 +10,7 @@ export type User = {
     username: string | null
 }
 
-export type Song = { id: number; file: string; created_at: string }
+export type Song = { id: number; title: string; created_at: string }
 
 export default function useMusic() {
     const supabase = useSupabaseClient()
@@ -36,7 +36,7 @@ export default function useMusic() {
         if (!userData.value || !userData.value?.auth_user_id) return
         const { data, error } = await supabase
             .from('music')
-            .select('id, file, created_at')
+            .select('id, title, created_at')
             .order('created_at', { ascending: false })
         if (!error && data) songs.value = data
     }

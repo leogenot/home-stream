@@ -15,11 +15,11 @@
         class="flex items-center justify-between gap-4 border border-black/40 px-2 py-4"
       >
         <h3 class="truncate font-serif text-sm text-wrap overflow-ellipsis">
-          {{ file.file }}
+          {{ file.title }}
         </h3>
         <button
           class="shrink-0 text-sm text-red-600 hover:underline"
-          @click="deleteFile(file.file)"
+          @click="deleteFile(file.title)"
         >
           Delete
         </button>
