@@ -19,7 +19,7 @@
         </h3>
         <button
           class="shrink-0 text-sm text-red-600 hover:underline"
-          @click="deleteFile(file.title)"
+          @click="deleteFile(file.file)"
         >
           Delete
         </button>

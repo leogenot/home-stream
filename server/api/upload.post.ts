@@ -1,8 +1,9 @@
 // server/api/upload.post.ts
-import { defineEventHandler, readMultipartFormData } from 'h3'
+import { defineEventHandler, readMultipartFormData, getHeaders, getRequestHeaders, getRequestURL } from 'h3'
 import { join, dirname, extname } from 'path'
 import { writeFile, mkdir } from 'fs/promises'
 import { serverSupabaseClient } from '#supabase/server'
+import { $fetch } from 'ofetch'
 
 export default defineEventHandler(async (event) => {
     try {
@@ -26,7 +27,7 @@ export default defineEventHandler(async (event) => {
 
             await writeFile(filePath, file.data)
 
-            const ext = extname(file.filename).toLowerCase()
+			const ext = extname(file.filename as string).toLowerCase()
             const mime = file.type?.toLowerCase() || ''
             const musicExts = ['.mp3', '.wav', '.flac', '.aac', '.ogg']
 
@@ -38,11 +39,25 @@ export default defineEventHandler(async (event) => {
             }
 
             try {
-                const { data, error } = await client
+                const reqUrl = getRequestURL(event)
+					const origin = `${reqUrl.protocol}//${reqUrl.host}`
+					const headers = getRequestHeaders(event)
+					const metadata = await $fetch(`${origin}/api/metadata`, {
+						method: 'GET',
+						query: { file: file.filename as string },
+						headers: { cookie: headers.cookie || '' },
+					}) as { title: string | null; artist: string | null; album: string | null; picture: string | null }
+                    console.log('metadata', metadata)
+
+				const { data, error } = await client
                     .from(tableToInsert)
                     .insert({
-                        title: file.filename,
-                        user_id: getHeaders(event)['x-user-id'] || user.id,
+                        file: file.filename,
+                        title: metadata.title || file.filename,
+						artist: metadata.artist || null,
+						album: metadata.album || null,
+						cover: metadata.picture || null,
+						user_id: getHeaders(event)['x-user-id'] || user.id,
                     })
                     .select()
                     .single()
@@ -54,6 +69,7 @@ export default defineEventHandler(async (event) => {
                     }
                     throw error
                 }
+
                 results.push({ table: tableToInsert, ...data })
             } catch (err) {
                 console.error(err)

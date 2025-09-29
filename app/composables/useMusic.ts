@@ -36,7 +36,7 @@ export default function useMusic() {
         if (!userData.value || !userData.value?.auth_user_id) return
         const { data, error } = await supabase
             .from('music')
-            .select('id, title, created_at')
+            .select('id, title,file,artist,album,cover created_at')
             .order('created_at', { ascending: false })
         if (!error && data) songs.value = data
     }
