@@ -4,8 +4,8 @@ import { unlink } from 'fs/promises'
 import { serverSupabaseClient } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
-    const { filename, table } = await readBody(event) as { filename: string, table: 'music' }
-    if (!filename || !table) return { error: 'fileId and table are required' }
+    const { title, table } = await readBody(event) as { title: string, table: 'music' }
+    if (!title || !table) return { error: 'fileId and table are required' }
     const client = await serverSupabaseClient(event)
     const { data: { user }, error: userError } = await client.auth.getUser()
     if (userError || !user) return { error: 'User not authenticated' }
@@ -15,20 +15,20 @@ export default defineEventHandler(async (event) => {
         const { data, error } = await client
             .from(table)
             .select('title')
-            .eq('title', filename)
+            .eq('title', title)
             .eq('user_id', user.id)
             .single()
 
-        console.log('filename', filename, data)
+        console.log('title', title, data)
         if (error || !data) return { error: 'File not found' }
 
-        const filePath = join(process.cwd(), 'public', 'uploads', 'music', data.file)
+        const filePath = join(process.cwd(), 'public', 'uploads', 'music', data.title)
 
         // Delete file from disk
         await unlink(filePath)
 
         // Delete file from Supabase
-        await client.from(table).delete().eq('file', filename)
+        await client.from(table).delete().eq('title', title)
 
         return { success: true }
     } catch (err: any) {

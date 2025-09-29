@@ -17,7 +17,7 @@ export function useUpload() {
         if (!user.value) return
         const { data, error } = await client
             .from('music')
-            .select('id, file, created_at')
+            .select('id, title, created_at')
             .order('created_at', { ascending: false })
         if (!error && data) {
             files.value = data
@@ -57,12 +57,12 @@ export function useUpload() {
         }
     }
 
-    const deleteFile = async (filename: string) => {
+    const deleteFile = async (title: string) => {
         if (!confirm('Are you sure you want to delete this file?')) return
         try {
             const res = await $fetch('/api/deleteFile', {
                 method: 'POST',
-                body: { filename, table: 'music' },
+                body: { title, table: 'music' },
                 credentials: 'include',
                 headers: useRequestHeaders(['cookie'])
             })
