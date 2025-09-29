@@ -73,3 +73,14 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## TODO:
+
+- [ ] Fetch song infos on upload and store the infos in the DB:
+  - [ ] Title
+  - [ ] Artist
+  - [ ] Album
+  - [ ] Cover
+- [ ] Fetch all songs with the according infos from the DB
+- [ ] Albums page with infos stored in DB
+- [ ] Album page with infos stored in DB
