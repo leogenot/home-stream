@@ -16,6 +16,7 @@
       >
         <h3 class="truncate font-serif text-sm text-wrap overflow-ellipsis">
           {{ file.title }}
+          <span class="text-xs opacity-80">- {{ file.artist }}</span>
         </h3>
         <button
           class="shrink-0 text-sm text-red-600 hover:underline"

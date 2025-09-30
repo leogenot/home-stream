@@ -49,6 +49,7 @@
           @click="playSong(i, songs)"
         >
           {{ song.title }}
+          <span class="text-xs opacity-80">- {{ song.artist }}</span>
         </div>
         <div class="flex shrink-0 items-center gap-2">
           <button
