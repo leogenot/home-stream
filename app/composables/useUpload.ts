@@ -17,7 +17,7 @@ export function useUpload() {
         if (!user.value) return
         const { data, error } = await client
             .from('music')
-            .select('id, title,file,artist,album,cover, created_at')
+            .select('id, title, file, artist, album, cover, created_at')
             .order('created_at', { ascending: false })
         if (!error && data) {
             files.value = data
