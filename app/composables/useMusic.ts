@@ -10,7 +10,7 @@ export type User = {
     username: string | null
 }
 
-export type Song = { id: number; title: string; artist: string; album: string; cover: string; created_at: string }
+export type Song = { id: number; file: string; title: string; artist: string; album: string; cover: string; created_at: string }
 
 export default function useMusic() {
     const supabase = useSupabaseClient()

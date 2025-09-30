@@ -10,9 +10,9 @@ export type User = {
     username: string | null
 }
 
-export type Music = { id: number; title: string; artist: string; album: string; cover: string; created_at: string }
+export type Music = { id: number; file: string; title: string; artist: string; album: string; cover: string; created_at: string }
 
-export type PlaylistItem = { id: number; position: number; file: { id: number; title: string } }
+export type PlaylistItem = { id: number; position: number; file: { id: number; file: string; title: string; artist: string; album: string; cover: string; } }
 export type Playlist = { id: number; title: string; created_at: string; playlist_items: PlaylistItem[] }
 
 const TABLES = {

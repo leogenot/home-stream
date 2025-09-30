@@ -241,26 +241,12 @@
 
   watch(currentItem, async () => {
     if (!currentItem.value?.src) return
-    artist.value = null
     pictureUrl.value = null
-    album.value = null
     showCover.value = false
 
     try {
       const filename = currentItem.value.src.split('/').pop()
-      const res = (await $fetch(
-        `/api/metadata?file=${encodeURIComponent(filename!)}`,
-      )) as {
-        artist?: string | null
-        album?: string | null
-        title?: string | null
-      }
-      console.log(res)
-      artist.value = res.artist || null
       pictureUrl.value = `/api/cover/${encodeURIComponent(filename!)}`
-      album.value = res.album || null
-
-      if (!res.title) res.title = currentItem.value.title
       // Update media session metadata when we have track info
       updateMediaSessionMetadata()
     } catch (err) {
@@ -338,10 +324,10 @@
               {{ currentItem.title }}
             </div>
             <div
-              v-if="artist"
+              v-if="currentItem.artist"
               class="truncate text-center text-xs text-gray-500"
             >
-              {{ artist }}
+              {{ currentItem.artist }}
             </div>
           </div>
         </div>
