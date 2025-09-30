@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     // Check authentication
     const client = await serverSupabaseClient(event)
     const { data: { user }, error: userError } = await client.auth.getUser()
-    
+
     if (userError || !user) {
         throw createError({ statusCode: 401, statusMessage: 'User not authenticated' })
     }

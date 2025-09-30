@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
 
             await writeFile(filePath, file.data)
 
-			const ext = extname(file.filename as string).toLowerCase()
+            const ext = extname(file.filename as string).toLowerCase()
             const mime = file.type?.toLowerCase() || ''
             const musicExts = ['.mp3', '.wav', '.flac', '.aac', '.ogg']
 
@@ -40,24 +40,22 @@ export default defineEventHandler(async (event) => {
 
             try {
                 const reqUrl = getRequestURL(event)
-					const origin = `${reqUrl.protocol}//${reqUrl.host}`
-					const headers = getRequestHeaders(event)
-					const metadata = await $fetch(`${origin}/api/metadata`, {
-						method: 'GET',
-						query: { file: file.filename as string },
-						headers: { cookie: headers.cookie || '' },
-					}) as { title: string | null; artist: string | null; album: string | null; picture: string | null }
-                    console.log('metadata', metadata)
+                const origin = `${reqUrl.protocol}//${reqUrl.host}`
+                const headers = getRequestHeaders(event)
+                const metadata = await $fetch(`${origin}/api/metadata`, {
+                    method: 'GET',
+                    query: { file: file.filename as string },
+                    headers: { cookie: headers.cookie || '' },
+                }) as { title: string | null; artist: string | null; album: string | null; picture: string | null }
 
-				const { data, error } = await client
+                const { data, error } = await client
                     .from(tableToInsert)
                     .insert({
                         file: file.filename,
                         title: metadata.title || file.filename,
-						artist: metadata.artist || null,
-						album: metadata.album || null,
-						cover: metadata.picture || null,
-						user_id: getHeaders(event)['x-user-id'] || user.id,
+                        artist: metadata.artist || null,
+                        album: metadata.album || null,
+                        user_id: getHeaders(event)['x-user-id'] || user.id,
                     })
                     .select()
                     .single()
