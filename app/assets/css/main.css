@@ -199,3 +199,13 @@ html.lenis {
     display: none;
   }
 }
+
+@keyframes prevent-scroll {
+  from {
+    opacity: 0;
+  }
+}
+
+input:focus {
+  animation: prevent-scroll 10ms forwards;
+}
