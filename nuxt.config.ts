@@ -24,7 +24,6 @@ export default defineNuxtConfig({
     "@nuxtjs/device",
     '@nuxt/ui',
     '@vueuse/nuxt',
-    'motion-v/nuxt'
   ],
   device: {
     refreshOnResize: true,
