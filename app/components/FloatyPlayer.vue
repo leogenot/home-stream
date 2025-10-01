@@ -55,14 +55,6 @@
     if (currentIndex.value > 0) playAt(currentIndex.value - 1)
   }
 
-  const onTimeUpdate = () => {
-    if (!audioRef.value) return
-    const a = audioRef.value
-    duration.value = a.duration || 0
-    currentTime.value = a.currentTime || 0
-    progress.value = a.duration ? (a.currentTime / a.duration) * 100 : 0
-  }
-
   // New: Set duration as soon as possible
   const onLoadedMetadata = () => {
     if (!audioRef.value) return
@@ -72,16 +64,6 @@
   const onEnded = () => {
     if (currentIndex.value < queue.value.length - 1) next()
     else isPlaying.value = false
-  }
-
-  // When user drags the progress bar
-  const onProgressInput = (e: Event) => {
-    if (!audioRef.value || !duration.value) return
-    const percent = Number((e.target as HTMLInputElement).value)
-    const newTime = (percent / 100) * duration.value
-    audioRef.value.currentTime = newTime
-    progress.value = percent
-    currentTime.value = newTime
   }
 
   watch(currentItem, () => {
@@ -290,6 +272,29 @@
       // ignore
     }
   })
+
+  const isSeeking = ref(false)
+
+  const onProgressInput = (percent: number) => {
+    if (!audioRef.value || !duration.value) return
+    isSeeking.value = true
+    const newTime = (percent / 100) * duration.value
+    audioRef.value.currentTime = newTime
+    currentTime.value = newTime
+    progress.value = percent
+    // release after a short delay so audio updates can take over again
+    setTimeout(() => {
+      isSeeking.value = false
+    }, 200)
+  }
+
+  const onTimeUpdate = () => {
+    if (!audioRef.value || isSeeking.value) return
+    const a = audioRef.value
+    duration.value = a.duration || 0
+    currentTime.value = a.currentTime || 0
+    progress.value = a.duration ? (a.currentTime / a.duration) * 100 : 0
+  }
 </script>
 
 <template>
@@ -347,14 +352,14 @@
         <span class="text-xs tabular-nums">
           {{ formatTime(currentTime) }}
         </span>
-        <input
-          type="range"
-          min="0"
-          max="100"
-          step="0.1"
-          :value="progress"
-          class="w-full accent-gray-800"
-          @input="onProgressInput"
+        <USlider
+          v-model="progress"
+          :min="0"
+          :max="100"
+          :step="0.1"
+          class="w-full"
+          color="neutral"
+          @update:model-value="onProgressInput"
         />
 
         <span class="text-xs tabular-nums">
