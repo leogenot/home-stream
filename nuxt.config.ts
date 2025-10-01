@@ -17,15 +17,7 @@ export default defineNuxtConfig({
     },
   },
   devtools: { enabled: true },
-  modules: [
-    '@nuxt/eslint',
-    '@nuxt/image',
-    '@nuxtjs/supabase',
-    "@nuxtjs/device",
-    '@nuxt/ui',
-    '@vueuse/nuxt',
-    'nuxt-vitalizer',
-  ],
+  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxtjs/supabase', "@nuxtjs/device", '@nuxt/ui', '@vueuse/nuxt', 'nuxt-vitalizer', 'nuxt-build-cache'],
   app: {
     layoutTransition: { name: 'layout', mode: 'out-in' },
     pageTransition: { name: 'page', mode: 'out-in' },
