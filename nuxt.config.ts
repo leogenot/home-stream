@@ -64,7 +64,9 @@ export default defineNuxtConfig({
     },
   },
 
-
+  ui: {
+    fonts: false
+  },
   nitro: {
     prerender: {
       crawlLinks: false, // Prevent Nitro from crawling and generating routes
