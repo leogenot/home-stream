@@ -68,13 +68,16 @@
         }"
         @update:model-value="($event) => (confirmPassword = $event)"
       />
-      <button
-        type="submit"
+      <UButton
         aria-label="Submit to signup"
-        class="border-default w-full border p-2 text-center uppercase"
+        type="submit"
+        color="neutral"
+        variant="subtle"
+        size="sm"
+        class="w-full justify-center p-2 text-center uppercase"
       >
         Sign up
-      </button>
+      </UButton>
       <p
         v-if="message"
         class="text-legal mt-2 normal-case"

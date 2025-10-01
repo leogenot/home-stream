@@ -10,15 +10,22 @@
     @submit.prevent="uploadFile"
   >
     <h2 class="font-serif text-xl">Upload music</h2>
-    <UFileUpload multiple :dropzone="true" class="min-h-12 w-full" />
-    <button
+    <UFileUpload
+      v-model="fileInput"
+      multiple
+      :dropzone="true"
+      class="min-h-12 w-full"
+    />
+    <UButton
       type="submit"
-      class="border-default h-fit cursor-pointer border p-2 uppercase"
-      :disabled="uploading"
+      :loading="uploading"
+      loading-icon="i-lucide-loader"
+      variant="subtle"
+      color="neutral"
+      class="justify-center p-2 uppercase"
     >
-      <span v-if="uploading">Uploading...</span>
-      <span v-else>Upload</span>
-    </button>
+      Upload
+    </UButton>
     <p v-if="uploadError" class="text-red-600">{{ uploadError }}</p>
     <p v-if="uploadSuccess" class="text-green-600">{{ uploadSuccess }}</p>
   </form>

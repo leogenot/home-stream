@@ -14,12 +14,18 @@
     <FormsLogin />
     <div class="grid w-full gap-4 text-center">
       <p class="text-sm">Don't have an account?</p>
-      <NuxtLink
-        class="border-default border p-2 text-center text-sm uppercase"
+
+      <UButton
+        aria-label="Go create account"
         to="/auth/register"
+        type="submit"
+        color="neutral"
+        variant="outline"
+        size="sm"
+        class="w-full justify-center p-2 text-center uppercase"
       >
-        Create new account
-      </NuxtLink>
+        Create account
+      </UButton>
     </div>
   </div>
 </template>

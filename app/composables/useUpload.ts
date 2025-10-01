@@ -25,9 +25,11 @@ export function useUpload() {
     }
 
     const uploadFile = async () => {
-        if (!fileInput.value?.files?.length) return
+        if (!fileInput.value?.length) return
         const formData = new FormData()
-        Array.from(fileInput.value.files).forEach((file) => {
+        console.log('fileInput', fileInput.value, formData)
+
+        Array.from(fileInput.value).forEach((file) => {
             formData.append('files', file)
         })
 

@@ -33,13 +33,16 @@
           {{ file.title }}
         </option>
       </select>
-
-      <button
+      <UButton
+        aria-label="Create playlist"
         type="submit"
-        class="border-default cursor-pointer border p-2 text-sm uppercase"
+        color="neutral"
+        variant="subtle"
+        size="sm"
+        class="w-full justify-center p-2 text-center uppercase"
       >
         Create
-      </button>
+      </UButton>
     </form>
 
     <p v-if="playlistError" class="text-sm text-red-600">{{ playlistError }}</p>

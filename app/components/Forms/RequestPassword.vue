@@ -37,13 +37,16 @@
         }"
         @update:model-value="($event) => (email = $event)"
       />
-      <button
+      <UButton
         aria-label="Request new password"
         type="submit"
-        class="border-default w-full border p-2 text-center uppercase"
+        color="neutral"
+        variant="subtle"
+        size="sm"
+        class="w-full justify-center p-2 text-center uppercase"
       >
         Request
-      </button>
+      </UButton>
       <p
         v-if="message"
         class="text-legal mt-2 normal-case"

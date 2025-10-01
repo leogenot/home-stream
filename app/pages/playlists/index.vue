@@ -58,33 +58,40 @@
 
     <div class="grid gap-2">
       <h2 class="font-serif text-xl">Create Playlist</h2>
-      <form class="grid gap-2" @submit.prevent="createPlaylist()">
+      <form class="grid gap-2" @submit.prevent="createPlaylist">
         <UInput
           v-model="newPlaylistTitle"
           class="text-sm uppercase"
           placeholder="Title"
           required
         />
-        <select
+
+        <USelectMenu
           v-model="selectedMusicIds"
+          :items="musics"
+          option-attribute="title"
+          value-attribute="id"
           multiple
-          class="border-default border p-2 uppercase"
+          placeholder="Select musics"
+          class="uppercase"
         >
-          <option
-            v-for="file in musics"
-            :key="file.id"
-            :value="file.id"
-            class="mb-2 text-sm"
-          >
-            {{ file.title }} - {{ file.artist }}
-          </option>
-        </select>
-        <button
+          <template #item="{ item }">
+            <div class="flex flex-col text-sm">
+              <span class="font-medium">{{ item.title }}</span>
+              <span class="text-xs text-gray-500">{{ item.artist }}</span>
+            </div>
+          </template>
+        </USelectMenu>
+
+        <UButton
           type="submit"
-          class="border-default cursor-pointer border p-2 text-sm uppercase"
+          color="neutral"
+          variant="subtle"
+          size="sm"
+          class="justify-center p-2 text-center uppercase"
         >
           Create
-        </button>
+        </UButton>
       </form>
 
       <p v-if="playlistError" class="text-sm text-red-600">

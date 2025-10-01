@@ -35,7 +35,7 @@
   <UApp>
     <DevGrid />
     <NuxtLayout :name="authLayout">
-      <UMain class="relative pb-16">
+      <UMain class="relative pb-56">
         <NuxtPage />
       </UMain>
     </NuxtLayout>

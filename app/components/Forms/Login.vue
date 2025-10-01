@@ -57,13 +57,16 @@
           Forgot password?
         </nuxt-link>
       </div>
-      <button
-        type="submit"
+      <UButton
         aria-label="Submit to log in"
-        class="border-default mt-5 w-full border p-2 text-center uppercase"
+        type="submit"
+        color="neutral"
+        variant="subtle"
+        size="sm"
+        class="mt-5 w-full justify-center p-2 text-center uppercase"
       >
         Log in
-      </button>
+      </UButton>
 
       <p
         v-if="message"

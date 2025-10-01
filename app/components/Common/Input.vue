@@ -38,20 +38,22 @@
       :autocomplete="autocomplete"
       :required="required"
       :placeholder="name"
+      :ui="{ trailing: 'pe-1' }"
       class="peer w-full text-sm focus:outline-none"
       @input="emit('update:modelValue', $event.target.value)"
-    />
-
-    <button
-      v-if="type === 'password'"
-      type="button"
-      class="text-default/50 absolute right-0 bottom-2 text-xs focus:outline-none"
-      @click="toggleVisibility"
     >
-      <span class="text-xxs flex">
-        <span v-if="isPasswordVisible" class="icon">hide</span>
-        <span v-else class="icon">show</span>
-      </span>
-    </button>
+      <template v-if="type === 'password'" #trailing>
+        <UButton
+          color="neutral"
+          variant="link"
+          size="sm"
+          :icon="isPasswordVisible ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+          :aria-label="isPasswordVisible ? 'Hide password' : 'Show password'"
+          :aria-pressed="isPasswordVisible"
+          aria-controls="password"
+          @click="toggleVisibility"
+        />
+      </template>
+    </UInput>
   </div>
 </template>

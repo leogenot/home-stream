@@ -8,6 +8,7 @@ import { $fetch } from 'ofetch'
 export default defineEventHandler(async (event) => {
     try {
         const files = await readMultipartFormData(event)
+        console.log("parsed files", files)
         if (!files || !files.length) {
             return { error: 'No file found' }
         }

@@ -325,9 +325,9 @@
             />
           </transition>
 
-          <div class="grid items-center justify-center gap-1 truncate">
+          <div class="grid w-full items-center justify-center gap-1">
             <div
-              class="cursor-pointer truncate text-center font-serif text-sm"
+              class="w-full cursor-pointer text-center font-serif text-sm"
               @click="showCover = !showCover"
             >
               {{ currentItem.title }}
@@ -409,7 +409,7 @@
             :class="{ 'border-default': i === currentIndex }"
           >
             <div
-              class="w-full truncate font-serif text-sm text-wrap overflow-ellipsis"
+              class="w-full font-serif text-sm text-wrap overflow-ellipsis"
               @click="playFrom(i)"
             >
               {{ item.title }}
