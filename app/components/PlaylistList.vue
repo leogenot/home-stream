@@ -57,10 +57,12 @@
             class="border border-black/40 px-2 py-1"
             @click="playPlaylist(pl)"
           >
-            Play
+            <span class="material-symbols-outlined leading-none">
+              play_arrow
+            </span>
           </button>
-          <button class="text-red-600" @click="deletePlaylist(pl.id)">
-            Delete
+          <button @click="deletePlaylist(pl.id)">
+            <span class="material-symbols-outlined leading-none">close</span>
           </button>
         </div>
       </div>

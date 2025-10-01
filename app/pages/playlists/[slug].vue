@@ -67,7 +67,9 @@
             class="border border-black/40 px-2 py-1 text-xs uppercase"
             @click="playAllNow(playlist.playlist_items.map((it) => it.file))"
           >
-            Play All
+            <span class="material-symbols-outlined leading-none">
+              play_arrow
+            </span>
           </button>
           <button
             class="border border-black/40 px-2 py-1 text-xs uppercase"
@@ -75,7 +77,7 @@
               playAllRandomNow(playlist.playlist_items.map((it) => it.file))
             "
           >
-            Random
+            <span class="material-symbols-outlined leading-none">shuffle</span>
           </button>
         </div>
       </div>
@@ -91,13 +93,15 @@
               class="border border-black/40 px-2 py-1 text-xs uppercase"
               @click="onPlayItem(idx)"
             >
-              Play
+              <span class="material-symbols-outlined leading-none">
+                play_arrow
+              </span>
             </button>
             <button
               class="border border-black/40 px-2 py-1 text-xs uppercase"
               @click="onRemoveItem(it.id)"
             >
-              Remove
+              <span class="material-symbols-outlined leading-none">close</span>
             </button>
           </div>
         </li>

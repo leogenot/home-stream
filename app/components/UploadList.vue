@@ -18,11 +18,8 @@
           {{ file.title }}
           <span class="text-xs opacity-80">- {{ file.artist }}</span>
         </h3>
-        <button
-          class="shrink-0 text-sm text-red-600 hover:underline"
-          @click="deleteFile(file.file)"
-        >
-          Delete
+        <button class="shrink-0 text-sm" @click="deleteFile(file.file)">
+          <span class="material-symbols-outlined leading-none">close</span>
         </button>
       </div>
     </div>

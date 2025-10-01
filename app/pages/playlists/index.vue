@@ -114,7 +114,9 @@
                 class="border border-black/40 px-2 py-1 text-xs uppercase"
                 @click="deletePlaylist(p.id)"
               >
-                Delete
+                <span class="material-symbols-outlined leading-none">
+                  close
+                </span>
               </button>
             </div>
             <div class="flex w-full items-center gap-2">
@@ -122,13 +124,17 @@
                 class="border border-black/40 px-2 py-1 text-xs uppercase"
                 @click="playAllNow(songsFromPlaylist(p))"
               >
-                Play All
+                <span class="material-symbols-outlined leading-none">
+                  play_arrow
+                </span>
               </button>
               <button
                 class="border border-black/40 px-2 py-1 text-xs uppercase"
                 @click="playAllRandomNow(songsFromPlaylist(p))"
               >
-                Random
+                <span class="material-symbols-outlined leading-none">
+                  shuffle
+                </span>
               </button>
             </div>
           </div>
@@ -170,7 +176,9 @@
               class="border border-black/40 px-2 py-1 text-xs uppercase"
               @click="addSongToSelected(m.id)"
             >
-              Add
+              <span class="material-symbols-outlined leading-none">
+                playlist_add
+              </span>
             </button>
           </div>
         </li>

@@ -29,13 +29,15 @@
             class="border border-black/40 px-3 py-1 text-sm"
             @click="playAllNow(songs)"
           >
-            Play All
+            <span class="material-symbols-outlined leading-none">
+              play_arrow
+            </span>
           </button>
           <button
             class="border border-black/40 px-3 py-1 text-sm"
             @click="playAllRandomNow(songs)"
           >
-            Random
+            <span class="material-symbols-outlined leading-none">shuffle</span>
           </button>
         </div>
       </div>
@@ -56,13 +58,17 @@
             class="border border-black/40 px-2 py-1 text-xs"
             @click="playSong(i, songs)"
           >
-            Play
+            <span class="material-symbols-outlined leading-none">
+              play_arrow
+            </span>
           </button>
           <button
             class="border border-black/40 px-2 py-1 text-xs"
             @click="addToQueue(song)"
           >
-            Add
+            <span class="material-symbols-outlined leading-none">
+              playlist_add
+            </span>
           </button>
         </div>
       </div>

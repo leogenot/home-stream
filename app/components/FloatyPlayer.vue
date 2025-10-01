@@ -341,13 +341,25 @@
           class="border border-black/40 px-2 py-1 text-xs"
           @click="toggleManager"
         >
-          Queue
+          <span class="material-symbols-outlined leading-none">
+            queue_music
+          </span>
         </button>
         <button
           class="border border-black/40 px-2 py-1 text-xs"
           @click="toggle"
         >
-          {{ isPlaying ? 'Pause' : 'Play' }}
+          <transition mode="out-in">
+            <span
+              v-if="isPlaying"
+              class="material-symbols-outlined leading-none"
+            >
+              pause
+            </span>
+            <span v-else class="material-symbols-outlined leading-none">
+              play_arrow
+            </span>
+          </transition>
         </button>
       </div>
       <div v-else class="ml-2 flex w-full items-center gap-2">
@@ -358,7 +370,17 @@
           class="border border-black/40 px-2 py-1 text-xs"
           @click="toggle"
         >
-          {{ isPlaying ? 'Pause' : 'Play' }}
+          <transition>
+            <span
+              v-if="isPlaying"
+              class="material-symbols-outlined leading-none"
+            >
+              pause
+            </span>
+            <span v-else class="material-symbols-outlined leading-none">
+              play_arrow
+            </span>
+          </transition>
         </button>
         <button class="border border-black/40 px-2 py-1 text-xs" @click="next">
           Next
@@ -367,7 +389,9 @@
           class="border border-black/40 px-2 py-1 text-xs"
           @click="toggleManager"
         >
-          Queue
+          <span class="material-symbols-outlined leading-none">
+            queue_music
+          </span>
         </button>
       </div>
       <div class="mt-2 flex w-full items-center gap-2">
