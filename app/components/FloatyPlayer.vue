@@ -300,7 +300,7 @@
 <template>
   <div
     v-if="currentItem"
-    class="bg-muted/80 border-muted/50 fixed right-2 bottom-14 left-2 z-10 mx-auto rounded-xl border p-2 shadow-lg shadow-neutral-950/5 backdrop-blur-sm sm:p-4 lg:bottom-16"
+    class="bg-muted/80 border-muted/50 fixed right-2 bottom-14 left-2 z-10 mx-auto max-h-[80dvh] overflow-y-auto rounded-xl border p-2 shadow-lg shadow-neutral-950/5 backdrop-blur-sm sm:p-4 lg:bottom-16"
   >
     <div
       class="wrapper grid w-full"
@@ -383,7 +383,10 @@
         @loadedmetadata="onLoadedMetadata"
       />
       <!-- Queue Manager -->
-      <div v-if="isManagerOpen" class="mt-3 w-full border-t pt-3">
+      <div
+        v-if="isManagerOpen"
+        class="border-t-default mt-3 w-full border-t pt-3"
+      >
         <div class="mb-2 flex w-full items-center justify-between">
           <div class="text-xs">Queue ({{ queue.length }})</div>
           <div class="flex items-center gap-2">
