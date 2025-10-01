@@ -295,7 +295,7 @@
 <template>
   <div
     v-if="currentItem"
-    class="border-default sticky bottom-18 left-0 z-50 w-full overflow-x-clip border p-3 backdrop-blur-3xl"
+    class="border-default sticky bottom-14 left-0 z-50 w-full overflow-x-clip border p-3 backdrop-blur-3xl"
   >
     <div
       class="wrapper grid w-full"
@@ -330,16 +330,16 @@
         </div>
       </div>
       <div class="flex w-full items-center justify-center gap-2">
-        <button class="border-default border px-2 py-1 text-xs" @click="prev">
+        <button class="px-2 py-1 text-xs" @click="prev">
           <UIcon name="i-lucide-chevron-first" class="size-5" />
         </button>
-        <button class="border-default border px-2 py-1 text-xs" @click="toggle">
+        <button class="px-2 py-1 text-xs" @click="toggle">
           <transition mode="out-in">
             <UIcon v-if="isPlaying" name="i-lucide-pause" class="size-5" />
             <UIcon v-else name="i-lucide-play" class="size-5" />
           </transition>
         </button>
-        <button class="border-default border px-2 py-1 text-xs" @click="next">
+        <button class="px-2 py-1 text-xs" @click="next">
           <UIcon name="i-lucide-chevron-last" class="size-5" />
         </button>
       </div>
@@ -360,10 +360,7 @@
         <span class="text-xs tabular-nums">
           {{ formatTime(duration) }}
         </span>
-        <button
-          class="border-default border px-2 py-1 text-xs"
-          @click="toggleManager"
-        >
+        <button class="px-2 py-1 text-xs" @click="toggleManager">
           <UIcon name="i-lucide-list-music" class="size-5" />
         </button>
       </div>

@@ -58,9 +58,9 @@
     <div class="grid gap-2">
       <h2 class="font-serif text-xl">Create Playlist</h2>
       <form class="grid gap-2" @submit.prevent="createPlaylist()">
-        <input
+        <UInput
           v-model="newPlaylistTitle"
-          class="border-default border p-2 text-sm uppercase"
+          class="text-sm uppercase"
           placeholder="Title"
           required
         />
@@ -111,7 +111,7 @@
                 <h3 class="font-serif underline">{{ p.title }}</h3>
               </NuxtLink>
               <button
-                class="border-default border px-2 py-1 text-xs uppercase"
+                class="px-2 py-1 text-xs uppercase"
                 @click="deletePlaylist(p.id)"
               >
                 <UIcon name="i-lucide-circle-x" class="size-5" />
@@ -119,13 +119,13 @@
             </div>
             <div class="flex w-full items-center gap-2">
               <button
-                class="border-default border px-2 py-1 text-xs uppercase"
+                class="px-2 py-1 text-xs uppercase"
                 @click="playAllNow(songsFromPlaylist(p))"
               >
                 <UIcon name="i-lucide-play" class="size-5" />
               </button>
               <button
-                class="border-default border px-2 py-1 text-xs uppercase"
+                class="px-2 py-1 text-xs uppercase"
                 @click="playAllRandomNow(songsFromPlaylist(p))"
               >
                 <UIcon name="i-lucide-shuffle" class="size-5" />

@@ -10,14 +10,7 @@
     @submit.prevent="uploadFile"
   >
     <h2 class="font-serif text-xl">Upload music</h2>
-    <input
-      ref="fileInput"
-      class="border-default border p-2 uppercase"
-      type="file"
-      name="files"
-      multiple
-      required
-    />
+    <UFileUpload multiple :dropzone="true" class="min-h-12 w-full" />
     <button
       type="submit"
       class="border-default h-fit cursor-pointer border p-2 uppercase"

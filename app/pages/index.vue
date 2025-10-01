@@ -25,16 +25,10 @@
     <div>
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <button
-            class="border-default border px-3 py-1 text-sm"
-            @click="playAllNow(songs)"
-          >
+          <button class="px-3 py-1 text-sm" @click="playAllNow(songs)">
             <UIcon name="i-lucide-play" class="size-5" />
           </button>
-          <button
-            class="border-default border px-3 py-1 text-sm"
-            @click="playAllRandomNow(songs)"
-          >
+          <button class="px-3 py-1 text-sm" @click="playAllRandomNow(songs)">
             <UIcon name="i-lucide-shuffle" class="size-5" />
           </button>
         </div>
@@ -52,16 +46,10 @@
           <span class="text-xs opacity-80">- {{ song.artist }}</span>
         </div>
         <div class="flex shrink-0 items-center gap-2">
-          <button
-            class="border-default border px-2 py-1 text-xs"
-            @click="playSong(i, songs)"
-          >
+          <button class="px-2 py-1 text-xs" @click="playSong(i, songs)">
             <UIcon name="i-lucide-play" class="size-5" />
           </button>
-          <button
-            class="border-default border px-2 py-1 text-xs"
-            @click="addToQueue(song)"
-          >
+          <button class="px-2 py-1 text-xs" @click="addToQueue(song)">
             <UIcon name="i-lucide-list-plus" class="size-5" />
           </button>
         </div>

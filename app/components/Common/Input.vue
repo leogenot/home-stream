@@ -30,7 +30,7 @@
 
 <template>
   <div class="relative mb-4">
-    <input
+    <UInput
       :id="id"
       :value="modelValue"
       :type="inputType"
@@ -38,7 +38,7 @@
       :autocomplete="autocomplete"
       :required="required"
       :placeholder="name"
-      class="peer border-default focus:text-default w-full border p-2 text-sm focus:outline-none"
+      class="peer w-full text-sm focus:outline-none"
       @input="emit('update:modelValue', $event.target.value)"
     />
 

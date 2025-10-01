@@ -64,13 +64,13 @@
         <h2 class="font-serif text-xl">Tracks</h2>
         <div class="flex items-center gap-2">
           <button
-            class="border-default border px-2 py-1 text-xs uppercase"
+            class="px-2 py-1 text-xs uppercase"
             @click="playAllNow(playlist.playlist_items.map((it) => it.file))"
           >
             <UIcon name="i-lucide-play" class="size-5" />
           </button>
           <button
-            class="border-default border px-2 py-1 text-xs uppercase"
+            class="px-2 py-1 text-xs uppercase"
             @click="
               playAllRandomNow(playlist.playlist_items.map((it) => it.file))
             "
@@ -88,13 +88,13 @@
           <span class="text-sm">{{ it.file.title }}</span>
           <div class="flex items-center gap-2">
             <button
-              class="border-default border px-2 py-1 text-xs uppercase"
+              class="px-2 py-1 text-xs uppercase"
               @click="onPlayItem(idx)"
             >
               <UIcon name="i-lucide-play" class="size-5" />
             </button>
             <button
-              class="border-default border px-2 py-1 text-xs uppercase"
+              class="px-2 py-1 text-xs uppercase"
               @click="onRemoveItem(it.id)"
             >
               <UIcon name="i-lucide-circle-x" class="size-5" />
