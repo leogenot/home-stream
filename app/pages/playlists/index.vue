@@ -127,7 +127,7 @@
         <li
           v-for="p in playlists"
           :key="p.id"
-          class="border-default border p-3"
+          class="border-default rounded-sm border p-3"
         >
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="title-wrapper inline-flex w-full justify-between">
@@ -157,7 +157,7 @@
             </div>
           </div>
           <div class="mt-2">
-            <ul class="ml-4 list-disc text-sm">
+            <ul class="ml-4 grid list-disc gap-2 text-sm">
               <li v-for="it in p.playlist_items" :key="it.id">
                 {{ it.file.title }}
                 <span class="text-xs opacity-80">- {{ it.file.artist }}</span>
@@ -175,7 +175,7 @@
         <li
           v-for="m in musics"
           :key="m.id"
-          class="border-default grid items-center gap-2 border p-2"
+          class="border-default grid items-center gap-2 rounded-sm border p-2"
         >
           <span class="truncate font-serif text-sm text-wrap overflow-ellipsis">
             {{ m.title }}
@@ -186,10 +186,11 @@
               v-model="selectedPlaylistBySong[m.id]"
               :items="mappedPlaylists"
               selected-icon="i-lucide-check"
+              class="w-full"
               placeholder="Select playlist"
             />
             <button
-              class="border-default shrink-0 border px-2 py-1 text-xs uppercase"
+              class="shrink-0 px-2 py-1 text-xs uppercase"
               @click="addSongToSelected(m.id)"
             >
               <UIcon name="i-lucide-list-plus" class="size-5" />

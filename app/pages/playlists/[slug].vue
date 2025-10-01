@@ -50,16 +50,12 @@
   <div class="grid gap-4 py-4">
     <div>
       <h1 class="font-serif text-2xl">{{ playlist?.title || 'Playlist' }}</h1>
-      <p class="text-sm text-gray-600">
-        Share this URL to share your playlist.
-      </p>
+      <p class="text-sm opacity-60">Share this URL to share your playlist.</p>
     </div>
     <USeparator />
 
-    <div v-if="isLoading" class="text-sm text-gray-600">Loading...</div>
-    <div v-else-if="!playlist" class="text-sm text-red-600">
-      Playlist not found.
-    </div>
+    <div v-if="isLoading" class="text-sm opacity-60">Loading...</div>
+    <div v-else-if="!playlist" class="text-sm">Playlist not found.</div>
     <div v-else class="grid gap-2">
       <div class="flex items-center justify-between">
         <h2 class="font-serif text-xl">Tracks</h2>
@@ -84,7 +80,7 @@
         <li
           v-for="(it, idx) in playlist.playlist_items"
           :key="it.id"
-          class="border-default flex items-center justify-between border p-2"
+          class="border-default flex items-center justify-between rounded-sm border p-2"
         >
           <span class="text-sm">{{ it.file.title }}</span>
           <div class="flex items-center gap-2">
