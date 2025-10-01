@@ -63,6 +63,8 @@ export default defineNuxtConfig({
       allowedHosts: ['home-stream.fallwinter.dk'],
     },
   },
+
+
   nitro: {
     prerender: {
       crawlLinks: false, // Prevent Nitro from crawling and generating routes

@@ -27,15 +27,24 @@
       lang: 'en',
     },
   })
+
+  const showCover = useState('showCover', () => false)
 </script>
 
 <template>
   <UApp>
     <DevGrid />
     <NuxtLayout :name="authLayout">
-      <UMain class="relative">
+      <UMain class="relative pb-16">
         <NuxtPage />
       </UMain>
     </NuxtLayout>
+    <transition mode="out-in" name="fade">
+      <div
+        v-if="showCover"
+        class="backdrop bg-muted/20 fixed top-0 left-0 h-full w-full backdrop-blur-lg"
+        @click="showCover = false"
+      />
+    </transition>
   </UApp>
 </template>

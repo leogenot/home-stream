@@ -166,7 +166,7 @@
   const artist = ref<string | null>(null)
   const pictureUrl = ref<string | null>(null)
   const album = ref<string | null>(null)
-  const showCover = ref(false)
+  const showCover = useState('showCover', () => true)
 
   function updateMediaSessionMetadata() {
     if (import.meta.server) return
@@ -300,7 +300,7 @@
 <template>
   <div
     v-if="currentItem"
-    class="border-default sticky bottom-14 left-0 z-50 w-full overflow-x-clip border p-3 backdrop-blur-3xl"
+    class="bg-muted/80 border-muted/50 fixed right-2 bottom-14 left-2 z-10 mx-auto rounded-xl border p-2 shadow-lg shadow-neutral-950/5 backdrop-blur-sm sm:p-4 lg:bottom-16"
   >
     <div
       class="wrapper grid w-full"
@@ -315,12 +315,16 @@
         <div
           class="grid w-full items-center justify-center gap-3 overflow-x-clip"
         >
-          <img
-            v-if="pictureUrl && showCover"
-            :src="pictureUrl"
-            alt="cover"
-            class="object-fit aspect-square h-auto w-full max-w-full overflow-clip bg-transparent"
-          />
+          <transition mode="out-in" name="reveal">
+            <img
+              v-if="pictureUrl"
+              v-show="showCover"
+              :src="pictureUrl"
+              alt="cover"
+              class="object-fit aspect-square h-auto w-full max-w-96 overflow-clip rounded-lg bg-transparent"
+            />
+          </transition>
+
           <div class="grid items-center justify-center gap-1 truncate">
             <div
               class="cursor-pointer truncate text-center font-serif text-sm"
@@ -438,3 +442,33 @@
     </div>
   </div>
 </template>
+
+<style>
+  .reveal-enter-active,
+  .reveal-leave-active {
+    transition:
+      max-height 0.25s ease-in-out,
+      opacity 0.25s ease-in-out;
+    overflow: hidden;
+  }
+  .reveal-enter-from,
+  .reveal-leave-to {
+    max-height: 0;
+    opacity: 0;
+  }
+  .reveal-enter-to,
+  .reveal-leave-from {
+    max-height: 392px;
+    opacity: 1;
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s ease;
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
+</style>
