@@ -71,8 +71,7 @@
             :value="file.id"
             class="mb-2 text-sm"
           >
-            {{ file.title }}
-            <span>- {{ file.artist }}</span>
+            {{ file.title }} - {{ file.artist }}
           </option>
         </select>
         <button
