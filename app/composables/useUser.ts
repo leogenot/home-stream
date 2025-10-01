@@ -22,7 +22,7 @@ export default function useUser() {
     const error = ref<string | null>(null)
 
     // fetch user from localstorage
-    onMounted(() => {
+    if (import.meta.client) {
         const stored = localStorage.getItem(USER_STORAGE_KEY)
         if (stored) {
             try {
@@ -32,7 +32,7 @@ export default function useUser() {
                 console.warn('Failed to parse user from localStorage', e)
             }
         }
-    })
+    }
 
     // update localstorage when user changes
     watch(
