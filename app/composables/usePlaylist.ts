@@ -10,9 +10,9 @@ export type User = {
     username: string | null
 }
 
-export type Music = { id: number; file: string; title: string; artist: string; album: string; cover: string; created_at: string }
+export type Music = { id: number; file: string; title: string; artist: string; album: string; created_at: string }
 
-export type PlaylistItem = { id: number; position: number; file: { id: number; file: string; title: string; artist: string; album: string; cover: string; } }
+export type PlaylistItem = { id: number; position: number; file: { id: number; file: string; title: string; artist: string; album: string; } }
 export type Playlist = { id: number; title: string; created_at: string; playlist_items: PlaylistItem[] }
 
 const TABLES = {
@@ -28,7 +28,7 @@ export default function usePlaylist() {
     const supabase = useSupabaseClient()
 
     const userData = useState<User | undefined | null>('userData', () => null)
-    const error = ref<string | null>(null)
+    const _error = ref<string | null>(null)
 
     // fetch user from localStorage
     onMounted(() => {
@@ -64,7 +64,7 @@ export default function usePlaylist() {
                     id,
                     position,
                     ${itemKey},
-                    music (id, title, artist, album, cover)
+                    music (id, title, artist, album, file)
                     )
                 `)
             .order('created_at', { ascending: false })
@@ -89,7 +89,7 @@ export default function usePlaylist() {
         if (!userData.value || !userData.value?.auth_user_id) return
         const { data, error } = await supabase
             .from('music')
-            .select('id, title, album, artist, cover, created_at')
+            .select('id, title, album, artist, file, created_at')
             .order('created_at', { ascending: false })
         if (!error && data) musics.value = data
     }
@@ -228,7 +228,7 @@ export default function usePlaylist() {
                     id,
                     position,
                     ${itemKey},
-                    music (id, title,artist,album,cover)
+                    music (id, title,artist,album,file)
                 )
             `)
             .eq('id', playlistId)

@@ -6,11 +6,10 @@ export type PlayerItem = {
   src: string
   artist: string
   album: string
-  cover: string
   file: string
 }
 
-type Song = { id: number; title: string, file: string, artist: string, album: string, cover: string }
+type Song = { id: number; title: string, file: string, artist: string, album: string }
 
 // Small util to shuffle an array immutably
 function shuffle<T>(list: T[]): T[] {
@@ -62,7 +61,7 @@ export default function useQueue() {
   function mapSongToPlayerItem(song: Song): PlayerItem {
     const title = song.title.replace(/\.[^.]+$/, '')
     const src = `/uploads/music/${song.file}`
-    return { id: song.id, title, file: song.file, src, artist: song.artist, album: song.album, cover: song.cover }
+    return { id: song.id, title, file: song.file, src, artist: song.artist, album: song.album }
   }
 
   /**

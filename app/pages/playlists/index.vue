@@ -25,10 +25,6 @@
     fetchMusics()
   })
 
-  const addToExisting = async (playlistId: number, musicId: number) => {
-    await addItemsToPlaylist(playlistId, [musicId])
-  }
-
   // Track which playlist is selected for each song row
   const selectedPlaylistBySong = reactive<Record<number, number | null>>({})
   const addSongToSelected = async (songId: number) => {
@@ -38,7 +34,15 @@
   }
 
   const songsFromPlaylist = (p: {
-    playlist_items: { file: { id: number; title: string } }[]
+    playlist_items: {
+      file: {
+        id: number
+        title: string
+        artist: string
+        album: string
+        file: string
+      }
+    }[]
   }) => p.playlist_items.map((it) => it.file)
 </script>
 

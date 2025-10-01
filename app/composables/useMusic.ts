@@ -10,13 +10,13 @@ export type User = {
     username: string | null
 }
 
-export type Song = { id: number; file: string; title: string; artist: string; album: string; cover: string; created_at: string }
+export type Song = { id: number; file: string; title: string; artist: string; album: string; created_at: string }
 
 export default function useMusic() {
     const supabase = useSupabaseClient()
 
     const userData = useState<User | undefined | null>('userData', () => null)
-    const error = ref<string | null>(null)
+    const _error = ref<string | null>(null)
 
     // fetch user from localStorage
     onMounted(() => {
@@ -36,7 +36,7 @@ export default function useMusic() {
         if (!userData.value || !userData.value?.auth_user_id) return
         const { data, error } = await supabase
             .from('music')
-            .select('id, title, file, artist, album, cover, created_at')
+            .select('id, title, file, artist, album, created_at')
             .order('created_at', { ascending: false })
         if (!error && data) songs.value = data
     }
