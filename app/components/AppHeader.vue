@@ -12,7 +12,7 @@
       :items="links"
       variant="link"
       color="neutral"
-      class="bg-muted/80 border-muted/50 rounded-xl border px-2 shadow-lg shadow-neutral-950/5 backdrop-blur-sm sm:px-4"
+      class="bg-muted/80 border-muted/50 justify-between rounded-xl border px-2 shadow-lg shadow-neutral-950/5 backdrop-blur-sm sm:px-4"
       :ui="{
         link: 'px-2 py-1',
         linkLeadingIcon: 'hidden',

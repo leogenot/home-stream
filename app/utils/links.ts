@@ -12,7 +12,4 @@ export const navLinks: NavigationMenuItem[] = [{
 }, {
     label: 'Upload',
     to: '/upload'
-}, {
-    label: 'Profile',
-    to: '/profile'
 }]
