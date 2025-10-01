@@ -16,8 +16,10 @@
 </script>
 
 <template>
-  <div class="grid w-full gap-6">
+  <div class="grid w-full gap-4">
     <h1 class="font-serif text-2xl">Hi {{ userData?.username }}</h1>
+    <USeparator />
+
     <FormsUpdateUser
       v-bind="{ ...userData, userId: user?.id }"
       @data-changed="userData = $event[0]"

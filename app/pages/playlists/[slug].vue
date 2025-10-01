@@ -54,6 +54,7 @@
         Share this URL to share your playlist.
       </p>
     </div>
+    <USeparator />
 
     <div v-if="isLoading" class="text-sm text-gray-600">Loading...</div>
     <div v-else-if="!playlist" class="text-sm text-red-600">

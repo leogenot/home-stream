@@ -18,21 +18,19 @@
 
 <template>
   <UPage>
-    <div>
+    <div class="flex justify-between pb-1">
       <h2 class="font-serif text-2xl">Music</h2>
-    </div>
-
-    <div>
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <button class="px-3 py-1 text-sm" @click="playAllNow(songs)">
-            <UIcon name="i-lucide-play" class="size-5" />
-          </button>
-          <button class="px-3 py-1 text-sm" @click="playAllRandomNow(songs)">
-            <UIcon name="i-lucide-shuffle" class="size-5" />
-          </button>
-        </div>
+      <div class="flex items-center gap-2">
+        <button class="px-3 py-1 text-sm" @click="playAllNow(songs)">
+          <UIcon name="i-lucide-play" class="size-5" />
+        </button>
+        <button class="px-3 py-1 text-sm" @click="playAllRandomNow(songs)">
+          <UIcon name="i-lucide-shuffle" class="size-5" />
+        </button>
       </div>
+    </div>
+    <USeparator />
+    <div>
       <div
         v-for="(song, i) in songs"
         :key="song.id"

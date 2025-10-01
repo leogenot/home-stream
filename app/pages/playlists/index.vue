@@ -54,6 +54,7 @@
         Create and manage your playlists. Share links are public.
       </p>
     </div>
+    <USeparator />
 
     <div class="grid gap-2">
       <h2 class="font-serif text-xl">Create Playlist</h2>
@@ -93,6 +94,7 @@
         {{ playlistSuccess }}
       </p>
     </div>
+    <USeparator />
 
     <div class="grid gap-3">
       <h2 class="font-serif text-xl">Your Playlists</h2>
@@ -143,6 +145,7 @@
         </li>
       </ul>
     </div>
+    <USeparator />
 
     <div class="grid gap-2">
       <h2 class="font-serif text-xl">All Songs</h2>
@@ -159,7 +162,7 @@
           <div class="flex items-center gap-2">
             <select
               v-model="selectedPlaylistBySong[m.id]"
-              class="border-default border px-2 py-0.5 text-xs uppercase"
+              class="border-default w-full border px-2 py-0.5 text-xs uppercase"
             >
               <option :value="null" disabled>Select playlist</option>
               <option v-for="p in playlists" :key="p.id" :value="p.id">
@@ -167,7 +170,7 @@
               </option>
             </select>
             <button
-              class="border-default border px-2 py-1 text-xs uppercase"
+              class="border-default shrink-0 border px-2 py-1 text-xs uppercase"
               @click="addSongToSelected(m.id)"
             >
               <UIcon name="i-lucide-list-plus" class="size-5" />

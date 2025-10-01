@@ -15,10 +15,12 @@
 </script>
 
 <template>
-  <div class="grid w-full gap-6">
+  <div class="grid w-full gap-4">
     <div>
       <h2 class="font-serif text-2xl">Upload</h2>
     </div>
+    <USeparator />
+
     <div class="grid w-full gap-8">
       <FormsUpload />
       <UploadList />
