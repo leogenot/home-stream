@@ -44,6 +44,21 @@
       }
     }[]
   }) => p.playlist_items.map((it) => it.file)
+
+  const mappedMusics = computed(() => {
+    return musics.value?.map((music) => ({
+      label: music.title,
+      artist: music.artist,
+      value: String(music.id),
+    }))
+  })
+
+  const mappedPlaylists = computed(() => {
+    return playlists.value?.map((playlist) => ({
+      label: playlist.title,
+      value: String(playlist.id),
+    }))
+  })
 </script>
 
 <template>
@@ -68,17 +83,17 @@
 
         <USelectMenu
           v-model="selectedMusicIds"
-          :items="musics"
-          option-attribute="title"
-          value-attribute="id"
+          :items="mappedMusics"
           multiple
-          placeholder="Select musics"
-          class="uppercase"
+          selected-icon="i-lucide-check"
+          placeholder="Select songs"
         >
-          <template #item="{ item }">
-            <div class="flex flex-col text-sm">
-              <span class="font-medium">{{ item.title }}</span>
-              <span class="text-xs text-gray-500">{{ item.artist }}</span>
+          <template #item-label="{ item }">
+            <div class="flex items-center justify-between gap-2 p-1 text-sm">
+              <div class="flex flex-col gap-1">
+                <span class="font-medium">{{ item.label }}</span>
+                <span class="text-xs text-gray-500">{{ item.artist }}</span>
+              </div>
             </div>
           </template>
         </USelectMenu>
@@ -167,15 +182,12 @@
             <span class="text-xs opacity-80">- {{ m.artist }}</span>
           </span>
           <div class="flex items-center gap-2">
-            <select
+            <USelectMenu
               v-model="selectedPlaylistBySong[m.id]"
-              class="border-default w-full border px-2 py-0.5 text-xs uppercase"
-            >
-              <option :value="null" disabled>Select playlist</option>
-              <option v-for="p in playlists" :key="p.id" :value="p.id">
-                {{ p.title }}
-              </option>
-            </select>
+              :items="mappedPlaylists"
+              selected-icon="i-lucide-check"
+              placeholder="Select playlist"
+            />
             <button
               class="border-default shrink-0 border px-2 py-1 text-xs uppercase"
               @click="addSongToSelected(m.id)"

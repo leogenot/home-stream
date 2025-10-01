@@ -82,6 +82,7 @@ export default function usePlaylist() {
     }
 
     const createPlaylist = async () => {
+        console.log('Creating playlist', selectedMusicIds.value)
         playlistError.value = ''
         playlistSuccess.value = ''
         if (!userData.value) return
@@ -106,7 +107,7 @@ export default function usePlaylist() {
             if (ids.length) {
                 const playlistItems = ids.map((id, index) => ({
                     playlist_id: playlistId,
-                    [itemKey]: id,
+                    [itemKey]: id.value,
                     position: index + 1,
                 }))
                 await supabase.from(itemsTable).insert(playlistItems)
@@ -145,10 +146,9 @@ export default function usePlaylist() {
             const { items: itemsTable, itemKey } = TABLES['music']
             const currentItems = playlists.value.find((p) => p.id === playlistId)?.playlist_items || []
             const startPosition = currentItems.length + 1
-
             if (fileIds.length) {
                 const playlistItems = fileIds.map((id, index) => ({
-                    playlist_id: playlistId,
+                    playlist_id: playlistId.value,
                     [itemKey]: id,
                     position: startPosition + index,
                 }))
