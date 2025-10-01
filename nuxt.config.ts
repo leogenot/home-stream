@@ -24,6 +24,7 @@ export default defineNuxtConfig({
     "@nuxtjs/device",
     '@nuxt/ui',
     '@vueuse/nuxt',
+    'nuxt-vitalizer',
   ],
   device: {
     refreshOnResize: true,
@@ -40,8 +41,6 @@ export default defineNuxtConfig({
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap' },
-        // Google Material Symbols (Outlined)
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0' },
       ],
     },
   },
@@ -53,8 +52,6 @@ export default defineNuxtConfig({
   },
   css: [
     '~/assets/css/main.css',
-    '~/assets/css/themes.css',
-    '~/assets/css/reveal.css',
   ],
   vite: {
     plugins: [tailwindcss()],

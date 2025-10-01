@@ -23,6 +23,7 @@
     "eslint": "^9.36.0",
     "music-metadata": "^11.9.0",
     "nuxt": "^4.1.2",
+    "nuxt-vitalizer": "^2.0.0",
     "tailwindcss": "^4.1.13",
     "vue": "^3.5.22",
     "vue-router": "^4.5.1"
