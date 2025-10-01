@@ -17,7 +17,7 @@ export default defineNuxtConfig({
     },
   },
   devtools: { enabled: true },
-  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxtjs/supabase', "@nuxtjs/device", '@nuxt/ui', '@vueuse/nuxt', 'nuxt-vitalizer', 'nuxt-build-cache'],
+  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxtjs/supabase', "@nuxtjs/device", '@nuxt/ui', '@vueuse/nuxt', 'nuxt-vitalizer'],
   app: {
     layoutTransition: { name: 'layout', mode: 'out-in' },
     pageTransition: { name: 'page', mode: 'out-in' },
@@ -59,7 +59,9 @@ export default defineNuxtConfig({
       collections: ['lucide']
     }
   },
-
+  experimental: {
+    buildCache: true,
+  },
 
   nitro: {
     prerender: {
@@ -84,4 +86,5 @@ export default defineNuxtConfig({
       },
     },
   },
+
 })
