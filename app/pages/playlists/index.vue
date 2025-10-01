@@ -72,6 +72,7 @@
             class="mb-2 text-sm"
           >
             {{ file.title }}
+            <span>- {{ file.artist }}</span>
           </option>
         </select>
         <button
@@ -132,6 +133,7 @@
             <ul class="ml-4 list-disc text-sm">
               <li v-for="it in p.playlist_items" :key="it.id">
                 {{ it.file.title }}
+                <span class="text-xs opacity-80">- {{ it.file.artist }}</span>
               </li>
             </ul>
           </div>
@@ -149,6 +151,7 @@
         >
           <span class="truncate font-serif text-sm text-wrap overflow-ellipsis">
             {{ m.title }}
+            <span class="text-xs opacity-80">- {{ m.artist }}</span>
           </span>
           <div class="flex items-center gap-2">
             <select
