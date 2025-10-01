@@ -17,7 +17,15 @@ export default defineNuxtConfig({
     },
   },
   devtools: { enabled: true },
-  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxtjs/supabase', "@nuxtjs/device"],
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/image',
+    '@nuxtjs/supabase',
+    "@nuxtjs/device",
+    '@nuxt/ui',
+    '@vueuse/nuxt',
+    'motion-v/nuxt'
+  ],
   device: {
     refreshOnResize: true,
   },

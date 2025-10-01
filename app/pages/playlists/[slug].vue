@@ -64,20 +64,18 @@
         <h2 class="font-serif text-xl">Tracks</h2>
         <div class="flex items-center gap-2">
           <button
-            class="border border-black/40 px-2 py-1 text-xs uppercase"
+            class="border-default border px-2 py-1 text-xs uppercase"
             @click="playAllNow(playlist.playlist_items.map((it) => it.file))"
           >
-            <span class="material-symbols-outlined leading-none">
-              play_arrow
-            </span>
+            <UIcon name="i-lucide-play" class="size-5" />
           </button>
           <button
-            class="border border-black/40 px-2 py-1 text-xs uppercase"
+            class="border-default border px-2 py-1 text-xs uppercase"
             @click="
               playAllRandomNow(playlist.playlist_items.map((it) => it.file))
             "
           >
-            <span class="material-symbols-outlined leading-none">shuffle</span>
+            <UIcon name="i-lucide-shuffle" class="size-5" />
           </button>
         </div>
       </div>
@@ -85,23 +83,21 @@
         <li
           v-for="(it, idx) in playlist.playlist_items"
           :key="it.id"
-          class="flex items-center justify-between border border-black/40 p-2"
+          class="border-default flex items-center justify-between border p-2"
         >
           <span class="text-sm">{{ it.file.title }}</span>
           <div class="flex items-center gap-2">
             <button
-              class="border border-black/40 px-2 py-1 text-xs uppercase"
+              class="border-default border px-2 py-1 text-xs uppercase"
               @click="onPlayItem(idx)"
             >
-              <span class="material-symbols-outlined leading-none">
-                play_arrow
-              </span>
+              <UIcon name="i-lucide-play" class="size-5" />
             </button>
             <button
-              class="border border-black/40 px-2 py-1 text-xs uppercase"
+              class="border-default border px-2 py-1 text-xs uppercase"
               @click="onRemoveItem(it.id)"
             >
-              <span class="material-symbols-outlined leading-none">close</span>
+              <UIcon name="i-lucide-circle-x" class="size-5" />
             </button>
           </div>
         </li>

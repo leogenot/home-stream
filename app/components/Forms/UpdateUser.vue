@@ -55,7 +55,7 @@
       </fieldset>
 
       <button
-        class="w-full border border-black/40 py-1"
+        class="border-default w-full border py-1"
         aria-label="Save changes"
         :disabled="btnDisabled"
       >

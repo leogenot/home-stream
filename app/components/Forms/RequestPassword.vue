@@ -40,7 +40,7 @@
       <button
         aria-label="Request new password"
         type="submit"
-        class="w-full border border-black/40 p-2 text-center uppercase"
+        class="border-default w-full border p-2 text-center uppercase"
       >
         Request
       </button>

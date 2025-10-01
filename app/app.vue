@@ -12,56 +12,30 @@
   const authLayout = computed(() => {
     return userData.value ? 'default' : 'auth'
   })
+
+  const colorMode = useColorMode()
+
+  const color = computed(() => (colorMode.value === 'dark' ? 'black' : 'white'))
+  useHead({
+    meta: [
+      { charset: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { key: 'theme-color', name: 'theme-color', content: color },
+    ],
+    link: [{ rel: 'icon', href: '/favicon.ico' }],
+    htmlAttrs: {
+      lang: 'en',
+    },
+  })
 </script>
 
 <template>
-  <div>
+  <UApp>
     <DevGrid />
     <NuxtLayout :name="authLayout">
-      <NuxtPage />
+      <UMain class="relative">
+        <NuxtPage />
+      </UMain>
     </NuxtLayout>
-  </div>
+  </UApp>
 </template>
-
-<style lang="postcss">
-  @keyframes fadeIn {
-    0% {
-      opacity: 0.001;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-  @keyframes fadeOut {
-    0% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0.001;
-    }
-  }
-  .page-enter-active,
-  .page-leave-active,
-  .layout-enter-active,
-  .layout-leave-active {
-    transition: opacity 250ms;
-  }
-  .page-enter,
-  .page-leave-to,
-  .layout-enter,
-  .layout-leave-to {
-    opacity: 0;
-  }
-  .page-enter-active,
-  .layout-enter-active {
-    animation-duration: 250ms;
-    animation-name: fadeIn;
-    animation-timing-function: linear;
-    backface-visibility: hidden;
-  }
-  .page-leave-active,
-  .layout-leave-active {
-    animation-name: fadeOut;
-    animation-duration: 0.25s;
-  }
-</style>

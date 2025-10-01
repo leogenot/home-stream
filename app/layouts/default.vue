@@ -1,15 +1,9 @@
-<script setup lang="ts">
-  // const route = useRoute()
-  // const currentRoute = computed(() => {
-  //   return route.meta.title
-  // })
-</script>
 <template>
-  <main class="px-bleed pt-bleed relative h-full">
-    <div class="min-h-screen pb-32">
+  <div>
+    <UContainer class="border-default pt-10 sm:border-x">
       <slot />
-    </div>
-    <site-navbar />
-    <floaty-player />
-  </main>
+      <floaty-player />
+      <AppHeader :links="navLinks" />
+    </UContainer>
+  </div>
 </template>

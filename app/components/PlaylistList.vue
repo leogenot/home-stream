@@ -44,7 +44,7 @@
     <div
       v-for="pl in normalizedPlaylists"
       :key="pl.id"
-      class="col flex flex-col border border-black/40 p-2 lg:flex-row"
+      class="col border-default flex flex-col border p-2 lg:flex-row"
     >
       <div class="flex items-center justify-between">
         <NuxtLink :to="`/playlists/${pl.id}`">
@@ -54,15 +54,13 @@
         </NuxtLink>
         <div class="flex items-center gap-2 text-xs">
           <button
-            class="border border-black/40 px-2 py-1"
+            class="border-default border px-2 py-1"
             @click="playPlaylist(pl)"
           >
-            <span class="material-symbols-outlined leading-none">
-              play_arrow
-            </span>
+            <UIcon name="i-lucide-play" class="size-5" />
           </button>
           <button @click="deletePlaylist(pl.id)">
-            <span class="material-symbols-outlined leading-none">close</span>
+            <UIcon name="i-lucide-circle-x" class="size-5" />
           </button>
         </div>
       </div>
@@ -77,7 +75,7 @@
         <select
           v-model="selectedMusicIds"
           multiple
-          class="border border-black/40 p-2 uppercase"
+          class="border-default border p-2 uppercase"
         >
           <option
             v-for="file in musics"
@@ -89,7 +87,7 @@
           </option>
         </select>
         <button
-          class="border border-black/40 p-2 text-sm"
+          class="border-default border p-2 text-sm"
           @click.prevent="addItemsToPlaylist(pl.id, selectedMusicIds)"
         >
           Add Selected Items

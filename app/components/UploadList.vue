@@ -12,14 +12,14 @@
       <div
         v-for="file in files"
         :key="file.id"
-        class="flex items-center justify-between gap-4 border border-black/40 px-2 py-4"
+        class="border-default flex items-center justify-between gap-4 border px-2 py-4"
       >
         <h3 class="truncate font-serif text-sm text-wrap overflow-ellipsis">
           {{ file.title }}
           <span class="text-xs opacity-80">- {{ file.artist }}</span>
         </h3>
         <button class="shrink-0 text-sm" @click="deleteFile(file.file)">
-          <span class="material-symbols-outlined leading-none">close</span>
+          <UIcon name="i-lucide-circle-x" class="size-5" />
         </button>
       </div>
     </div>

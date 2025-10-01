@@ -38,14 +38,14 @@
       :autocomplete="autocomplete"
       :required="required"
       :placeholder="name"
-      class="peer w-full border border-black/40 p-2 text-sm focus:text-black focus:outline-none"
+      class="peer border-default focus:text-default w-full border p-2 text-sm focus:outline-none"
       @input="emit('update:modelValue', $event.target.value)"
     />
 
     <button
       v-if="type === 'password'"
       type="button"
-      class="absolute right-0 bottom-2 text-xs text-black/50 focus:outline-none"
+      class="text-default/50 absolute right-0 bottom-2 text-xs focus:outline-none"
       @click="toggleVisibility"
     >
       <span class="text-xxs flex">

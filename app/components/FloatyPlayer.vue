@@ -295,7 +295,7 @@
 <template>
   <div
     v-if="currentItem"
-    class="sticky bottom-18 left-0 z-50 w-full overflow-x-clip border border-black/40 p-3 backdrop-blur-3xl"
+    class="border-default sticky bottom-18 left-0 z-50 w-full overflow-x-clip border p-3 backdrop-blur-3xl"
   >
     <div
       class="wrapper grid w-full"
@@ -323,79 +323,28 @@
             >
               {{ currentItem.title }}
             </div>
-            <div
-              v-if="currentItem.artist"
-              class="truncate text-center text-xs text-gray-500"
-            >
+            <div v-if="currentItem.artist" class="truncate text-center text-xs">
               {{ currentItem.artist }}
             </div>
           </div>
         </div>
       </div>
-      <!-- Only show play button on mobile, show all buttons on desktop -->
-      <div
-        v-if="isMobile"
-        class="flex w-full items-center justify-center gap-2"
-      >
-        <button
-          class="border border-black/40 px-2 py-1 text-xs"
-          @click="toggleManager"
-        >
-          <span class="material-symbols-outlined leading-none">
-            queue_music
-          </span>
+      <div class="flex w-full items-center justify-center gap-2">
+        <button class="border-default border px-2 py-1 text-xs" @click="prev">
+          <UIcon name="i-lucide-chevron-first" class="size-5" />
         </button>
-        <button
-          class="border border-black/40 px-2 py-1 text-xs"
-          @click="toggle"
-        >
+        <button class="border-default border px-2 py-1 text-xs" @click="toggle">
           <transition mode="out-in">
-            <span
-              v-if="isPlaying"
-              class="material-symbols-outlined leading-none"
-            >
-              pause
-            </span>
-            <span v-else class="material-symbols-outlined leading-none">
-              play_arrow
-            </span>
+            <UIcon v-if="isPlaying" name="i-lucide-pause" class="size-5" />
+            <UIcon v-else name="i-lucide-play" class="size-5" />
           </transition>
         </button>
-      </div>
-      <div v-else class="ml-2 flex w-full items-center gap-2">
-        <button class="border border-black/40 px-2 py-1 text-xs" @click="prev">
-          Prev
-        </button>
-        <button
-          class="border border-black/40 px-2 py-1 text-xs"
-          @click="toggle"
-        >
-          <transition>
-            <span
-              v-if="isPlaying"
-              class="material-symbols-outlined leading-none"
-            >
-              pause
-            </span>
-            <span v-else class="material-symbols-outlined leading-none">
-              play_arrow
-            </span>
-          </transition>
-        </button>
-        <button class="border border-black/40 px-2 py-1 text-xs" @click="next">
-          Next
-        </button>
-        <button
-          class="border border-black/40 px-2 py-1 text-xs"
-          @click="toggleManager"
-        >
-          <span class="material-symbols-outlined leading-none">
-            queue_music
-          </span>
+        <button class="border-default border px-2 py-1 text-xs" @click="next">
+          <UIcon name="i-lucide-chevron-last" class="size-5" />
         </button>
       </div>
       <div class="mt-2 flex w-full items-center gap-2">
-        <span class="text-xs text-gray-500 tabular-nums">
+        <span class="text-xs tabular-nums">
           {{ formatTime(currentTime) }}
         </span>
         <input
@@ -408,9 +357,15 @@
           @input="onProgressInput"
         />
 
-        <span class="text-xs text-gray-500 tabular-nums">
+        <span class="text-xs tabular-nums">
           {{ formatTime(duration) }}
         </span>
+        <button
+          class="border-default border px-2 py-1 text-xs"
+          @click="toggleManager"
+        >
+          <UIcon name="i-lucide-list-music" class="size-5" />
+        </button>
       </div>
       <audio
         ref="audioRef"
@@ -424,16 +379,16 @@
       <!-- Queue Manager -->
       <div v-if="isManagerOpen" class="mt-3 w-full border-t pt-3">
         <div class="mb-2 flex w-full items-center justify-between">
-          <div class="text-xs text-gray-500">Queue ({{ queue.length }})</div>
+          <div class="text-xs">Queue ({{ queue.length }})</div>
           <div class="flex items-center gap-2">
             <button
-              class="border border-black/40 px-2 py-1 text-xs"
+              class="border-default border px-2 py-1 text-xs"
               @click="clearQueue"
             >
               Clear
             </button>
             <button
-              class="border border-black/40 px-2 py-1 text-xs"
+              class="border-default border px-2 py-1 text-xs"
               @click="toggleManager"
             >
               Close
@@ -444,8 +399,8 @@
           <li
             v-for="(item, i) in queue"
             :key="item.id + '-' + i"
-            class="mb-1 flex w-full items-center justify-between gap-2 rounded border border-black/40 p-2"
-            :class="{ 'bg-gray-100': i === currentIndex }"
+            class="border-default/80 mb-1 flex w-full items-center justify-between gap-2 rounded border p-2"
+            :class="{ 'border-default': i === currentIndex }"
           >
             <div
               class="w-full truncate font-serif text-sm text-wrap overflow-ellipsis"
@@ -455,21 +410,21 @@
             </div>
             <div class="flex shrink-0 items-center gap-1">
               <button
-                class="border border-black/40 px-1 py-0.5 text-sm"
+                class="border-default border px-1 py-0.5 text-sm"
                 :disabled="i === 0"
                 @click="moveItem(i, i - 1)"
               >
                 ↑
               </button>
               <button
-                class="border border-black/40 px-1 py-0.5 text-sm"
+                class="border-default border px-1 py-0.5 text-sm"
                 :disabled="i === queue.length - 1"
                 @click="moveItem(i, i + 1)"
               >
                 ↓
               </button>
               <button
-                class="border border-black/40 px-1 py-0.5 text-sm"
+                class="border-default border px-1 py-0.5 text-sm"
                 @click="removeAt(i)"
               >
                 ✕

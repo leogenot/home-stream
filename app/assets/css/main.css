@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import 'tailwindcss';
 @plugin "@tailwindcss/typography";
+@import '@nuxt/ui';
 
 @theme {
   --font-serif: 'Doto', serif;
@@ -153,13 +154,26 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+:root {
+  --ui-container: var(--container-4xl);
+  ::selection {
+    color: #282a30;
+    background-color: #c8c8c8;
+  }
+}
+
+.dark {
+  ::selection {
+    color: #ffffff;
+    background-color: #474747;
+  }
+}
+
 html {
   overflow-x: clip;
   width: 100vw;
 }
 body {
-  background: var(--bg-color);
-  color: var(--fg-color);
   font-family: var(--font-sans);
 }
 

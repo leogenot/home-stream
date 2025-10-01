@@ -60,14 +60,14 @@
       <form class="grid gap-2" @submit.prevent="createPlaylist()">
         <input
           v-model="newPlaylistTitle"
-          class="border border-black/40 p-2 text-sm uppercase"
+          class="border-default border p-2 text-sm uppercase"
           placeholder="Title"
           required
         />
         <select
           v-model="selectedMusicIds"
           multiple
-          class="border border-black/40 p-2 uppercase"
+          class="border-default border p-2 uppercase"
         >
           <option
             v-for="file in musics"
@@ -80,7 +80,7 @@
         </select>
         <button
           type="submit"
-          class="cursor-pointer border border-black/40 p-2 text-sm uppercase"
+          class="border-default cursor-pointer border p-2 text-sm uppercase"
         >
           Create
         </button>
@@ -103,7 +103,7 @@
         <li
           v-for="p in playlists"
           :key="p.id"
-          class="border border-black/40 p-3"
+          class="border-default border p-3"
         >
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="title-wrapper inline-flex w-full justify-between">
@@ -111,30 +111,24 @@
                 <h3 class="font-serif underline">{{ p.title }}</h3>
               </NuxtLink>
               <button
-                class="border border-black/40 px-2 py-1 text-xs uppercase"
+                class="border-default border px-2 py-1 text-xs uppercase"
                 @click="deletePlaylist(p.id)"
               >
-                <span class="material-symbols-outlined leading-none">
-                  close
-                </span>
+                <UIcon name="i-lucide-circle-x" class="size-5" />
               </button>
             </div>
             <div class="flex w-full items-center gap-2">
               <button
-                class="border border-black/40 px-2 py-1 text-xs uppercase"
+                class="border-default border px-2 py-1 text-xs uppercase"
                 @click="playAllNow(songsFromPlaylist(p))"
               >
-                <span class="material-symbols-outlined leading-none">
-                  play_arrow
-                </span>
+                <UIcon name="i-lucide-play" class="size-5" />
               </button>
               <button
-                class="border border-black/40 px-2 py-1 text-xs uppercase"
+                class="border-default border px-2 py-1 text-xs uppercase"
                 @click="playAllRandomNow(songsFromPlaylist(p))"
               >
-                <span class="material-symbols-outlined leading-none">
-                  shuffle
-                </span>
+                <UIcon name="i-lucide-shuffle" class="size-5" />
               </button>
             </div>
           </div>
@@ -156,7 +150,7 @@
         <li
           v-for="m in musics"
           :key="m.id"
-          class="grid items-center gap-2 border border-black/40 p-2"
+          class="border-default grid items-center gap-2 border p-2"
         >
           <span class="truncate font-serif text-sm text-wrap overflow-ellipsis">
             {{ m.title }}
@@ -165,7 +159,7 @@
           <div class="flex items-center gap-2">
             <select
               v-model="selectedPlaylistBySong[m.id]"
-              class="border border-black/40 px-2 py-0.5 text-xs uppercase"
+              class="border-default border px-2 py-0.5 text-xs uppercase"
             >
               <option :value="null" disabled>Select playlist</option>
               <option v-for="p in playlists" :key="p.id" :value="p.id">
@@ -173,12 +167,10 @@
               </option>
             </select>
             <button
-              class="border border-black/40 px-2 py-1 text-xs uppercase"
+              class="border-default border px-2 py-1 text-xs uppercase"
               @click="addSongToSelected(m.id)"
             >
-              <span class="material-symbols-outlined leading-none">
-                playlist_add
-              </span>
+              <UIcon name="i-lucide-list-plus" class="size-5" />
             </button>
           </div>
         </li>

@@ -2,7 +2,7 @@
   definePageMeta({
     layout: 'auth',
     title: 'Login',
-    middleware: 'guest'
+    middleware: 'guest',
   })
   useHead({
     title: 'Login',
@@ -15,7 +15,7 @@
     <div class="grid w-full gap-4 text-center">
       <p class="text-sm">Don't have an account?</p>
       <NuxtLink
-        class="border border-black/40 p-2 text-center text-sm uppercase"
+        class="border-default border p-2 text-center text-sm uppercase"
         to="/auth/register"
       >
         Create new account

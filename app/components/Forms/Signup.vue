@@ -71,7 +71,7 @@
       <button
         type="submit"
         aria-label="Submit to signup"
-        class="w-full border border-black/40 p-2 text-center uppercase"
+        class="border-default w-full border p-2 text-center uppercase"
       >
         Sign up
       </button>
