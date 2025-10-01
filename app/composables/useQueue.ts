@@ -1,16 +1,5 @@
 import { useState } from '#imports'
 
-export type PlayerItem = {
-  id: number
-  title: string
-  src: string
-  artist: string
-  album: string
-  file: string
-}
-
-type Song = { id: number; title: string, file: string, artist: string, album: string }
-
 // Small util to shuffle an array immutably
 function shuffle<T>(list: T[]): T[] {
   const a = [...list]

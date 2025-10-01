@@ -26,9 +26,6 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'nuxt-vitalizer',
   ],
-  device: {
-    refreshOnResize: true,
-  },
   app: {
     layoutTransition: { name: 'layout', mode: 'out-in' },
     pageTransition: { name: 'page', mode: 'out-in' },
@@ -63,6 +60,15 @@ export default defineNuxtConfig({
   ui: {
     fonts: false
   },
+  icon: {
+    mode: 'css',
+    cssLayer: 'base',
+    serverBundle: {
+      collections: ['lucide']
+    }
+  },
+
+
   nitro: {
     prerender: {
       crawlLinks: false, // Prevent Nitro from crawling and generating routes

@@ -1,19 +1,10 @@
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useSupabaseClient } from '#imports'
 
 const USER_STORAGE_KEY = 'stream-user'
 
-export type User = {
-    id: string
-    auth_user_id: string
-    created_at: string
-    email: string
-    username: string | null
-}
-
 export default function useUser() {
     const supabase = useSupabaseClient()
-
     const userData = useState<User | undefined | null>(
         'userData',
         () => null,
