@@ -9,7 +9,13 @@ export const navLinks: NavigationMenuItem[] = [{
 }, {
     label: 'Playlists',
     to: '/playlists'
-}, {
+}, 
+{
     label: 'Upload',
     to: '/upload'
-}]
+},
+{
+    label: 'Sync',
+    to: '/sync'
+},
+]
