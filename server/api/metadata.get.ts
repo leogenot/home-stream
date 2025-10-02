@@ -3,13 +3,13 @@ import { defineEventHandler, getQuery, createError } from 'h3'
 import path from 'path'
 import { serverSupabaseClient } from '#supabase/server'
 
-const MUSIC_DIR = path.resolve(process.cwd(), 'public/uploads/music')
+const MUSIC_DIR = path.resolve(process.cwd(), 'storage/uploads/music')
 
 export default defineEventHandler(async (event) => {
     // Check authentication
     const client = await serverSupabaseClient(event)
     const { data: { user }, error: userError } = await client.auth.getUser()
-    
+
     if (userError || !user) {
         throw createError({ statusCode: 401, statusMessage: 'User not authenticated' })
     }

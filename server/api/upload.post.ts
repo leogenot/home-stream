@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
 
         const results: any[] = []
         for (const file of files) {
-            const filePath = join(process.cwd(), 'public', 'uploads', 'music', file.filename as string)
+            const filePath = join(process.cwd(), 'storage', 'uploads', 'music', file.filename as string)
 
             await mkdir(dirname(filePath), { recursive: true })
 

@@ -22,9 +22,10 @@
       .map((item: any) => {
         const file = item.file || item.music
         if (!file) return null
+        const encodedTitle = encodeURIComponent(file.file)
         return {
           id: file.id,
-          src: `/uploads/music/${file.title}`,
+          src: `/api/music/${encodedTitle}`,
           title: file.title || file.title || 'Unknown',
         }
       })

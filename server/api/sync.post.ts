@@ -4,7 +4,7 @@ import { readdir, stat } from 'fs/promises'
 import path, { extname } from 'path'
 import { parseFile } from 'music-metadata'
 
-const MUSIC_DIR = path.resolve(process.cwd(), 'public/uploads/music')
+const MUSIC_DIR = path.resolve(process.cwd(), 'storage/uploads/music')
 const AUDIO_EXTS = new Set(['.mp3', '.wav', '.flac', '.aac', '.ogg'])
 
 export default defineEventHandler(async (event) => {

@@ -49,7 +49,9 @@ export default function useQueue() {
    */
   function mapSongToPlayerItem(song: Song): PlayerItem {
     const title = song.title.replace(/\.[^.]+$/, '')
-    const src = `/uploads/music/${song.file}`
+    const encodedTitle = encodeURIComponent(song.file)
+    console.log('encodedTitle', encodedTitle, 'normal title', song.file)
+    const src = `/api/music/${encodedTitle}`
     return { id: song.id, title, file: song.file, src, artist: song.artist, album: song.album }
   }
 

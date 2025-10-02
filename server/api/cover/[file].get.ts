@@ -3,7 +3,7 @@ import { parseFile } from 'music-metadata'
 import path from 'path'
 import { serverSupabaseClient } from '#supabase/server'
 
-const MUSIC_DIR = path.resolve(process.cwd(), 'public/uploads/music')
+const MUSIC_DIR = path.resolve(process.cwd(), 'storage/uploads/music')
 const coverCache = new Map<string, { data: Buffer; format: string }>()
 
 export default defineEventHandler(async (event) => {

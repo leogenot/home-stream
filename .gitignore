@@ -25,5 +25,6 @@ logs
 !.env.example
 
 public/uploads
+storage
 
 pnpm-lock.yaml
