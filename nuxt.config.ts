@@ -109,7 +109,7 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
     server: {
-      allowedHosts: ['home-stream.fallwinter.dk'],
+      allowedHosts: ['home-stream.servemp3.com'],
     },
     build: {
       rollupOptions: {
