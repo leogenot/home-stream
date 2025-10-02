@@ -211,7 +211,7 @@ sudo systemctl reload nginx
 ### 3. Add SSL
 
 ```bash
-sudo certbot --nginx -d mymusicserver.com -d www.mymusicserver.com
+sudo certbot --nginx -d mymusicserver.com
 ```
 
 Reload the config:
