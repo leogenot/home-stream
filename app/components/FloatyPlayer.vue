@@ -413,13 +413,7 @@
     class="bg-muted/80 border-muted/50 fixed right-2 bottom-14 left-2 z-10 mx-auto max-h-[80dvh] overflow-y-auto rounded-xl border p-2 shadow-lg shadow-neutral-950/5 backdrop-blur-sm sm:p-4 lg:bottom-16"
     :class="{ 'hide-focus-outlines': showCover && !showFocusOutlines }"
   >
-    <div
-      class="wrapper grid w-full"
-      :class="{ 'select-none': isMobile }"
-      @touchstart="onTouchStart"
-      @touchmove="onTouchMove"
-      @touchend="onTouchEnd"
-    >
+    <div class="wrapper grid w-full" :class="{ 'select-none': isMobile }">
       <div
         class="mb-4 flex w-full items-center justify-between overflow-x-clip"
       >
@@ -434,6 +428,9 @@
               :src="pictureUrl"
               alt="cover"
               class="object-fit aspect-square h-auto w-full max-w-96 overflow-clip rounded-lg bg-transparent"
+              @touchstart="onTouchStart"
+              @touchmove="onTouchMove"
+              @touchend="onTouchEnd"
             />
           </transition>
 
