@@ -4,9 +4,22 @@ import { join } from 'path'
 import { createReadStream, existsSync } from 'fs'
 
 export default defineEventHandler(async (event) => {
-    const file = decodeURIComponent(event.context.params?.file || '')
-    if (!file) {
+    const rawFile = event.context.params?.file || ''
+    if (!rawFile) {
         throw createError({ statusCode: 400, statusMessage: 'No file specified' })
+    }
+
+    // Handle potential double URL encoding
+    let file = decodeURIComponent(rawFile)
+
+    // If the decoded string still contains URL-encoded characters, decode again
+    if (file.includes('%')) {
+        try {
+            file = decodeURIComponent(file)
+        } catch {
+            // If second decode fails, use the first decoded version
+            console.warn('Failed to double-decode filename:', file)
+        }
     }
 
     const filePath = join(process.cwd(), 'storage', 'uploads', 'music', file)
