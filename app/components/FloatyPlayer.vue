@@ -410,7 +410,7 @@
   <div
     v-if="currentItem"
     ref="floatyPlayerRef"
-    class="bg-muted/80 border-muted/50 fixed right-2 bottom-14 left-2 z-10 mx-auto max-h-[80dvh] overflow-y-auto rounded-xl border p-2 shadow-lg shadow-neutral-950/5 backdrop-blur-sm sm:p-4 lg:bottom-16"
+    class="bg-muted/80 border-muted/50 fixed right-2 bottom-16 left-2 z-10 mx-auto max-h-[80dvh] overflow-y-auto rounded-xl border p-2 shadow-lg shadow-neutral-950/5 backdrop-blur-sm sm:p-4 lg:bottom-16"
     :class="{ 'hide-focus-outlines': showCover && !showFocusOutlines }"
   >
     <div class="wrapper grid w-full" :class="{ 'select-none': isMobile }">

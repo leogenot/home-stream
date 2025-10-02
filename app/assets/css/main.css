@@ -173,10 +173,6 @@ html {
   overflow-x: clip;
   width: 100vw;
 }
-body {
-  font-family: var(--font-sans);
-}
-
 /* recommended lenis css */
 html.lenis {
   height: auto;
@@ -222,4 +218,53 @@ html.lenis {
 
 input:focus {
   animation: prevent-scroll 10ms forwards;
+}
+
+/* iOS Safe Area Support for PWA */
+:root {
+  --safe-area-inset-top: env(safe-area-inset-top);
+  --safe-area-inset-right: env(safe-area-inset-right);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom);
+  --safe-area-inset-left: env(safe-area-inset-left);
+}
+
+/* Body should extend to full viewport for PWA */
+body {
+  font-family: var(--font-sans);
+}
+
+/* Safe area utilities */
+@layer utilities {
+  .safe-top {
+    padding-top: max(0.5rem, var(--safe-area-inset-top));
+  }
+
+  .safe-bottom {
+    padding-bottom: max(0.5rem, var(--safe-area-inset-bottom));
+  }
+
+  .safe-left {
+    padding-left: max(0.5rem, var(--safe-area-inset-left));
+  }
+
+  .safe-right {
+    padding-right: max(0.5rem, var(--safe-area-inset-right));
+  }
+
+  .safe-x {
+    padding-left: max(0.5rem, var(--safe-area-inset-left));
+    padding-right: max(0.5rem, var(--safe-area-inset-right));
+  }
+
+  .safe-y {
+    padding-top: max(0.5rem, var(--safe-area-inset-top));
+    padding-bottom: max(0.5rem, var(--safe-area-inset-bottom));
+  }
+
+  .safe-all {
+    padding-top: max(0.5rem, var(--safe-area-inset-top));
+    padding-right: max(0.5rem, var(--safe-area-inset-right));
+    padding-bottom: max(0.5rem, var(--safe-area-inset-bottom));
+    padding-left: max(0.5rem, var(--safe-area-inset-left));
+  }
 }

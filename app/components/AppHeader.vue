@@ -7,7 +7,10 @@
 </script>
 
 <template>
-  <div class="fixed right-2 bottom-2 left-2 z-10 mx-auto lg:bottom-4">
+  <div
+    class="safe-bottom fixed right-2 left-2 z-10 mx-auto lg:bottom-4"
+    style="bottom: max(0.5rem, env(safe-area-inset-bottom))"
+  >
     <UNavigationMenu
       :items="links"
       variant="link"
