@@ -163,17 +163,15 @@
     document.addEventListener('click', markGesture, true)
   })
 
-  const artist = ref<string | null>(null)
   const pictureUrl = ref<string | null>(null)
-  const album = ref<string | null>(null)
   const showCover = useState('showCover', () => true)
 
   function updateMediaSessionMetadata() {
     if (import.meta.server) return
     if (!('mediaSession' in navigator)) return
     const title = currentItem.value?.title || ''
-    const artistName = artist.value || ''
-    const albumName = album.value || ''
+    const artistName = currentItem.value?.artist || ''
+    const albumName = currentItem.value?.album || ''
     const cover = pictureUrl.value || ''
     try {
       navigator.mediaSession.metadata = new MediaMetadata({
@@ -190,7 +188,7 @@
             ]
           : [],
       })
-    } catch (e) {
+    } catch {
       // ignore
     }
   }
@@ -202,7 +200,7 @@
       navigator.mediaSession.playbackState = isPlaying.value
         ? 'playing'
         : 'paused'
-    } catch (e) {
+    } catch {
       // ignore
     }
   }
@@ -216,24 +214,28 @@
         duration: duration.value || 0,
         position: currentTime.value || 0,
       })
-    } catch (e) {
+    } catch {
       // ignore
     }
   }
 
-  watch(currentItem, async () => {
-    if (!currentItem.value?.src) return
-    pictureUrl.value = null
+  watch(
+    currentItem,
+    async () => {
+      if (!currentItem.value?.src) return
+      pictureUrl.value = null
 
-    try {
-      const filename = currentItem.value.src.split('/').pop()
-      pictureUrl.value = `/api/cover/${encodeURIComponent(filename!)}`
-      // Update media session metadata when we have track info
-      updateMediaSessionMetadata()
-    } catch (err) {
-      console.warn('Failed to fetch metadata:', err)
-    }
-  })
+      try {
+        const filename = currentItem.value.src.split('/').pop()
+        pictureUrl.value = `/api/cover/${encodeURIComponent(filename!)}`
+        // Update media session metadata when we have track info
+        updateMediaSessionMetadata()
+      } catch (err) {
+        console.warn('Failed to fetch metadata:', err)
+      }
+    },
+    { immediate: true },
+  )
 
   // Keep Media Session state in sync
   watch(isPlaying, () => {
@@ -242,6 +244,11 @@
 
   watch([duration, currentTime], () => {
     updateMediaSessionPositionState()
+  })
+
+  // Update metadata when cover art loads
+  watch(pictureUrl, () => {
+    updateMediaSessionMetadata()
   })
 
   onMounted(() => {
@@ -261,21 +268,24 @@
       navigator.mediaSession.setActionHandler?.('nexttrack', () => {
         next()
       })
-      navigator.mediaSession.setActionHandler?.('seekto', (details: any) => {
-        if (!audioRef.value) return
-        if (typeof details?.seekTime === 'number') {
-          audioRef.value.currentTime = details.seekTime
-        }
-      })
-    } catch (e) {
+      navigator.mediaSession.setActionHandler?.(
+        'seekto',
+        (details: { seekTime?: number }) => {
+          if (!audioRef.value) return
+          if (typeof details?.seekTime === 'number') {
+            audioRef.value.currentTime = details.seekTime
+          }
+        },
+      )
+    } catch {
       // ignore
     }
   })
 
   const isSeeking = ref(false)
 
-  const onProgressInput = (percent: number) => {
-    if (!audioRef.value || !duration.value) return
+  const onProgressInput = (percent: number | undefined) => {
+    if (!audioRef.value || !duration.value || percent === undefined) return
     isSeeking.value = true
     const newTime = (percent / 100) * duration.value
     audioRef.value.currentTime = newTime
