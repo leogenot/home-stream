@@ -224,7 +224,6 @@
   watch(currentItem, async () => {
     if (!currentItem.value?.src) return
     pictureUrl.value = null
-    showCover.value = false
 
     try {
       const filename = currentItem.value.src.split('/').pop()
@@ -319,6 +318,7 @@
             <img
               v-if="pictureUrl"
               v-show="showCover"
+              :key="pictureUrl"
               :src="pictureUrl"
               alt="cover"
               class="object-fit aspect-square h-auto w-full max-w-96 overflow-clip rounded-lg bg-transparent"
