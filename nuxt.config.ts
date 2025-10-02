@@ -47,6 +47,11 @@ export default defineNuxtConfig({
     server: {
       allowedHosts: ['home-stream.fallwinter.dk'],
     },
+    build: {
+      rollupOptions: {
+        external: [],
+      },
+    },
   },
 
   ui: {
