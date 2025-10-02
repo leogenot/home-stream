@@ -3,17 +3,31 @@
     title: 'Home Stream',
     middleware: 'auth',
   })
-  useHead({
-    title: 'Music',
-  })
+
   const { refreshUserData } = useUser()
+  const { songs } = useMusic()
+  const { playAllNow, playAllRandomNow, playSong, addToQueue } = useQueue()
 
   onMounted(() => {
     // Refresh user data to ensure subscription status is current
     refreshUserData()
   })
-  const { songs } = useMusic()
-  const { playAllNow, playAllRandomNow, playSong, addToQueue } = useQueue()
+
+  useSeoMeta({
+    title: 'Your Music Library',
+    description:
+      'Browse and play your personal music collection. Stream all your favorite songs, create playlists, and enjoy your music anywhere.',
+    robots:
+      'noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate',
+    ogTitle: 'Your Music Library - Home Stream',
+    ogDescription:
+      'Browse and play your personal music collection with Home Stream.',
+    ogType: 'website',
+    twitterCard: 'summary',
+    twitterTitle: 'Your Music Library - Home Stream',
+    twitterDescription:
+      'Browse and play your personal music collection with Home Stream.',
+  })
 </script>
 
 <template>

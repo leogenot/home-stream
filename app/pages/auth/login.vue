@@ -4,8 +4,20 @@
     title: 'Login',
     middleware: 'guest',
   })
-  useHead({
+  useSeoMeta({
     title: 'Login',
+    description:
+      'Sign in to your Home Stream account to access your personal music library and playlists.',
+    ogTitle: 'Login - Home Stream',
+    ogDescription:
+      'Sign in to your Home Stream account to access your personal music library.',
+    ogType: 'website',
+    robots:
+      'noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate',
+    twitterCard: 'summary',
+    twitterTitle: 'Login - Home Stream',
+    twitterDescription:
+      'Sign in to your Home Stream account to access your personal music library.',
   })
 </script>
 

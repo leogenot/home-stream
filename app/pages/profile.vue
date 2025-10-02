@@ -3,8 +3,19 @@
     title: 'Profile',
     middleware: 'auth',
   })
-  useHead({
+  useSeoMeta({
     title: 'Profile',
+    description:
+      'Manage your Home Stream profile settings and account information.',
+    ogTitle: 'Profile - Home Stream',
+    ogDescription:
+      'Manage your Home Stream profile settings and account information.',
+    robots:
+      'noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate',
+    twitterCard: 'summary',
+    twitterTitle: 'Profile - Home Stream',
+    twitterDescription:
+      'Manage your Home Stream profile settings and account information.',
   })
   const { user } = useSupabaseAuth()
   const { userData, refreshUserData } = useUser()

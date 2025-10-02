@@ -3,6 +3,21 @@
     middleware: 'auth',
   })
 
+  useSeoMeta({
+    title: 'Sync Library',
+    description:
+      'Synchronize your music library with uploaded files. Scan and add missing files to your Home Stream collection.',
+    ogTitle: 'Sync Library - Home Stream',
+    ogDescription:
+      'Synchronize your music library with uploaded files on Home Stream.',
+    robots:
+      'noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate',
+    twitterCard: 'summary',
+    twitterTitle: 'Sync Library - Home Stream',
+    twitterDescription:
+      'Synchronize your music library with uploaded files on Home Stream.',
+  })
+
   const syncing = ref(false)
   const error = ref('')
   const summary = ref<{

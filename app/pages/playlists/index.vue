@@ -3,6 +3,21 @@
     middleware: 'auth',
   })
 
+  useSeoMeta({
+    title: 'Playlists',
+    description:
+      'Create and manage your music playlists. Organize your favorite songs into custom playlists and share them with others.',
+    robots:
+      'noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate',
+    ogTitle: 'Playlists - Home Stream',
+    ogDescription: 'Create and manage your music playlists on Home Stream.',
+    ogType: 'website',
+    twitterCard: 'summary',
+    twitterTitle: 'Playlists - Home Stream',
+    twitterDescription:
+      'Create and manage your music playlists on Home Stream.',
+  })
+
   const {
     playlists,
     musics,

@@ -27,10 +27,35 @@
   onMounted(load)
   watch(() => route.params.slug, load)
 
-  const pageTitle = computed(() =>
-    playlist.value ? playlist.value.title : 'Playlist',
-  )
-  useHead({ title: pageTitle })
+  // Dynamic SEO based on playlist data
+  watchEffect(() => {
+    if (playlist.value) {
+      const trackCount = playlist.value.playlist_items.length
+      useSeoMeta({
+        title: playlist.value.title,
+        description: `Listen to ${playlist.value.title} playlist. Contains ${trackCount} track${trackCount !== 1 ? 's' : ''}. Stream now on Home Stream.`,
+        robots:
+          'noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate',
+        ogTitle: `${playlist.value.title} - Playlist on Home Stream`,
+        ogDescription: `Listen to ${playlist.value.title} playlist with ${trackCount} tracks on Home Stream.`,
+        ogType: 'music.playlist',
+        twitterCard: 'summary',
+        twitterTitle: `${playlist.value.title} - Playlist`,
+        twitterDescription: `Listen to ${playlist.value.title} playlist with ${trackCount} tracks on Home Stream.`,
+      })
+    } else if (!isLoading.value) {
+      useSeoMeta({
+        title: 'Playlist Not Found',
+        description:
+          'The playlist you are looking for could not be found. Browse our playlists to discover more music.',
+        robots:
+          'noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate',
+        ogTitle: 'Playlist Not Found - Home Stream',
+        ogDescription:
+          'The playlist you are looking for could not be found on Home Stream.',
+      })
+    }
+  })
 
   const songsFromPlaylist = computed(() =>
     playlist.value ? playlist.value.playlist_items.map((it) => it.file) : [],

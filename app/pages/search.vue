@@ -3,8 +3,18 @@
     title: 'Search Music',
     middleware: 'auth',
   })
-  useHead({
+  useSeoMeta({
     title: 'Search Music',
+    description:
+      'Search through your music library. Find songs by title, artist, or album name quickly and easily.',
+    robots:
+      'noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate',
+    ogTitle: 'Search Music - Home Stream',
+    ogDescription: 'Search through your music library on Home Stream.',
+    ogType: 'website',
+    twitterCard: 'summary',
+    twitterTitle: 'Search Music - Home Stream',
+    twitterDescription: 'Search through your music library on Home Stream.',
   })
 
   const { songs } = useMusic()
