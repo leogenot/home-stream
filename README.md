@@ -61,6 +61,71 @@ cd home-stream
 pnpm install
 ```
 
+### 9. Import SQL database into Supabase
+```sql
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+CREATE TABLE public.music (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  title text,
+  user_id uuid,
+  artist text,
+  album text,
+  cover text,
+  file text UNIQUE,
+  CONSTRAINT music_pkey PRIMARY KEY (id),
+  CONSTRAINT music_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.music_playlist_items (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  playlist_id bigint NOT NULL,
+  music_id bigint,
+  position integer NOT NULL DEFAULT 1,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT music_playlist_items_pkey PRIMARY KEY (id),
+  CONSTRAINT playlist_items_music_id_fkey FOREIGN KEY (music_id) REFERENCES public.music(id),
+  CONSTRAINT music_playlist_items_playlist_id_fkey FOREIGN KEY (playlist_id) REFERENCES public.music_playlists(id)
+);
+CREATE TABLE public.music_playlists (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  user_id uuid NOT NULL,
+  title text NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT music_playlists_pkey PRIMARY KEY (id),
+  CONSTRAINT playlists_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.user_details (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  auth_user_id uuid NOT NULL,
+  favorite_music_id bigint,
+  favorite_movie_id bigint,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  favorite_music_uuid uuid,
+  favorite_movie_uuid uuid,
+  username text UNIQUE,
+  CONSTRAINT user_details_pkey PRIMARY KEY (id),
+  CONSTRAINT user_details_auth_user_id_fkey FOREIGN KEY (auth_user_id) REFERENCES auth.users(id),
+  CONSTRAINT user_details_favorite_music_id_fkey FOREIGN KEY (favorite_music_id) REFERENCES public.music(id)
+);
+```
+
+### 10. Add Supabase Auth
+
+### 11. Set the right .env variables values
+```env
+BASE_URL=https://mymusicserver.com
+SUPABASE_URL=
+SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_KEY=
+SUPABASE_ANON_KEY=
+```
+
 ## 🌍 Exposing Home Stream with Nginx (Port 80/443)
 
 Instead of exposing port `3000` directly, you can run your Nuxt app behind **Nginx**, which will:
