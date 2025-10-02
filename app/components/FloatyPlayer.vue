@@ -352,6 +352,7 @@
           <UIcon name="i-lucide-chevron-last" class="size-5" />
         </button>
       </div>
+
       <div class="mt-2 flex w-full items-center gap-2">
         <span class="text-xs tabular-nums">
           {{ formatTime(currentTime) }}
