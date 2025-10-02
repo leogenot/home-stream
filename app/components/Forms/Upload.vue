@@ -12,6 +12,7 @@
     <h2 class="font-serif text-xl">Upload music</h2>
     <UFileUpload
       v-model="fileInput"
+      layout="list"
       multiple
       :dropzone="true"
       class="min-h-12 w-full"
