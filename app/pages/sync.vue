@@ -52,7 +52,7 @@
       <h1 class="font-serif text-2xl">Sync Library</h1>
       <p class="text-sm text-neutral-500">
         Scan
-        <code>public/uploads/music</code>
+        <code>storage/uploads/music</code>
         and add any missing files to your library.
       </p>
     </div>

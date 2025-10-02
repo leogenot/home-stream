@@ -24,6 +24,17 @@ export default defineEventHandler(async (event) => {
 
     try {
         const filePath = path.join(MUSIC_DIR, safeFile)
+        console.log('Metadata request for file:', safeFile, 'full path:', filePath)
+
+        // Check if file exists before trying to parse metadata
+        const { existsSync } = await import('fs')
+        if (!existsSync(filePath)) {
+            throw createError({
+                statusCode: 404,
+                statusMessage: `Music file not found: ${safeFile}`
+            })
+        }
+
         const metadata = await parseFile(filePath)
 
         let pictureBase64: string | null = null
@@ -40,6 +51,10 @@ export default defineEventHandler(async (event) => {
             duration: metadata.format.duration ?? null,
         }
     } catch (err: any) {
+        // Re-throw createError instances
+        if (err.statusCode) {
+            throw err
+        }
         throw createError({ statusCode: 500, statusMessage: `Metadata parse failed: ${err.message}` })
     }
 })

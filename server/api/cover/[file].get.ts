@@ -1,6 +1,7 @@
 // /server/api/cover/[file].get.ts
 import { parseFile } from 'music-metadata'
 import path from 'path'
+import { existsSync } from 'fs'
 import { serverSupabaseClient } from '#supabase/server'
 
 const MUSIC_DIR = path.resolve(process.cwd(), 'storage/uploads/music')
@@ -30,17 +31,39 @@ export default defineEventHandler(async (event) => {
     }
 
     const filePath = path.join(MUSIC_DIR, file)
-    const metadata = await parseFile(filePath)
-    const picture = metadata.common.picture?.[0]
-    if (!picture) throw createError({ statusCode: 404, statusMessage: 'No cover found' })
+    console.log('Cover request for file:', file, 'full path:', filePath)
 
-    // Save to cache
-    coverCache.set(file, { data: picture.data, format: picture.format })
+    // Check if file exists before trying to parse metadata
+    if (!existsSync(filePath)) {
+        throw createError({
+            statusCode: 404,
+            statusMessage: `Music file not found: ${file}`
+        })
+    }
 
-    return new Response(picture.data, {
-        headers: {
-            'Content-Type': picture.format,
-            'Cache-Control': 'public, max-age=86400, immutable'
+    try {
+        const metadata = await parseFile(filePath)
+        const picture = metadata.common.picture?.[0]
+        if (!picture) throw createError({ statusCode: 404, statusMessage: 'No cover found in file' })
+
+        // Save to cache
+        coverCache.set(file, { data: picture.data, format: picture.format })
+
+        return new Response(picture.data, {
+            headers: {
+                'Content-Type': picture.format,
+                'Cache-Control': 'public, max-age=86400, immutable'
+            }
+        })
+    } catch (error: any) {
+        // Handle metadata parsing errors
+        if (error.statusCode) {
+            // Re-throw createError instances
+            throw error
         }
-    })
+        throw createError({
+            statusCode: 500,
+            statusMessage: `Error parsing file metadata: ${error.message}`
+        })
+    }
 })
