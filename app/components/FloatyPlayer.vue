@@ -221,13 +221,6 @@
     }
   }
 
-  // Prevent page scrolling when cover is shown
-  const preventScroll = (e: Event) => {
-    if (showCover.value) {
-      e.preventDefault()
-    }
-  }
-
   function updateMediaSessionMetadata() {
     if (import.meta.server) return
     if (!('mediaSession' in navigator)) return
@@ -323,8 +316,6 @@
 
       // Add event listeners when cover is shown
       document.addEventListener('keydown', trapFocus)
-      document.addEventListener('wheel', preventScroll, { passive: false })
-      document.addEventListener('touchmove', preventScroll, { passive: false })
 
       // Focus the first focusable element in the player (without showing outline initially)
       nextTick(() => {
@@ -336,8 +327,6 @@
     } else {
       // Remove event listeners when cover is hidden
       document.removeEventListener('keydown', trapFocus)
-      document.removeEventListener('wheel', preventScroll)
-      document.removeEventListener('touchmove', preventScroll)
       // Reset focus outline visibility
       showFocusOutlines.value = false
     }
@@ -378,8 +367,6 @@
   onUnmounted(() => {
     if (import.meta.server) return
     document.removeEventListener('keydown', trapFocus)
-    document.removeEventListener('wheel', preventScroll)
-    document.removeEventListener('touchmove', preventScroll)
   })
 
   const isSeeking = ref(false)

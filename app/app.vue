@@ -41,6 +41,15 @@
   })
 
   const showCover = useState('showCover', () => false)
+
+  watch(showCover, (isShown) => {
+    if (!import.meta.client) return
+    if (isShown) {
+      document.documentElement.style.overflow = 'hidden'
+    } else {
+      document.documentElement.style.overflow = ''
+    }
+  })
 </script>
 
 <template>
@@ -48,7 +57,9 @@
     <DevGrid />
     <NuxtLayout :name="authLayout">
       <UMain class="relative pb-56">
-        <NuxtPage />
+        <div>
+          <NuxtPage />
+        </div>
       </UMain>
     </NuxtLayout>
     <transition mode="out-in" name="fade">
