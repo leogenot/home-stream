@@ -50,7 +50,7 @@ export default function useQueue() {
   function mapSongToPlayerItem(song: Song): PlayerItem {
     const title = song.title.replace(/\.[^.]+$/, '')
     const encodedTitle = encodeURIComponent(song.file)
-    console.log('encodedTitle', encodedTitle, 'normal title', song.file)
+    // console.log('encodedTitle', encodedTitle, 'normal title', song.file)
     const src = `/api/music/${encodedTitle}`
     return { id: song.id, title, file: song.file, src, artist: song.artist, album: song.album }
   }
@@ -62,7 +62,7 @@ export default function useQueue() {
    */
   function playAllNow(songs: Song[]) {
     const items = songs.map(mapSongToPlayerItem)
-    console.log('Playing all items', items)
+    // console.log('Playing all items', items)
     setQueue(items)
     playAt(items.length > 0 ? 0 : -1)
   }
@@ -73,7 +73,7 @@ export default function useQueue() {
    */
   function playAllRandomNow(songs: Song[]) {
     const items = shuffle(songs.map(mapSongToPlayerItem))
-    console.log('Shuffled items', items)
+    // console.log('Shuffled items', items)
     setQueue(items)
     playAt(items.length > 0 ? 0 : -1)
   }
@@ -85,7 +85,7 @@ export default function useQueue() {
    */
   function playSong(index: number, songs: Song[]) {
     const items = songs.map(mapSongToPlayerItem)
-    console.log('Playing song at index', index, 'from items', items)
+    // console.log('Playing song at index', index, 'from items', items)
     setQueue(items)
     playAt(index)
   }

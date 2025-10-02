@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const filePath = path.join(MUSIC_DIR, file)
-    console.log('Cover request for file:', file, 'full path:', filePath)
+    // console.log('Cover request for file:', file, 'full path:', filePath)
 
     // Check if file exists before trying to parse metadata
     if (!existsSync(filePath)) {
