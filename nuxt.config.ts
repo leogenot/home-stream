@@ -128,16 +128,6 @@ export default defineNuxtConfig({
       collections: ['lucide']
     }
   },
-  experimental: {
-    buildCache: true,
-  },
-
-  // SEO Configuration
-  seo: {
-    fallbackTitle: 'Home Stream - Personal Music Streaming Platform',
-    description: 'Stream your personal music collection anywhere. Upload, organize, and enjoy your music with Home Stream - your private music streaming platform.',
-  },
-
   nitro: {
     prerender: {
       crawlLinks: false, // Prevent Nitro from crawling and generating routes
