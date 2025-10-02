@@ -65,7 +65,7 @@ export default defineNuxtConfig({
         { name: 'cohere-ai', content: 'noindex, nofollow' },
         { name: 'theme-color', content: '#ffffff' },
         { name: 'msapplication-TileColor', content: '#ffffff' },
-        { name: 'apple-mobile-web-app-capable', content: 'yes' },
+        { name: 'mobile-web-app-capable', content: 'yes' },
         { name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
         { name: 'apple-mobile-web-app-title', content: 'Home Stream' },
         // Open Graph

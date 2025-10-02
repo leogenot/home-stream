@@ -166,6 +166,68 @@
   const pictureUrl = ref<string | null>(null)
   const showCover = useState('showCover', () => true)
 
+  // Focus trapping and scroll prevention
+  const floatyPlayerRef = ref<HTMLElement | null>(null)
+  const showFocusOutlines = ref(false)
+
+  // Get all focusable elements within the player
+  const getFocusableElements = (): HTMLElement[] => {
+    if (!floatyPlayerRef.value) return []
+
+    const selectors = [
+      'button:not([disabled])',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
+      'a[href]',
+    ]
+
+    return Array.from(
+      floatyPlayerRef.value.querySelectorAll(selectors.join(', ')),
+    ) as HTMLElement[]
+  }
+
+  // Trap focus within the player when cover is shown
+  const trapFocus = (e: KeyboardEvent) => {
+    if (!showCover.value) return
+
+    const elements = getFocusableElements()
+    if (elements.length === 0) return
+
+    const firstElement = elements[0]
+    const lastElement = elements[elements.length - 1]
+
+    if (e.key === 'Tab') {
+      // Show focus outlines when user starts tabbing
+      showFocusOutlines.value = true
+
+      if (e.shiftKey) {
+        // Shift + Tab (backwards)
+        if (document.activeElement === firstElement) {
+          e.preventDefault()
+          lastElement?.focus()
+        }
+      } else {
+        // Tab (forwards)
+        if (document.activeElement === lastElement) {
+          e.preventDefault()
+          firstElement?.focus()
+        }
+      }
+    } else if (e.key === 'Escape') {
+      // Close cover on Escape
+      showCover.value = false
+    }
+  }
+
+  // Prevent page scrolling when cover is shown
+  const preventScroll = (e: Event) => {
+    if (showCover.value) {
+      e.preventDefault()
+    }
+  }
+
   function updateMediaSessionMetadata() {
     if (import.meta.server) return
     if (!('mediaSession' in navigator)) return
@@ -251,6 +313,36 @@
     updateMediaSessionMetadata()
   })
 
+  // Watch for cover visibility changes to manage focus trapping and scroll prevention
+  watch(showCover, (isShown) => {
+    if (import.meta.server) return
+
+    if (isShown) {
+      // Reset focus outline visibility
+      showFocusOutlines.value = false
+
+      // Add event listeners when cover is shown
+      document.addEventListener('keydown', trapFocus)
+      document.addEventListener('wheel', preventScroll, { passive: false })
+      document.addEventListener('touchmove', preventScroll, { passive: false })
+
+      // Focus the first focusable element in the player (without showing outline initially)
+      nextTick(() => {
+        const elements = getFocusableElements()
+        if (elements.length > 0) {
+          elements[0]?.focus()
+        }
+      })
+    } else {
+      // Remove event listeners when cover is hidden
+      document.removeEventListener('keydown', trapFocus)
+      document.removeEventListener('wheel', preventScroll)
+      document.removeEventListener('touchmove', preventScroll)
+      // Reset focus outline visibility
+      showFocusOutlines.value = false
+    }
+  })
+
   onMounted(() => {
     if (import.meta.server) return
     if (!('mediaSession' in navigator)) return
@@ -282,6 +374,14 @@
     }
   })
 
+  // Clean up event listeners on unmount
+  onUnmounted(() => {
+    if (import.meta.server) return
+    document.removeEventListener('keydown', trapFocus)
+    document.removeEventListener('wheel', preventScroll)
+    document.removeEventListener('touchmove', preventScroll)
+  })
+
   const isSeeking = ref(false)
 
   const onProgressInput = (percent: number | undefined) => {
@@ -309,7 +409,9 @@
 <template>
   <div
     v-if="currentItem"
+    ref="floatyPlayerRef"
     class="bg-muted/80 border-muted/50 fixed right-2 bottom-14 left-2 z-10 mx-auto max-h-[80dvh] overflow-y-auto rounded-xl border p-2 shadow-lg shadow-neutral-950/5 backdrop-blur-sm sm:p-4 lg:bottom-16"
+    :class="{ 'hide-focus-outlines': showCover && !showFocusOutlines }"
   >
     <div
       class="wrapper grid w-full"
@@ -484,5 +586,11 @@
   .fade-enter-from,
   .fade-leave-to {
     opacity: 0;
+  }
+
+  /* Hide focus outlines initially when cover is shown */
+  .hide-focus-outlines *:focus {
+    outline: none !important;
+    box-shadow: none !important;
   }
 </style>
