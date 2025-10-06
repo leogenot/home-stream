@@ -6,9 +6,14 @@
 
   const sign = ref<'in' | 'up'>('in')
 
+  const route = useRoute()
+  const redirect = computed(() =>
+    typeof route.query.redirect === 'string' ? route.query.redirect : '/',
+  )
+
   watchEffect(() => {
     if (user.value) {
-      return navigateTo('/')
+      return navigateTo(redirect.value)
     }
   })
 
@@ -28,7 +33,7 @@
     },
   ]
 
-  const signIn = async (email, password) => {
+  const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -36,7 +41,7 @@
     if (error) displayError(error)
   }
 
-  const signUp = async (email, password) => {
+  const signUp = async (email: string, password: string) => {
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -52,7 +57,9 @@
     }
   }
 
-  async function onSubmit(payload) {
+  async function onSubmit(payload: {
+    data: { email: string; password: string }
+  }) {
     const email = payload.data.email
     const password = payload.data.password
 
@@ -60,7 +67,7 @@
     else await signUp(email, password)
   }
 
-  const displayError = (error) => {
+  const displayError = (error: { message: string }) => {
     toast.add({
       title: 'Error',
       description: error.message,

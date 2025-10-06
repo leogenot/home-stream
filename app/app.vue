@@ -9,7 +9,7 @@
   onUnmounted(() => {
     unsubscribeAuthListener()
   })
-  const authLayout = computed(() => {
+  const _authLayout = computed(() => {
     return userData.value ? 'default' : 'auth'
   })
 
@@ -57,7 +57,12 @@
     user,
     () => {
       if (!user.value) {
-        return navigateTo('/login')
+        // Avoid redirect loop when already on login page
+        if (route.path === '/login') return
+        return navigateTo({
+          path: '/login',
+          query: { redirect: route.fullPath },
+        })
       }
     },
     { immediate: true },
