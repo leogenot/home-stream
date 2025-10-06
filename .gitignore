@@ -28,3 +28,6 @@ public/uploads
 storage
 
 pnpm-lock.yaml
+
+localhost.pem
+localhost-key.pem

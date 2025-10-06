@@ -128,6 +128,12 @@ export default defineNuxtConfig({
       collections: ['lucide']
     }
   },
+  devServer: {
+    https: {
+      key: './localhost-key.pem',
+      cert: './localhost.pem',
+    },
+  },
   nitro: {
     prerender: {
       crawlLinks: false, // Prevent Nitro from crawling and generating routes
