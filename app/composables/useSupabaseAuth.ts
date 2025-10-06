@@ -15,19 +15,21 @@ export function useSupabaseAuth() {
             data: { subscription },
         } = supabase.auth.onAuthStateChange(async (event, session) => {
             console.log('EVENT', event)
-            if (event === 'INITIAL_SESSION') {
-                if (session?.user) {
-                    console.log('Session restored')
-                    await loadUser(session?.user)
+            setTimeout(async () => {
+                if (event === 'INITIAL_SESSION') {
+                    if (session?.user) {
+                        console.log('Session restored')
+                        await loadUser(session?.user)
+                    }
+                } else if (event === 'SIGNED_IN') {
+                    if (session?.user) {
+                        console.log('User logged in')
+                        await loadUser(session?.user)
+                    }
+                } else if (event === 'SIGNED_OUT') {
+                    console.log('User logged out')
                 }
-            } else if (event === 'SIGNED_IN') {
-                if (session?.user) {
-                    console.log('User logged in')
-                    await loadUser(session?.user)
-                }
-            } else if (event === 'SIGNED_OUT') {
-                console.log('User logged out')
-            }
+            })
         })
 
         authListener = subscription
