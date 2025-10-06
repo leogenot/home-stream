@@ -50,12 +50,24 @@
       document.documentElement.style.overflow = ''
     }
   })
+
+  const user = useSupabaseUser()
+
+  watch(
+    user,
+    () => {
+      if (!user.value) {
+        return navigateTo('/login')
+      }
+    },
+    { immediate: true },
+  )
 </script>
 
 <template>
   <UApp>
     <DevGrid />
-    <NuxtLayout :name="authLayout">
+    <NuxtLayout>
       <UMain class="relative pb-56">
         <div>
           <NuxtPage />

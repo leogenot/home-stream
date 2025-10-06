@@ -16,7 +16,7 @@
   })
   definePageMeta({
     title: 'Upload',
-    middleware: 'auth',
+    // middleware: 'auth',
   })
   const { refreshUserData } = useUser()
 

@@ -2,7 +2,7 @@
   import useAlbums from '~/composables/useAlbums'
 
   definePageMeta({
-    middleware: 'auth',
+    // middleware: 'auth',
   })
 
   const route = useRoute()
