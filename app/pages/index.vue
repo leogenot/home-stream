@@ -1,7 +1,7 @@
 <script setup lang="ts">
   definePageMeta({
     title: 'Home Stream',
-    // middleware: 'auth',
+    middleware: 'auth',
   })
 
   const { refreshUserData } = useUser()

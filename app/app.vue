@@ -2,13 +2,29 @@
   import { useSupabaseAuth } from '~/composables/useSupabaseAuth'
   const { initAuthListener, unsubscribeAuthListener } = useSupabaseAuth()
   const { userData } = useUser()
+
+  // Track if auth has been initialized to prevent premature redirects
+  const authInitialized = ref(false)
+  const isInitializing = ref(true)
+
   onMounted(async () => {
-    await initAuthListener()
+    try {
+      await initAuthListener()
+      // Give a small delay to ensure auth state is properly set
+      await new Promise((resolve) => setTimeout(resolve, 100))
+      authInitialized.value = true
+      isInitializing.value = false
+    } catch (error) {
+      console.error('Failed to initialize auth:', error)
+      authInitialized.value = true
+      isInitializing.value = false
+    }
   })
 
   onUnmounted(() => {
     unsubscribeAuthListener()
   })
+
   const _authLayout = computed(() => {
     return userData.value ? 'default' : 'auth'
   })
@@ -50,35 +66,31 @@
       document.documentElement.style.overflow = ''
     }
   })
-
-  const user = useSupabaseUser()
-
-  watch(
-    user,
-    () => {
-      if (!user.value) {
-        // Avoid redirect loop when already on login page
-        if (route.path === '/login') return
-        return navigateTo({
-          path: '/login',
-          query: { redirect: route.fullPath },
-        })
-      }
-    },
-    { immediate: true },
-  )
 </script>
 
 <template>
   <UApp>
     <DevGrid />
-    <NuxtLayout>
-      <UMain class="relative pb-56">
-        <div>
-          <NuxtPage />
-        </div>
-      </UMain>
-    </NuxtLayout>
+    <!-- Show loading state while auth is initializing -->
+    <div
+      v-if="isInitializing"
+      class="flex min-h-screen items-center justify-center"
+    >
+      <div class="flex flex-col items-center gap-4">
+        <UIcon name="i-lucide-loader-2" class="h-8 w-8 animate-spin" />
+        <p class="text-muted-foreground text-sm">Loading...</p>
+      </div>
+    </div>
+    <!-- Show app content once auth is initialized -->
+    <template v-else>
+      <NuxtLayout>
+        <UMain class="relative pb-56">
+          <div>
+            <NuxtPage />
+          </div>
+        </UMain>
+      </NuxtLayout>
+    </template>
     <transition mode="out-in" name="fade">
       <div
         v-if="showCover"

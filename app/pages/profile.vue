@@ -1,7 +1,7 @@
 <script setup lang="ts">
   definePageMeta({
     title: 'Profile',
-    // middleware: 'auth',
+    middleware: 'auth',
   })
   useSeoMeta({
     title: 'Profile',

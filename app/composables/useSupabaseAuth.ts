@@ -10,26 +10,35 @@ export function useSupabaseAuth() {
 
 
     const initAuthListener = async () => {
+        // Get initial session first to avoid race conditions
+        const { data: { session }, error } = await supabase.auth.getSession()
+
+        if (error) {
+            console.error('Error getting initial session:', error)
+        } else if (session?.user) {
+            console.log('Initial session found, loading user')
+            await loadUser(session.user)
+        }
+
         // Setup auth state change listener
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange(async (event, session) => {
             console.log('EVENT', event)
-            setTimeout(async () => {
-                if (event === 'INITIAL_SESSION') {
-                    if (session?.user) {
-                        console.log('Session restored')
-                        await loadUser(session?.user)
-                    }
-                } else if (event === 'SIGNED_IN') {
-                    if (session?.user) {
-                        console.log('User logged in')
-                        await loadUser(session?.user)
-                    }
-                } else if (event === 'SIGNED_OUT') {
-                    console.log('User logged out')
+
+            if (event === 'INITIAL_SESSION') {
+                if (session?.user) {
+                    console.log('Session restored via listener')
+                    await loadUser(session?.user)
                 }
-            })
+            } else if (event === 'SIGNED_IN') {
+                if (session?.user) {
+                    console.log('User logged in')
+                    await loadUser(session?.user)
+                }
+            } else if (event === 'SIGNED_OUT') {
+                console.log('User logged out')
+            }
         })
 
         authListener = subscription

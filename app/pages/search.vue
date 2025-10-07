@@ -1,7 +1,7 @@
 <script setup lang="ts">
   definePageMeta({
     title: 'Search Music',
-    // middleware: 'auth',
+    middleware: 'auth',
   })
   useSeoMeta({
     title: 'Search Music',
