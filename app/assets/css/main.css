@@ -6,152 +6,6 @@
 @theme {
   --font-serif: 'Doto', serif;
   --font-sans: 'Inter', sans-serif;
-
-  /* Override tailwind text styles */
-  --text-xxs: 0.625rem;
-  --text-xxs--line-height: 1;
-
-  --text-xs--line-height: 1;
-
-  --text-sm--line-height: 1;
-
-  --text-lg--line-height: 1.3;
-
-  --text-xl: 1.375rem;
-  --text-xl--line-height: 1.3;
-
-  --text-2xl: 2rem;
-  --text-2xl--line-height: 1.3;
-
-  --text-3xl: 2.75rem;
-  --text-3xl--line-height: 1.1;
-
-  --text-4xl: 3.5rem;
-  --text-4xl--line-height: 1.1;
-
-  --text-5xl: 5.625rem;
-  --text-5xl--line-height: 1.1;
-
-  --text-legal: 0.75rem;
-  --text-legal--line-height: 1.4;
-}
-
-:root {
-  --grid-bleed: 12px;
-  --grid-gap: 12px;
-  --grid-cols: 4;
-
-  @media (min-width: 900px) {
-    --grid-gap: 16px;
-    --grid-bleed: 20px;
-    --grid-cols: 12;
-  }
-
-  --single-column-in-vw: (
-      100vw - var(--grid-bleed) * 2 - (var(--grid-cols) - 1) * var(--grid-gap)
-    ) /
-    var(--grid-cols);
-  --cols: calc(var(--single-column-in-vw) + var(--grid-gap));
-
-  /* push is good for margins and paddings */
-  --push-1: calc(var(--cols) * 1);
-  /* cols is good for widths */
-  --cols-1: calc(var(--cols) * 1 - var(--grid-gap));
-
-  --push-2: calc(var(--cols) * 2);
-  --cols-2: calc(var(--cols) * 2 - var(--grid-gap));
-
-  --push-3: calc(var(--cols) * 3);
-  --cols-3: calc(var(--cols) * 3 - var(--grid-gap));
-
-  --push-4: calc(var(--cols) * 4);
-  --cols-4: calc(var(--cols) * 4 - var(--grid-gap));
-
-  --push-5: calc(var(--cols) * 5);
-  --cols-5: calc(var(--cols) * 5 - var(--grid-gap));
-
-  --push-6: calc(var(--cols) * 6);
-  --cols-6: calc(var(--cols) * 6 - var(--grid-gap));
-
-  --push-7: calc(var(--cols) * 7);
-  --cols-7: calc(var(--cols) * 7 - var(--grid-gap));
-
-  --push-8: calc(var(--cols) * 8);
-  --cols-8: calc(var(--cols) * 8 - var(--grid-gap));
-
-  --push-9: calc(var(--cols) * 9);
-  --cols-9: calc(var(--cols) * 9 - var(--grid-gap));
-
-  --push-10: calc(var(--cols) * 10);
-  --cols-10: calc(var(--cols) * 10 - var(--grid-gap));
-
-  --push-11: calc(var(--cols) * 11);
-  --cols-11: calc(var(--cols) * 11 - var(--grid-gap));
-
-  --push-12: calc(var(--cols) * 12);
-  --cols-12: calc(var(--cols) * 12 - var(--grid-gap));
-}
-
-html {
-  --zoom-amount: 0.4;
-  font-size: max(
-    16px,
-    calc(16px + 16 * var(--zoom-amount) * (100vw - 1440px) / 1440)
-  );
-}
-@theme extend {
-  --spacing-bleed: var(--grid-bleed);
-  --spacing-gap: var(--grid-gap);
-
-  /* push is good for margins and paddings */
-  --spacing-push-1: var(--push-1);
-  /* cols is good for widths */
-  --spacing-cols-1: var(--cols-1);
-
-  --spacing-push-2: var(--push-2);
-  --spacing-cols-2: var(--cols-2);
-
-  --spacing-push-3: var(--push-3);
-  --spacing-cols-3: var(--cols-3);
-
-  --spacing-push-4: var(--push-4);
-  --spacing-cols-4: var(--cols-4);
-
-  --spacing-push-5: var(--push-5);
-  --spacing-cols-5: var(--cols-5);
-
-  --spacing-push-6: var(--push-6);
-  --spacing-cols-6: var(--cols-6);
-
-  --spacing-push-7: var(--push-7);
-  --spacing-cols-7: var(--cols-7);
-
-  --spacing-push-8: var(--push-8);
-  --spacing-cols-8: var(--cols-8);
-
-  --spacing-push-9: var(--push-9);
-  --spacing-cols-9: var(--cols-9);
-
-  --spacing-push-10: var(--push-10);
-  --spacing-cols-10: var(--cols-10);
-
-  --spacing-push-11: var(--push-11);
-  --spacing-cols-11: var(--cols-11);
-
-  --spacing-push-12: var(--push-12);
-  --spacing-cols-12: var(--cols-12);
-}
-
-:root {
-  --black: #000000;
-  --white: #f9f9f9;
-  --sand: #dddec6;
-  --red: #ff2222;
-  --green: #00ab66;
-  --fg-color: var(--black);
-  --bg-color: var(--white);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 :root {
@@ -171,43 +25,7 @@ html {
 
 html {
   overflow-x: clip;
-  width: 100vw;
-}
-/* recommended lenis css */
-html.lenis {
-  height: auto;
-}
-
-.lenis.lenis-smooth {
-  scroll-behavior: auto;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-
-.lenis.lenis-scrolling iframe {
-  pointer-events: none;
-}
-
-@layer utilities {
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-
-  summary::-webkit-details-marker {
-    display: none;
-  }
+  width: 100%;
 }
 
 @keyframes prevent-scroll {
@@ -228,12 +46,10 @@ input:focus {
   --safe-area-inset-left: env(safe-area-inset-left);
 }
 
-/* Body should extend to full viewport for PWA */
 body {
   font-family: var(--font-sans);
 }
 
-/* Safe area utilities */
 @layer utilities {
   .safe-top {
     padding-top: max(0.5rem, var(--safe-area-inset-top));

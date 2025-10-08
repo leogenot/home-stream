@@ -3,7 +3,6 @@ import { useSupabaseClient, useSupabaseUser } from '#imports'
 export function useSupabaseAuth() {
     const supabase = useSupabaseClient()
     const user = useSupabaseUser()
-    const { setCurrentError } = useErrorMessage()
     const isLoading = ref(false)
     let authListener: Subscription | null = null
     const { loadUser, clearUser } = useUser()
@@ -148,7 +147,6 @@ export function useSupabaseAuth() {
             .eq('auth_user_id', user.value?.id)
             .select();
         if (error) {
-            setCurrentError('Error upserting user details: ' + error)
             console.error('Error upserting user details:', error)
             throw error
         }

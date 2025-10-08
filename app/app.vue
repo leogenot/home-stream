@@ -70,7 +70,6 @@
 
 <template>
   <UApp>
-    <DevGrid />
     <!-- Show loading state while auth is initializing -->
     <div
       v-if="isInitializing"

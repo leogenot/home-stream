@@ -17,9 +17,9 @@
     twitterDescription:
       'Synchronize your music library with uploaded files on Home Stream.',
   })
+  const toast = useToast()
 
   const syncing = ref(false)
-  const error = ref('')
   const summary = ref<{
     inserted: number
     skipped: number
@@ -34,7 +34,6 @@
   >([])
 
   const runSync = async () => {
-    error.value = ''
     summary.value = null
     results.value = []
     syncing.value = true
@@ -54,7 +53,12 @@
       summary.value = res.summary
       results.value = res.results
     } catch (e: any) {
-      error.value = e?.message || 'Sync failed'
+      toast.add({
+        title: 'Error',
+        description: e?.message || 'Sync failed',
+        icon: 'i-lucide-alert-circle',
+        color: 'error',
+      })
     } finally {
       syncing.value = false
     }
@@ -90,8 +94,6 @@
         <strong>{{ summary.failed }}</strong>
       </span>
     </div>
-
-    <ErrorAlert v-if="error" class="mt-4">{{ error }}</ErrorAlert>
 
     <div v-if="results.length" class="mt-4 overflow-hidden rounded-lg border">
       <table class="w-full text-sm">
