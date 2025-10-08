@@ -5,8 +5,13 @@
   })
 
   const { refreshUserData } = useUser()
-  const { songs } = useMusic()
+  const { songs, hasMore, isLoading, loadMore } = useMusic()
   const { playAllNow, playAllRandomNow, playSong, addToQueue } = useQueue()
+
+  // Setup infinite scroll
+  useInfiniteScroll(loadMore, {
+    enabled: computed(() => hasMore.value && !isLoading.value),
+  })
 
   onMounted(() => {
     // Refresh user data to ensure subscription status is current
@@ -65,6 +70,19 @@
             <UIcon name="i-lucide-list-plus" class="size-5" />
           </button>
         </div>
+      </div>
+
+      <!-- Loading indicator -->
+      <div v-if="isLoading" class="py-4 text-center text-sm text-gray-500">
+        Loading more songs...
+      </div>
+
+      <!-- End of list indicator -->
+      <div
+        v-else-if="!hasMore && songs.length > 0"
+        class="py-4 text-center text-sm text-gray-400"
+      >
+        No more songs to load
       </div>
     </div>
   </UPage>

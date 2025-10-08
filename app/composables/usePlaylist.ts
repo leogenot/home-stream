@@ -36,6 +36,12 @@ export default function usePlaylist() {
     const playlistSuccess = ref('')
     const playlistError = ref('')
 
+    // Pagination states for musics
+    const musicsHasMore = ref(true)
+    const musicsIsLoading = ref(false)
+    const musicsCurrentPage = ref(0)
+    const MUSICS_PAGE_SIZE = 50
+
     // Fetch playlists with normalized items
     const fetchPlaylists = async () => {
         if (!userData.value || !userData.value?.auth_user_id) return
@@ -71,13 +77,44 @@ export default function usePlaylist() {
         }))
     }
 
-    const fetchMusics = async () => {
+    const fetchMusics = async (reset = false) => {
         if (!userData.value || !userData.value?.auth_user_id) return
+        if (musicsIsLoading.value || (!musicsHasMore.value && !reset)) return
+
+        musicsIsLoading.value = true
+
+        if (reset) {
+            musicsCurrentPage.value = 0
+            musics.value = []
+            musicsHasMore.value = true
+        }
+
+        const from = musicsCurrentPage.value * MUSICS_PAGE_SIZE
+        const to = from + MUSICS_PAGE_SIZE - 1
+
         const { data, error } = await supabase
             .from('music')
             .select('id, title, album, artist, file, created_at')
             .order('created_at', { ascending: false })
-        if (!error && data) musics.value = data
+            .range(from, to)
+
+        if (!error && data) {
+            if (reset) {
+                musics.value = data
+            } else {
+                musics.value = [...musics.value, ...data]
+            }
+            musicsHasMore.value = data.length === MUSICS_PAGE_SIZE
+            musicsCurrentPage.value++
+        }
+
+        musicsIsLoading.value = false
+    }
+
+    const loadMoreMusics = () => {
+        if (!musicsIsLoading.value && musicsHasMore.value) {
+            fetchMusics()
+        }
     }
 
     const createPlaylist = async () => {
@@ -105,7 +142,7 @@ export default function usePlaylist() {
             if (ids.length) {
                 const playlistItems = ids.map((id, index) => ({
                     playlist_id: playlistId,
-                    [itemKey]: id.value,
+                    [itemKey]: id,
                     position: index + 1,
                 }))
                 await supabase.from(itemsTable).insert(playlistItems)
@@ -144,7 +181,7 @@ export default function usePlaylist() {
             const startPosition = currentItems.length + 1
             if (fileIds.length) {
                 const playlistItems = fileIds.map((id, index) => ({
-                    playlist_id: playlistId.value,
+                    playlist_id: playlistId,
                     [itemKey]: id,
                     position: startPosition + index,
                 }))
@@ -232,7 +269,7 @@ export default function usePlaylist() {
     }
 
     onMounted(() => {
-        fetchMusics()
+        fetchMusics(true)
     })
 
     watchEffect(() => {
@@ -242,6 +279,9 @@ export default function usePlaylist() {
     return {
         playlists,
         musics,
+        musicsHasMore,
+        musicsIsLoading,
+        loadMoreMusics,
         selectedMusicIds,
         newPlaylistTitle,
         playlistSuccess,

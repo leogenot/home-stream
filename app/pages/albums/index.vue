@@ -6,7 +6,12 @@
   })
 
   const { refreshUserData } = useUser()
-  const { albums, getAlbumSlug } = useAlbums()
+  const { albums, hasMore, isLoading, loadMore, getAlbumSlug } = useAlbums()
+
+  // Setup infinite scroll
+  useInfiniteScroll(loadMore, {
+    enabled: computed(() => hasMore.value && !isLoading.value),
+  })
 
   onMounted(() => {
     // Refresh user data to ensure subscription status is current
@@ -87,6 +92,19 @@
           </p>
         </div>
       </NuxtLink>
+    </div>
+
+    <!-- Loading indicator -->
+    <div v-if="isLoading" class="py-8 text-center text-sm text-gray-500">
+      Loading more albums...
+    </div>
+
+    <!-- End of list indicator -->
+    <div
+      v-else-if="!hasMore && albums.length > 0"
+      class="py-8 text-center text-sm text-gray-400"
+    >
+      All albums loaded
     </div>
   </UPage>
 </template>

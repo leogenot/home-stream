@@ -21,6 +21,9 @@
   const {
     playlists,
     musics,
+    musicsHasMore,
+    musicsIsLoading,
+    loadMoreMusics,
     selectedMusicIds,
     newPlaylistTitle,
     playlistError,
@@ -34,6 +37,11 @@
   } = usePlaylist()
 
   const { playAllNow, playAllRandomNow } = useQueue()
+
+  // Setup infinite scroll for musics section
+  useInfiniteScroll(loadMoreMusics, {
+    enabled: computed(() => musicsHasMore.value && !musicsIsLoading.value),
+  })
 
   onMounted(() => {
     fetchPlaylists()
@@ -213,6 +221,22 @@
           </div>
         </li>
       </ul>
+
+      <!-- Loading indicator -->
+      <div
+        v-if="musicsIsLoading"
+        class="py-4 text-center text-sm text-gray-500"
+      >
+        Loading more songs...
+      </div>
+
+      <!-- End of list indicator -->
+      <div
+        v-else-if="!musicsHasMore && musics.length > 0"
+        class="py-4 text-center text-sm text-gray-400"
+      >
+        All songs loaded
+      </div>
     </div>
   </div>
 </template>

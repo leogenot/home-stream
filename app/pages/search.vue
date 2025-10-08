@@ -17,7 +17,7 @@
     twitterDescription: 'Search through your music library on Home Stream.',
   })
 
-  const { songs } = useMusic()
+  const { songs, hasMore, isLoading, loadMore } = useMusic()
   const { playAllNow, playAllRandomNow, playSong, addToQueue } = useQueue()
 
   const searchQuery = ref('')
@@ -33,6 +33,11 @@
         song.artist.toLowerCase().includes(query) ||
         song.album.toLowerCase().includes(query),
     )
+  })
+
+  // Setup infinite scroll - only load more when not searching or when showing all results
+  useInfiniteScroll(loadMore, {
+    enabled: computed(() => hasMore.value && !isLoading.value),
   })
 
   const clearSearch = () => {
@@ -101,6 +106,22 @@
             </button>
           </div>
         </div>
+      </div>
+
+      <!-- Loading indicator (only show when not filtering with search) -->
+      <div
+        v-if="isLoading && !searchQuery.trim()"
+        class="py-4 text-center text-sm text-gray-500"
+      >
+        Loading more songs...
+      </div>
+
+      <!-- End of list indicator -->
+      <div
+        v-else-if="!hasMore && !searchQuery.trim() && songs.length > 0"
+        class="py-4 text-center text-sm text-gray-400"
+      >
+        All songs loaded
       </div>
     </div>
 

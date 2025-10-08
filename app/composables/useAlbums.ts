@@ -2,6 +2,8 @@ import { useSupabaseClient } from '#imports'
 
 const USER_STORAGE_KEY = 'stream-user'
 
+const PAGE_SIZE = 100
+
 export type Album = {
   name: string
   artist: string
@@ -28,20 +30,39 @@ export default function useAlbums() {
   })
 
   const albums = ref<Album[]>([])
+  const albumMap = new Map<string, Album>()
+  const hasMore = ref(true)
+  const isLoading = ref(false)
+  const currentPage = ref(0)
 
-  const fetchAlbums = async () => {
+  const fetchAlbums = async (reset = false) => {
     if (!userData.value || !userData.value?.auth_user_id) return
+    if (isLoading.value || (!hasMore.value && !reset)) return
+
+    isLoading.value = true
+
+    if (reset) {
+      currentPage.value = 0
+      albumMap.clear()
+      albums.value = []
+      hasMore.value = true
+    }
+
+    const from = currentPage.value * PAGE_SIZE
+    const to = from + PAGE_SIZE - 1
 
     const { data, error } = await supabase
       .from('music')
       .select('id, title, file, artist, album, created_at')
       .order('created_at', { ascending: false })
+      .range(from, to)
 
-    if (error || !data) return
+    if (error || !data) {
+      isLoading.value = false
+      return
+    }
 
     // Group songs by album
-    const albumMap = new Map<string, Album>()
-
     for (const song of data) {
       const albumKey = `${song.album} - ${song.artist}`
 
@@ -62,7 +83,7 @@ export default function useAlbums() {
 
     // Try to get cover from the first song of each album
     for (const album of albumList) {
-      if (album.songs.length > 0) {
+      if (album.songs.length > 0 && !album.coverUrl) {
         const firstSong = album.songs[0]
         try {
           album.coverUrl = `/api/cover/${encodeURIComponent(firstSong.file)}`
@@ -73,6 +94,15 @@ export default function useAlbums() {
     }
 
     albums.value = albumList
+    hasMore.value = data.length === PAGE_SIZE
+    currentPage.value++
+    isLoading.value = false
+  }
+
+  const loadMore = () => {
+    if (!isLoading.value && hasMore.value) {
+      fetchAlbums()
+    }
   }
 
   const getAlbumBySlug = (slug: string) => {
@@ -95,11 +125,14 @@ export default function useAlbums() {
   }
 
   onMounted(() => {
-    fetchAlbums()
+    fetchAlbums(true)
   })
 
   return {
     albums,
+    hasMore,
+    isLoading,
+    loadMore,
     fetchAlbums,
     getAlbumBySlug,
     getAlbumSlug
