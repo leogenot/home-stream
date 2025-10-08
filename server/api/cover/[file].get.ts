@@ -27,7 +27,6 @@ export default defineEventHandler(async (event) => {
             file = decodeURIComponent(file)
         } catch {
             // If second decode fails, use the first decoded version
-            console.warn('Failed to double-decode filename:', file)
         }
     }
 
@@ -40,7 +39,6 @@ export default defineEventHandler(async (event) => {
     }
 
     const filePath = path.join(MUSIC_DIR, file)
-    // console.log('Cover request for file:', file, 'full path:', filePath)
 
     // Check if file exists before trying to parse metadata
     if (!existsSync(filePath)) {

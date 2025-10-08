@@ -18,13 +18,10 @@ export default defineEventHandler(async (event) => {
             file = decodeURIComponent(file)
         } catch {
             // If second decode fails, use the first decoded version
-            console.warn('Failed to double-decode filename:', file)
         }
     }
 
     const filePath = join(process.cwd(), 'storage', 'uploads', 'music', file)
-    console.log('decoded file', file, 'normal file', event.context.params?.file)
-    console.log('full file path', filePath)
 
     // Check if file exists before trying to create read stream
     if (!existsSync(filePath)) {

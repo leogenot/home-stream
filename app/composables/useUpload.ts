@@ -27,7 +27,6 @@ export function useUpload() {
     const uploadFile = async () => {
         if (!fileInput.value?.length) return
         const formData = new FormData()
-        console.log('fileInput', fileInput.value, formData)
 
         Array.from(fileInput.value).forEach((file) => {
             formData.append('files', file)
@@ -40,7 +39,7 @@ export function useUpload() {
                 try {
                     userData.value = JSON.parse(stored)
                 } catch (e) {
-                    console.warn('Failed to parse user from localStorage', e)
+                    // Failed to parse user from localStorage
                 }
             }
             const res = await $fetch('/api/upload', { method: 'POST', body: formData, credentials: 'include', headers: userData.value ? { 'x-user-id': userData.value.auth_user_id } : {}, })

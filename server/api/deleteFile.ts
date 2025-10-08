@@ -5,7 +5,6 @@ import { serverSupabaseClient } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
     const { file, table } = await readBody(event) as { file: string, table: 'music' }
-    console.log('deleting - ', file, ' from ', table)
     if (!file || !table) return { error: 'filename and table are required' }
     const client = await serverSupabaseClient(event)
     const { data: { user }, error: userError } = await client.auth.getUser()
@@ -20,7 +19,6 @@ export default defineEventHandler(async (event) => {
             .eq('user_id', user.id)
             .single()
 
-        console.log('file', file, data)
         if (error || !data) return { error: 'File not found' }
 
         const filePath = join(process.cwd(), 'storage', 'uploads', 'music', data.file)

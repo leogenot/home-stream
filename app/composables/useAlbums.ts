@@ -11,7 +11,7 @@ export type Album = {
 
 export default function useAlbums() {
   const supabase = useSupabaseClient()
-  
+
   const userData = useState<User | undefined | null>('userData', () => null)
   const _error = ref<string | null>(null)
 
@@ -22,7 +22,7 @@ export default function useAlbums() {
       try {
         userData.value = JSON.parse(stored)
       } catch (e) {
-        console.warn('Failed to parse user from localStorage', e)
+        // Failed to parse user from localStorage
       }
     }
   })
@@ -31,20 +31,20 @@ export default function useAlbums() {
 
   const fetchAlbums = async () => {
     if (!userData.value || !userData.value?.auth_user_id) return
-    
+
     const { data, error } = await supabase
       .from('music')
       .select('id, title, file, artist, album, created_at')
       .order('created_at', { ascending: false })
-    
+
     if (error || !data) return
 
     // Group songs by album
     const albumMap = new Map<string, Album>()
-    
+
     for (const song of data) {
       const albumKey = `${song.album} - ${song.artist}`
-      
+
       if (!albumMap.has(albumKey)) {
         albumMap.set(albumKey, {
           name: song.album,
@@ -53,13 +53,13 @@ export default function useAlbums() {
           coverUrl: undefined
         })
       }
-      
+
       albumMap.get(albumKey)!.songs.push(song)
     }
 
     // Convert to array and get cover URLs
     const albumList = Array.from(albumMap.values())
-    
+
     // Try to get cover from the first song of each album
     for (const album of albumList) {
       if (album.songs.length > 0) {
@@ -67,7 +67,7 @@ export default function useAlbums() {
         try {
           album.coverUrl = `/api/cover/${encodeURIComponent(firstSong.file)}`
         } catch (e) {
-          console.warn(`Failed to get cover for album ${album.name}:`, e)
+          // Failed to get cover for album
         }
       }
     }

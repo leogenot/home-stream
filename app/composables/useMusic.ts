@@ -15,7 +15,7 @@ export default function useMusic() {
             try {
                 userData.value = JSON.parse(stored)
             } catch (e) {
-                console.warn('Failed to parse user from localStorage', e)
+                // Failed to parse user from localStorage
             }
         }
     })

@@ -8,7 +8,6 @@ import { $fetch } from 'ofetch'
 export default defineEventHandler(async (event) => {
     try {
         const files = await readMultipartFormData(event)
-        console.log("parsed files", files)
         if (!files || !files.length) {
             return { error: 'No file found' }
         }
@@ -63,7 +62,7 @@ export default defineEventHandler(async (event) => {
 
                 if (error) {
                     if (error.code === '23505') {
-                        console.log(`File ${file.filename} already exists, skipping insert`)
+                        // File already exists, skip insert
                         continue
                     }
                     throw error
@@ -71,13 +70,12 @@ export default defineEventHandler(async (event) => {
 
                 results.push({ table: tableToInsert, ...data })
             } catch (err) {
-                console.error(err)
+                // Error processing file
             }
         }
         return { files: results }
     }
     catch (err) {
-        console.error('Handler crashed:', err)
         return { error: 'Something went wrong on the server' }
     }
 

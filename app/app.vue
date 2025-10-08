@@ -14,8 +14,7 @@
       await new Promise((resolve) => setTimeout(resolve, 100))
       authInitialized.value = true
       isInitializing.value = false
-    } catch (error) {
-      console.error('Failed to initialize auth:', error)
+    } catch {
       authInitialized.value = true
       isInitializing.value = false
     }

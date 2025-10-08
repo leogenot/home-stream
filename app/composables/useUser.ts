@@ -17,10 +17,9 @@ export default function useUser() {
         const stored = localStorage.getItem(USER_STORAGE_KEY)
         if (stored) {
             try {
-                console.log('Getting stored')
                 userData.value = JSON.parse(stored)
             } catch (e) {
-                console.warn('Failed to parse user from localStorage', e)
+                // Failed to parse user from localStorage
             }
         }
     }
@@ -31,7 +30,6 @@ export default function useUser() {
         (newVal, oldVal) => {
             // Always update localStorage if userData changes
             if (newVal !== oldVal) {
-                console.log('User data changed, updating localStorage')
                 localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(newVal))
             }
         },
@@ -44,7 +42,6 @@ export default function useUser() {
 
         loadingUserDetails.value = true
         error.value = null
-        console.log('user id', user.id)
 
         try {
             const { data, error: queryError } = await supabase
@@ -54,7 +51,6 @@ export default function useUser() {
                 .maybeSingle()
 
             if (queryError) throw new Error(queryError.message)
-            console.log('Setting user data', data)
             userData.value = data
             if (!data) throw new Error('No user data found')
         } catch (err: any) {
@@ -74,7 +70,6 @@ export default function useUser() {
         if (!userData.value || !userData.value.id) return
         // Clear localStorage first
         localStorage.removeItem(USER_STORAGE_KEY)
-        console.log('userData.value', userData.value)
         loadingUserDetails.value = true
         error.value = null
 
@@ -86,7 +81,6 @@ export default function useUser() {
                 .maybeSingle()
 
             if (queryError) throw new Error(queryError.message)
-            console.log('Force refreshing user data from database')
             userData.value = data
         } catch (err: any) {
             error.value = err.message || 'Failed to force refresh user'
@@ -110,7 +104,6 @@ export default function useUser() {
                 .maybeSingle()
 
             if (queryError) throw new Error(queryError.message)
-            console.log('Refreshing user data')
             userData.value = data
         } catch (err: any) {
             error.value = err.message || 'Failed to refresh user'

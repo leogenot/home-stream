@@ -24,7 +24,6 @@ export default defineEventHandler(async (event) => {
 
     try {
         const filePath = path.join(MUSIC_DIR, safeFile)
-        console.log('Metadata request for file:', safeFile, 'full path:', filePath)
 
         // Check if file exists before trying to parse metadata
         const { existsSync } = await import('fs')

@@ -18,8 +18,9 @@ export default defineEventHandler(async (event) => {
   let entries: string[] = []
   try {
     entries = await readdir(MUSIC_DIR)
-  } catch (e: any) {
-    throw createError({ statusCode: 500, statusMessage: `Unable to read uploads directory: ${e.message}` })
+  } catch (e) {
+    const message = e instanceof Error ? e.message : 'unknown error'
+    throw createError({ statusCode: 500, statusMessage: `Unable to read uploads directory: ${message}` })
   }
 
   const results: Array<{ file: string; status: 'inserted' | 'skipped' | 'failed'; reason?: string }> = []
@@ -79,7 +80,7 @@ export default defineEventHandler(async (event) => {
 
       if (insertError) {
         // If unique violation, mark skipped; else, mark failed
-        if ((insertError as any).code === '23505') {
+        if ('code' in insertError && insertError.code === '23505') {
           results.push({ file: entry, status: 'skipped', reason: 'duplicate' })
         } else {
           results.push({ file: entry, status: 'failed', reason: insertError.message })
@@ -88,8 +89,9 @@ export default defineEventHandler(async (event) => {
       }
 
       results.push({ file: entry, status: 'inserted' })
-    } catch (e: any) {
-      results.push({ file: entry, status: 'failed', reason: e?.message || 'unknown error' })
+    } catch (e) {
+      const message = e instanceof Error ? e.message : 'unknown error'
+      results.push({ file: entry, status: 'failed', reason: message })
     }
   }
 

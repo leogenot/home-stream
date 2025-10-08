@@ -52,10 +52,10 @@
       }
       summary.value = res.summary
       results.value = res.results
-    } catch (e: any) {
+    } catch (e) {
       toast.add({
         title: 'Error',
-        description: e?.message || 'Sync failed',
+        description: e instanceof Error ? e.message : 'Sync failed',
         icon: 'i-lucide-alert-circle',
         color: 'error',
       })
@@ -111,10 +111,10 @@
               <UBadge
                 :color="
                   row.status === 'inserted'
-                    ? 'green'
+                    ? 'success'
                     : row.status === 'skipped'
-                      ? 'gray'
-                      : 'red'
+                      ? 'neutral'
+                      : 'error'
                 "
               >
                 {{ row.status }}

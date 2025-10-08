@@ -1,10 +1,14 @@
-import type { Subscription } from '@supabase/supabase-js'
 import { useSupabaseClient, useSupabaseUser } from '#imports'
+
+type AuthSubscription = {
+    unsubscribe: () => void
+}
+
 export function useSupabaseAuth() {
     const supabase = useSupabaseClient()
     const user = useSupabaseUser()
     const isLoading = ref(false)
-    let authListener: Subscription | null = null
+    let authListener: AuthSubscription | null = null
     const { loadUser, clearUser } = useUser()
 
 
@@ -12,31 +16,24 @@ export function useSupabaseAuth() {
         // Get initial session first to avoid race conditions
         const { data: { session }, error } = await supabase.auth.getSession()
 
-        if (error) {
-            console.error('Error getting initial session:', error)
-        } else if (session?.user) {
-            console.log('Initial session found, loading user')
-            await loadUser(session.user)
+        if (!error && session?.user) {
+            await loadUser(session.user as unknown as User)
         }
 
         // Setup auth state change listener
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange(async (event, session) => {
-            console.log('EVENT', event)
-
             if (event === 'INITIAL_SESSION') {
                 if (session?.user) {
-                    console.log('Session restored via listener')
-                    await loadUser(session?.user)
+                    await loadUser(session?.user as unknown as User)
                 }
             } else if (event === 'SIGNED_IN') {
                 if (session?.user) {
-                    console.log('User logged in')
-                    await loadUser(session?.user)
+                    await loadUser(session?.user as unknown as User)
                 }
             } else if (event === 'SIGNED_OUT') {
-                console.log('User logged out')
+                // User logged out
             }
         })
 
@@ -44,12 +41,11 @@ export function useSupabaseAuth() {
     }
 
     const unsubscribeAuthListener = () => {
-        console.log('unsubscribe')
         if (authListener) {
             try {
                 authListener.unsubscribe()
-            } catch (err) {
-                console.error('Failed to unsubscribe auth listener:', err)
+            } catch {
+                // Failed to unsubscribe
             }
             authListener = null
         }
@@ -61,8 +57,8 @@ export function useSupabaseAuth() {
             if (error) throw new Error(error.message)
 
             return { data, error: null }
-        } catch (err: any) {
-            return { data: null, error: err.message }
+        } catch (err) {
+            return { data: null, error: err instanceof Error ? err.message : 'Unknown error' }
         }
     }
 
@@ -81,14 +77,13 @@ export function useSupabaseAuth() {
             })
             clearTimeout(loaderTimeout)
             isLoading.value = false
-            console.log(data)
             if (error) throw new Error(error.message)
 
             return { data, error: null }
-        } catch (err: any) {
+        } catch (err) {
             clearTimeout(loaderTimeout)
             isLoading.value = false
-            return { data: null, error: err.message }
+            return { data: null, error: err instanceof Error ? err.message : 'Unknown error' }
         }
     }
 
@@ -97,29 +92,28 @@ export function useSupabaseAuth() {
             const { error } = await supabase.auth.signOut()
 
             if (error) {
-                console.log(error)
                 throw new Error(error.message)
             }
 
             clearUser()
 
             return { error: null }
-        } catch (err: any) {
-            return { error: err.message }
+        } catch (err) {
+            return { error: err instanceof Error ? err.message : 'Unknown error' }
         }
     }
 
     const resetPassword = async (email: string) => {
         try {
-            const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
                 redirectTo: `${useRuntimeConfig().public.BASE_URL}/auth/new-password`,
             })
 
             if (error) throw new Error(error.message)
 
             return { error: null }
-        } catch (err: any) {
-            return { error: err.message }
+        } catch (err) {
+            return { error: err instanceof Error ? err.message : 'Unknown error' }
         }
     }
 
@@ -128,26 +122,26 @@ export function useSupabaseAuth() {
             password: new_password,
         })
 
-        if (error) {
-            console.error('Error updating password:', error)
-        }
-
         return { data, error }
     }
 
     const upsertUserDetails = async (
         username: string,
     ) => {
-        console.log('user', user.value)
+        if (!user.value?.id) {
+            throw new Error('User not authenticated')
+        }
+
+        // Note: Supabase type generation needs to be configured for proper type inference
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - Supabase type generation issue
         const { data, error } = await supabase
             .from('user_details')
-            .update({
-                username: username as string,
-            })
-            .eq('auth_user_id', user.value?.id)
+            .update({ username })
+            .eq('auth_user_id', user.value.id)
             .select();
+
         if (error) {
-            console.error('Error upserting user details:', error)
             throw error
         }
 

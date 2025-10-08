@@ -24,7 +24,7 @@ export default function usePlaylist() {
             try {
                 userData.value = JSON.parse(stored)
             } catch (e) {
-                console.warn('Failed to parse user from localStorage', e)
+                // Failed to parse user from localStorage
             }
         }
     })
@@ -57,7 +57,6 @@ export default function usePlaylist() {
             .order('created_at', { ascending: false })
 
         if (error) {
-            console.error(error)
             return
         }
 
@@ -82,7 +81,6 @@ export default function usePlaylist() {
     }
 
     const createPlaylist = async () => {
-        console.log('Creating playlist', selectedMusicIds.value)
         playlistError.value = ''
         playlistSuccess.value = ''
         if (!userData.value) return
@@ -118,7 +116,6 @@ export default function usePlaylist() {
             selectedMusicIds.value = []
             fetchPlaylists()
         } catch (err: any) {
-            console.error(err)
             playlistError.value = err.message
         }
     }
@@ -133,7 +130,6 @@ export default function usePlaylist() {
             playlistSuccess.value = 'Playlist deleted successfully!'
             fetchPlaylists()
         } catch (err: any) {
-            console.error(err)
             playlistError.value = err.message
         }
     }
@@ -158,7 +154,6 @@ export default function usePlaylist() {
             playlistSuccess.value = 'Items added to playlist!'
             fetchPlaylists()
         } catch (err: any) {
-            console.error(err)
             playlistError.value = err.message
         }
     }
@@ -170,7 +165,6 @@ export default function usePlaylist() {
             playlistSuccess.value = 'Item removed from playlist!'
             fetchPlaylists()
         } catch (err: any) {
-            console.error(err)
             playlistError.value = err.message
         }
     }
@@ -222,7 +216,6 @@ export default function usePlaylist() {
             .single()
 
         if (fetchError || !data) {
-            if (fetchError) console.error(fetchError)
             return null
         }
 

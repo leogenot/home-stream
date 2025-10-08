@@ -286,7 +286,7 @@
         // Update media session metadata when we have track info
         updateMediaSessionMetadata()
       } catch (err) {
-        console.warn('Failed to fetch metadata:', err)
+        // Failed to fetch metadata
       }
     },
     { immediate: true },
