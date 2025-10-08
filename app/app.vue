@@ -87,7 +87,7 @@
     <transition mode="out-in" name="fade">
       <div
         v-if="showCover"
-        class="backdrop bg-muted/20 fixed top-0 left-0 h-full w-full backdrop-blur-lg"
+        class="backdrop bg-neutral fixed top-0 left-0 z-1 h-full w-full backdrop-blur-lg"
         @click="showCover = false"
       />
     </transition>
