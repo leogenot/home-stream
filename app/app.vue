@@ -28,11 +28,6 @@
     return userData.value ? 'default' : 'auth'
   })
 
-  const colorMode = useColorMode()
-
-  const color = computed(() =>
-    colorMode.value === 'dark' ? '#000000' : '#ffffff',
-  )
   const route = useRoute()
   const runtimeConfig = useRuntimeConfig()
 
@@ -40,7 +35,7 @@
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { key: 'theme-color', name: 'theme-color', content: color },
+      { key: 'theme-color', name: 'theme-color', content: '#000000' },
     ],
     link: [
       { rel: 'icon', href: '/favicon.ico' },

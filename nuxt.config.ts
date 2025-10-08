@@ -63,8 +63,8 @@ export default defineNuxtConfig({
         { name: 'amazonbot', content: 'noindex, nofollow' },
         { name: 'claudebot', content: 'noindex, nofollow' },
         { name: 'cohere-ai', content: 'noindex, nofollow' },
-        { name: 'theme-color', content: '#ffffff' },
-        { name: 'msapplication-TileColor', content: '#ffffff' },
+        { name: 'theme-color', content: '#000000' },
+        { name: 'msapplication-TileColor', content: '#000000' },
         { name: 'mobile-web-app-capable', content: 'yes' },
         { name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
         { name: 'apple-mobile-web-app-title', content: 'Home Stream' },
@@ -120,6 +120,10 @@ export default defineNuxtConfig({
 
   ui: {
     fonts: false
+  },
+  colorMode: {
+    preference: 'dark',
+    fallback: 'dark',
   },
   icon: {
     mode: 'css',

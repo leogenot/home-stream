@@ -15,15 +15,13 @@
       :items="links"
       variant="link"
       color="neutral"
-      class="bg-muted/80 border-muted/50 justify-between rounded-xl border px-2 shadow-lg shadow-neutral-950/5 backdrop-blur-sm sm:px-4"
+      class="bg-muted/80 border-muted/50 w-full items-center justify-center rounded-xl border px-4 shadow-lg shadow-neutral-950/5 backdrop-blur-sm"
       :ui="{
-        link: 'px-2 py-1',
+        root: '[&>div]:w-full',
+        list: 'flex items-center justify-between w-full gap-1.5',
+        link: 'py-1 px-0',
         linkLeadingIcon: 'hidden',
       }"
-    >
-      <template #list-trailing>
-        <ColorModeButton />
-      </template>
-    </UNavigationMenu>
+    />
   </div>
 </template>
