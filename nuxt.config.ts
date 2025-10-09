@@ -63,7 +63,6 @@ export default defineNuxtConfig({
         { name: 'amazonbot', content: 'noindex, nofollow' },
         { name: 'claudebot', content: 'noindex, nofollow' },
         { name: 'cohere-ai', content: 'noindex, nofollow' },
-        { name: 'theme-color', content: '#000000' },
         { name: 'msapplication-TileColor', content: '#000000' },
         { name: 'mobile-web-app-capable', content: 'yes' },
         { name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
