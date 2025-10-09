@@ -7,9 +7,10 @@
 
 <template>
   <li class="flex items-center justify-between">
-    {{ item?.file.title || 'Unknown' }}
+    <span>{{ item?.file.title || 'Unknown' }}</span>
     <button
       class="text-xs text-red-500"
+      :aria-label="`Remove ${item?.file.title || 'Unknown'} from playlist`"
       @click="removeItemFromPlaylist(item.id)"
     >
       Remove

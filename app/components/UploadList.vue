@@ -20,12 +20,13 @@
 <template>
   <div>
     <h2 class="font-serif text-xl">Uploaded music:</h2>
-    <div
+    <ul
       v-if="files.length"
       ref="filesContainer"
       class="files-list mt-4 grid gap-2"
+      aria-label="Uploaded music files"
     >
-      <div
+      <li
         v-for="file in files"
         :key="file.id"
         class="file-item border-default flex items-center justify-between gap-4 border px-2 py-4"
@@ -34,12 +35,16 @@
           {{ file.title }}
           <span class="text-xs opacity-80">- {{ file.artist }}</span>
         </h3>
-        <button class="shrink-0 text-sm" @click="deleteFile(file.file)">
-          <UIcon name="i-lucide-circle-x" class="size-5" />
+        <button
+          class="shrink-0 text-sm"
+          :aria-label="`Delete ${file.title} by ${file.artist}`"
+          @click="deleteFile(file.file)"
+        >
+          <UIcon name="i-lucide-circle-x" class="size-5" aria-hidden="true" />
         </button>
-      </div>
-    </div>
-    <p v-else class="text-gray-500">No uploaded music yet.</p>
+      </li>
+    </ul>
+    <p v-else class="text-gray-500" role="status">No uploaded music yet.</p>
   </div>
 </template>
 

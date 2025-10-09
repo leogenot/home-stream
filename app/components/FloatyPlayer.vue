@@ -413,7 +413,7 @@
               v-show="showCover"
               :key="pictureUrl"
               :src="pictureUrl"
-              alt="cover"
+              :alt="`Album cover for ${currentItem.title} by ${currentItem.artist || 'Unknown Artist'}`"
               class="object-fit aspect-square h-auto w-full max-w-96 overflow-clip rounded-lg bg-transparent"
               @touchstart="onTouchStart"
               @touchmove="onTouchMove"
@@ -422,12 +422,14 @@
           </transition>
 
           <div class="grid w-full items-center justify-center gap-1">
-            <div
+            <button
               class="w-full cursor-pointer text-center font-serif text-sm"
+              :aria-label="showCover ? 'Hide album cover' : 'Show album cover'"
+              :aria-expanded="showCover"
               @click="showCover = !showCover"
             >
               {{ currentItem.title }}
-            </div>
+            </button>
             <div v-if="currentItem.artist" class="truncate text-center text-xs">
               {{ currentItem.artist }}
             </div>
@@ -435,17 +437,43 @@
         </div>
       </div>
       <div class="flex w-full items-center justify-center gap-2">
-        <button class="px-2 py-1 text-xs" @click="prev">
-          <UIcon name="i-lucide-chevron-first" class="size-5" />
+        <button
+          class="px-2 py-1 text-xs"
+          aria-label="Previous track"
+          @click="prev"
+        >
+          <UIcon
+            name="i-lucide-chevron-first"
+            class="size-5"
+            aria-hidden="true"
+          />
         </button>
-        <button class="px-2 py-1 text-xs" @click="toggle">
+        <button
+          class="px-2 py-1 text-xs"
+          :aria-label="isPlaying ? 'Pause' : 'Play'"
+          @click="toggle"
+        >
           <transition mode="out-in">
-            <UIcon v-if="isPlaying" name="i-lucide-pause" class="size-5" />
-            <UIcon v-else name="i-lucide-play" class="size-5" />
+            <UIcon
+              v-if="isPlaying"
+              name="i-lucide-pause"
+              class="size-5"
+              aria-hidden="true"
+            />
+            <UIcon
+              v-else
+              name="i-lucide-play"
+              class="size-5"
+              aria-hidden="true"
+            />
           </transition>
         </button>
-        <button class="px-2 py-1 text-xs" @click="next">
-          <UIcon name="i-lucide-chevron-last" class="size-5" />
+        <button class="px-2 py-1 text-xs" aria-label="Next track" @click="next">
+          <UIcon
+            name="i-lucide-chevron-last"
+            class="size-5"
+            aria-hidden="true"
+          />
         </button>
       </div>
 
@@ -466,14 +494,20 @@
         <span class="text-xs tabular-nums">
           {{ formatTime(duration) }}
         </span>
-        <button class="px-2 py-1 text-xs" @click="toggleManager">
-          <UIcon name="i-lucide-list-music" class="size-5" />
+        <button
+          class="px-2 py-1 text-xs"
+          :aria-label="isManagerOpen ? 'Close queue' : 'Open queue'"
+          :aria-expanded="isManagerOpen"
+          @click="toggleManager"
+        >
+          <UIcon name="i-lucide-list-music" class="size-5" aria-hidden="true" />
         </button>
       </div>
       <audio
         ref="audioRef"
         class="w-full"
         :src="currentItem?.src"
+        :aria-label="`Now playing: ${currentItem?.title || 'No track'}`"
         preload="none"
         @ended="onEnded"
         @timeupdate="onTimeUpdate"
@@ -483,41 +517,51 @@
       <div
         v-if="isManagerOpen"
         class="border-t-default mt-3 w-full border-t pt-3"
+        role="region"
+        aria-label="Queue manager"
       >
         <div class="mb-2 flex w-full items-center justify-between">
-          <div class="text-xs">Queue ({{ queue.length }})</div>
+          <h3 class="text-xs">Queue ({{ queue.length }})</h3>
           <div class="flex items-center gap-2">
             <button
               class="border-default border px-2 py-1 text-xs"
+              aria-label="Clear queue"
               @click="clearQueue"
             >
               Clear
             </button>
             <button
               class="border-default border px-2 py-1 text-xs"
+              aria-label="Close queue"
               @click="toggleManager"
             >
               Close
             </button>
           </div>
         </div>
-        <ul class="max-h-60 w-full overflow-y-auto text-sm">
+        <ul
+          class="max-h-60 w-full overflow-y-auto text-sm"
+          aria-label="Queue items"
+        >
           <li
             v-for="(item, i) in queue"
             :key="item.id + '-' + i"
             class="border-default/80 mb-1 flex w-full items-center justify-between gap-2 rounded border p-2"
             :class="{ 'border-default': i === currentIndex }"
+            :aria-current="i === currentIndex ? 'true' : undefined"
           >
-            <div
-              class="w-full font-serif text-sm text-wrap overflow-ellipsis"
+            <button
+              class="w-full text-left font-serif text-sm text-wrap overflow-ellipsis"
+              :aria-label="`Play ${item.title}${i === currentIndex ? ' (currently playing)' : ''}`"
               @click="playFrom(i)"
             >
               {{ item.title }}
-            </div>
+            </button>
             <div class="flex shrink-0 items-center gap-1">
               <button
                 class="border-default border px-1 py-0.5 text-sm"
                 :disabled="i === 0"
+                :aria-label="`Move ${item.title} up in queue`"
                 @click="moveItem(i, i - 1)"
               >
                 ↑
@@ -525,12 +569,14 @@
               <button
                 class="border-default border px-1 py-0.5 text-sm"
                 :disabled="i === queue.length - 1"
+                :aria-label="`Move ${item.title} down in queue`"
                 @click="moveItem(i, i + 1)"
               >
                 ↓
               </button>
               <button
                 class="border-default border px-1 py-0.5 text-sm"
+                :aria-label="`Remove ${item.title} from queue`"
                 @click="removeAt(i)"
               >
                 ✕

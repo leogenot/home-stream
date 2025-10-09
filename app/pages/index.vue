@@ -49,52 +49,79 @@
 <template>
   <UPage>
     <div class="flex justify-between pb-1">
-      <h2 class="font-serif text-2xl">Music</h2>
+      <h1 class="font-serif text-2xl">Music</h1>
       <div class="flex items-center gap-2">
-        <button class="px-3 py-1 text-sm" @click="playAllNow(songs)">
-          <UIcon name="i-lucide-play" class="size-5" />
+        <button
+          class="px-3 py-1 text-sm"
+          aria-label="Play all songs"
+          @click="playAllNow(songs)"
+        >
+          <UIcon name="i-lucide-play" class="size-5" aria-hidden="true" />
         </button>
-        <button class="px-3 py-1 text-sm" @click="playAllRandomNow(songs)">
-          <UIcon name="i-lucide-shuffle" class="size-5" />
+        <button
+          class="px-3 py-1 text-sm"
+          aria-label="Shuffle all songs"
+          @click="playAllRandomNow(songs)"
+        >
+          <UIcon name="i-lucide-shuffle" class="size-5" aria-hidden="true" />
         </button>
       </div>
     </div>
     <USeparator />
-    <div ref="songsContainer" class="songs-list">
-      <div
+    <ul ref="songsContainer" class="songs-list">
+      <li
         v-for="(song, i) in songs"
         :key="song.id"
         class="song-item my-6 flex w-full items-center justify-between gap-3"
       >
-        <div
-          class="truncate font-serif text-sm text-wrap overflow-ellipsis"
+        <button
+          class="truncate text-left font-serif text-sm text-wrap overflow-ellipsis"
+          :aria-label="`Play ${song.title} by ${song.artist}`"
           @click="playSong(i, songs)"
         >
           {{ song.title }}
           <span class="text-xs opacity-80">- {{ song.artist }}</span>
-        </div>
+        </button>
         <div class="flex shrink-0 items-center gap-2">
-          <button class="px-2 py-1 text-xs" @click="playSong(i, songs)">
-            <UIcon name="i-lucide-play" class="size-5" />
+          <button
+            class="px-2 py-1 text-xs"
+            :aria-label="`Play ${song.title}`"
+            @click="playSong(i, songs)"
+          >
+            <UIcon name="i-lucide-play" class="size-5" aria-hidden="true" />
           </button>
-          <button class="px-2 py-1 text-xs" @click="addToQueue(song)">
-            <UIcon name="i-lucide-list-plus" class="size-5" />
+          <button
+            class="px-2 py-1 text-xs"
+            :aria-label="`Add ${song.title} to queue`"
+            @click="addToQueue(song)"
+          >
+            <UIcon
+              name="i-lucide-list-plus"
+              class="size-5"
+              aria-hidden="true"
+            />
           </button>
         </div>
-      </div>
+      </li>
+    </ul>
 
-      <!-- Loading indicator -->
-      <div v-if="isLoading" class="py-4 text-center text-sm text-gray-500">
-        Loading more songs...
-      </div>
+    <!-- Loading indicator -->
+    <div
+      v-if="isLoading"
+      class="py-4 text-center text-sm text-gray-500"
+      role="status"
+      aria-live="polite"
+    >
+      Loading more songs...
+    </div>
 
-      <!-- End of list indicator -->
-      <div
-        v-else-if="!hasMore && songs.length > 0"
-        class="py-4 text-center text-sm text-gray-400"
-      >
-        No more songs to load
-      </div>
+    <!-- End of list indicator -->
+    <div
+      v-else-if="!hasMore && songs.length > 0"
+      class="py-4 text-center text-sm text-gray-400"
+      role="status"
+    >
+      No more songs to load
     </div>
   </UPage>
 </template>

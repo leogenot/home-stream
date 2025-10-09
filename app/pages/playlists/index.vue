@@ -108,7 +108,7 @@
 <template>
   <div class="grid w-full gap-6">
     <div>
-      <h2 class="font-serif text-2xl">Playlists</h2>
+      <h1 class="font-serif text-2xl">Playlists</h1>
       <p class="text-sm text-gray-600">
         Create and manage your playlists. Share links are public.
       </p>
@@ -118,19 +118,27 @@
     <div class="grid gap-2">
       <h2 class="font-serif text-xl">Create Playlist</h2>
       <form class="grid gap-2" @submit.prevent="createPlaylist">
+        <label for="playlist-title" class="sr-only">Playlist title</label>
         <UInput
+          id="playlist-title"
           v-model="newPlaylistTitle"
           class="text-sm uppercase"
           placeholder="Title"
+          aria-label="Playlist title"
           required
         />
 
+        <label for="playlist-songs" class="sr-only">
+          Select songs for playlist
+        </label>
         <USelectMenu
+          id="playlist-songs"
           v-model="selectedMusicIds"
           :items="mappedMusics"
           multiple
           selected-icon="i-lucide-check"
           placeholder="Select songs"
+          aria-label="Select songs for playlist"
         >
           <template #item-label="{ item }">
             <div class="flex items-center justify-between gap-2 p-1 text-sm">
@@ -148,15 +156,16 @@
           variant="subtle"
           size="sm"
           class="justify-center p-2 text-center uppercase"
+          aria-label="Create playlist"
         >
           Create
         </UButton>
       </form>
 
-      <p v-if="playlistError" class="text-sm text-red-600">
+      <p v-if="playlistError" class="text-sm text-red-600" role="alert">
         {{ playlistError }}
       </p>
-      <p v-if="playlistSuccess" class="text-sm text-green-600">
+      <p v-if="playlistSuccess" class="text-sm text-green-600" role="status">
         {{ playlistSuccess }}
       </p>
     </div>
@@ -164,10 +173,14 @@
 
     <div class="grid gap-3">
       <h2 class="font-serif text-xl">Your Playlists</h2>
-      <div v-if="!playlists.length" class="text-sm text-gray-500">
+      <div v-if="!playlists.length" class="text-sm text-gray-500" role="status">
         No playlists yet.
       </div>
-      <ul ref="playlistsContainer" class="playlists-list grid gap-3">
+      <ul
+        ref="playlistsContainer"
+        class="playlists-list grid gap-3"
+        aria-label="Your playlists"
+      >
         <li
           v-for="p in playlists"
           :key="p.id"
@@ -175,33 +188,50 @@
         >
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="title-wrapper inline-flex w-full justify-between">
-              <NuxtLink :to="`/playlists/${makePlaylistSlug(p.title, p.id)}`">
+              <NuxtLink
+                :to="`/playlists/${makePlaylistSlug(p.title, p.id)}`"
+                :aria-label="`View playlist ${p.title}`"
+              >
                 <h3 class="font-serif underline">{{ p.title }}</h3>
               </NuxtLink>
               <button
                 class="px-2 py-1 text-xs uppercase"
+                :aria-label="`Delete playlist ${p.title}`"
                 @click="deletePlaylist(p.id)"
               >
-                <UIcon name="i-lucide-circle-x" class="size-5" />
+                <UIcon
+                  name="i-lucide-circle-x"
+                  class="size-5"
+                  aria-hidden="true"
+                />
               </button>
             </div>
             <div class="flex w-full items-center gap-2">
               <button
                 class="px-2 py-1 text-xs uppercase"
+                :aria-label="`Play all songs from ${p.title}`"
                 @click="playAllNow(songsFromPlaylist(p))"
               >
-                <UIcon name="i-lucide-play" class="size-5" />
+                <UIcon name="i-lucide-play" class="size-5" aria-hidden="true" />
               </button>
               <button
                 class="px-2 py-1 text-xs uppercase"
+                :aria-label="`Shuffle all songs from ${p.title}`"
                 @click="playAllRandomNow(songsFromPlaylist(p))"
               >
-                <UIcon name="i-lucide-shuffle" class="size-5" />
+                <UIcon
+                  name="i-lucide-shuffle"
+                  class="size-5"
+                  aria-hidden="true"
+                />
               </button>
             </div>
           </div>
           <div class="mt-2">
-            <ul class="ml-4 grid list-disc gap-2 text-sm">
+            <ul
+              class="ml-4 grid list-disc gap-2 text-sm"
+              :aria-label="`Songs in ${p.title}`"
+            >
               <li v-for="it in p.playlist_items" :key="it.id">
                 {{ it.file.title }}
                 <span class="text-xs opacity-80">- {{ it.file.artist }}</span>
@@ -215,7 +245,11 @@
 
     <div class="grid gap-2">
       <h2 class="font-serif text-xl">All Songs</h2>
-      <ul ref="songsContainer" class="songs-list grid gap-2">
+      <ul
+        ref="songsContainer"
+        class="songs-list grid gap-2"
+        aria-label="All songs"
+      >
         <li
           v-for="m in musics"
           :key="m.id"
@@ -226,18 +260,28 @@
             <span class="text-xs opacity-80">- {{ m.artist }}</span>
           </span>
           <div class="flex items-center gap-2">
+            <label :for="`playlist-select-${m.id}`" class="sr-only">
+              Select playlist for {{ m.title }}
+            </label>
             <USelectMenu
+              :id="`playlist-select-${m.id}`"
               v-model="selectedPlaylistBySong[m.id]"
               :items="mappedPlaylists"
               selected-icon="i-lucide-check"
               class="w-full"
               placeholder="Select playlist"
+              :aria-label="`Select playlist for ${m.title}`"
             />
             <button
               class="shrink-0 px-2 py-1 text-xs uppercase"
+              :aria-label="`Add ${m.title} to selected playlist`"
               @click="addSongToSelected(m.id)"
             >
-              <UIcon name="i-lucide-list-plus" class="size-5" />
+              <UIcon
+                name="i-lucide-list-plus"
+                class="size-5"
+                aria-hidden="true"
+              />
             </button>
           </div>
         </li>
@@ -247,6 +291,8 @@
       <div
         v-if="musicsIsLoading"
         class="py-4 text-center text-sm text-gray-500"
+        role="status"
+        aria-live="polite"
       >
         Loading more songs...
       </div>
@@ -255,6 +301,7 @@
       <div
         v-else-if="!musicsHasMore && musics.length > 0"
         class="py-4 text-center text-sm text-gray-400"
+        role="status"
       >
         All songs loaded
       </div>

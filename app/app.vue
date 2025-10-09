@@ -67,9 +67,16 @@
     <div
       v-if="isInitializing"
       class="flex min-h-screen items-center justify-center"
+      role="status"
+      aria-live="polite"
+      aria-label="Loading application"
     >
       <div class="flex flex-col items-center gap-4">
-        <UIcon name="i-lucide-loader-2" class="h-8 w-8 animate-spin" />
+        <UIcon
+          name="i-lucide-loader-2"
+          class="h-8 w-8 animate-spin"
+          aria-hidden="true"
+        />
         <p class="text-muted-foreground text-sm">Loading...</p>
       </div>
     </div>
@@ -87,7 +94,13 @@
       <div
         v-if="showCover"
         class="backdrop bg-neutral fixed top-0 left-0 z-1 h-full w-full backdrop-blur-lg"
+        role="button"
+        tabindex="0"
+        aria-label="Close overlay"
         @click="showCover = false"
+        @keydown.enter="showCover = false"
+        @keydown.space.prevent="showCover = false"
+        @keydown.esc="showCover = false"
       />
     </transition>
   </UApp>

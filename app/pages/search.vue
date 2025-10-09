@@ -59,26 +59,36 @@
 <template>
   <UPage>
     <div class="flex justify-between pb-1">
-      <h2 class="font-serif text-2xl">Search songs</h2>
+      <h1 class="font-serif text-2xl">Search songs</h1>
     </div>
     <USeparator />
     <!-- Search Input -->
     <div class="my-6">
       <div class="relative">
+        <label for="search-input" class="sr-only">
+          Search for songs by title, artist, or album
+        </label>
         <UInput
+          id="search-input"
           v-model="searchQuery"
           icon="i-lucide-search"
           size="md"
           variant="outline"
           placeholder="Search..."
           class="w-full"
+          aria-label="Search for songs"
         />
       </div>
     </div>
 
     <!-- Search Results -->
     <div v-if="searchResults.length > 0">
-      <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+      <div
+        class="mb-4 text-sm text-gray-600 dark:text-gray-400"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
         {{ searchResults.length }} song{{
           searchResults.length !== 1 ? 's' : ''
         }}
@@ -86,14 +96,15 @@
         <span v-if="searchQuery.trim()">for "{{ searchQuery }}"</span>
       </div>
 
-      <div ref="songsContainer" class="songs-list">
-        <div
+      <ul ref="songsContainer" class="songs-list">
+        <li
           v-for="(song, i) in searchResults"
           :key="song.id"
           class="song-item my-6 flex w-full items-center justify-between gap-3"
         >
-          <div
-            class="cursor-pointer truncate font-serif text-sm text-wrap overflow-ellipsis hover:opacity-80"
+          <button
+            class="cursor-pointer truncate text-left font-serif text-sm text-wrap overflow-ellipsis hover:opacity-80"
+            :aria-label="`Play ${song.title} by ${song.artist}${song.album ? ' from ' + song.album : ''}`"
             @click="playSong(i, searchResults)"
           >
             {{ song.title }}
@@ -101,28 +112,36 @@
             <span v-if="song.album" class="block text-xs opacity-60">
               {{ song.album }}
             </span>
-          </div>
+          </button>
           <div class="flex shrink-0 items-center gap-2">
             <button
               class="rounded px-2 py-1 text-xs hover:bg-gray-100 dark:hover:bg-gray-800"
+              :aria-label="`Play ${song.title}`"
               @click="playSong(i, searchResults)"
             >
-              <UIcon name="i-lucide-play" class="size-5" />
+              <UIcon name="i-lucide-play" class="size-5" aria-hidden="true" />
             </button>
             <button
               class="rounded px-2 py-1 text-xs hover:bg-gray-100 dark:hover:bg-gray-800"
+              :aria-label="`Add ${song.title} to queue`"
               @click="addToQueue(song)"
             >
-              <UIcon name="i-lucide-list-plus" class="size-5" />
+              <UIcon
+                name="i-lucide-list-plus"
+                class="size-5"
+                aria-hidden="true"
+              />
             </button>
           </div>
-        </div>
-      </div>
+        </li>
+      </ul>
 
       <!-- Loading indicator (only show when not filtering with search) -->
       <div
         v-if="isLoading && !searchQuery.trim()"
         class="py-4 text-center text-sm text-gray-500"
+        role="status"
+        aria-live="polite"
       >
         Loading more songs...
       </div>
@@ -131,20 +150,22 @@
       <div
         v-else-if="!hasMore && !searchQuery.trim() && songs.length > 0"
         class="py-4 text-center text-sm text-gray-400"
+        role="status"
       >
         All songs loaded
       </div>
     </div>
 
     <!-- No Results -->
-    <div v-else-if="searchQuery.trim()" class="py-12 text-center">
+    <div v-else-if="searchQuery.trim()" class="py-12 text-center" role="status">
       <UIcon
         name="i-lucide-search-x"
         class="mx-auto mb-4 size-12 text-gray-400"
+        aria-hidden="true"
       />
-      <h3 class="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100">
+      <h2 class="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100">
         No songs found
-      </h3>
+      </h2>
       <p class="text-gray-600 dark:text-gray-400">
         Try searching with different keywords or check your spelling.
       </p>
@@ -152,18 +173,23 @@
 
     <!-- Empty State -->
     <div v-else-if="songs.length === 0" class="py-12 text-center">
-      <UIcon name="i-lucide-music" class="mx-auto mb-4 size-12 text-gray-400" />
-      <h3 class="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100">
+      <UIcon
+        name="i-lucide-music"
+        class="mx-auto mb-4 size-12 text-gray-400"
+        aria-hidden="true"
+      />
+      <h2 class="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100">
         No music uploaded yet
-      </h3>
+      </h2>
       <p class="mb-4 text-gray-600 dark:text-gray-400">
         Upload some music to start searching through your collection.
       </p>
       <NuxtLink
         to="/upload"
         class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+        aria-label="Go to upload page"
       >
-        <UIcon name="i-lucide-upload" class="mr-2 size-4" />
+        <UIcon name="i-lucide-upload" class="mr-2 size-4" aria-hidden="true" />
         Upload Music
       </NuxtLink>
     </div>

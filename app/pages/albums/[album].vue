@@ -79,11 +79,15 @@
 <template>
   <UPage>
     <div v-if="!album" class="py-8 text-center">
-      <h2 class="mb-4 font-serif text-2xl">Album not found</h2>
+      <h1 class="mb-4 font-serif text-2xl">Album not found</h1>
       <p class="text-muted-foreground mb-4">
         The album you're looking for doesn't exist.
       </p>
-      <NuxtLink to="/albums" class="text-primary hover:underline">
+      <NuxtLink
+        to="/albums"
+        class="text-primary hover:underline"
+        aria-label="Return to albums page"
+      >
         ← Back to Albums
       </NuxtLink>
     </div>
@@ -97,7 +101,7 @@
           <img
             v-if="album.coverUrl"
             :src="album.coverUrl"
-            :alt="`${album.name} by ${album.artist}`"
+            :alt="`Album cover for ${album.name} by ${album.artist}`"
             class="h-full w-full object-cover"
             @error="
               (e: Event) => {
@@ -109,8 +113,9 @@
           <div
             v-else
             class="text-muted-foreground flex h-full w-full items-center justify-center text-4xl"
+            aria-label="No album cover available"
           >
-            <UIcon name="i-lucide-music" />
+            <UIcon name="i-lucide-music" aria-hidden="true" />
           </div>
         </div>
         <div class="min-w-0 flex-1">
@@ -126,15 +131,21 @@
           <div class="flex items-center gap-2">
             <button
               class="hover:bg-accent px-3 py-1 text-sm"
+              :aria-label="`Play all songs from ${album.name}`"
               @click="playAlbum"
             >
-              <UIcon name="i-lucide-play" class="size-5" />
+              <UIcon name="i-lucide-play" class="size-5" aria-hidden="true" />
             </button>
             <button
               class="hover:bg-accent px-3 py-1 text-sm"
+              :aria-label="`Shuffle all songs from ${album.name}`"
               @click="shuffleAlbum"
             >
-              <UIcon name="i-lucide-shuffle" class="size-5" />
+              <UIcon
+                name="i-lucide-shuffle"
+                class="size-5"
+                aria-hidden="true"
+              />
             </button>
           </div>
         </div>
@@ -146,38 +157,46 @@
       <div
         v-if="album.songs.length === 0"
         class="text-muted-foreground py-8 text-center"
+        role="status"
       >
         <p>No songs found in this album</p>
       </div>
 
-      <div v-else ref="songsContainer" class="songs-list">
-        <div
+      <ul v-else ref="songsContainer" class="songs-list">
+        <li
           v-for="(song, i) in album.songs"
           :key="song.id"
           class="song-item my-6 flex w-full items-center justify-between gap-3"
         >
-          <div
-            class="hover:text-primary cursor-pointer truncate font-serif text-sm text-wrap overflow-ellipsis"
+          <button
+            class="hover:text-primary cursor-pointer truncate text-left font-serif text-sm text-wrap overflow-ellipsis"
+            :aria-label="`Play ${song.title}`"
             @click="playSong(i, album.songs)"
           >
             {{ song.title }}
-          </div>
+          </button>
           <div class="flex shrink-0 items-center gap-2">
             <button
               class="hover:bg-accent px-2 py-1 text-xs"
+              :aria-label="`Play ${song.title}`"
               @click="playSong(i, album.songs)"
             >
-              <UIcon name="i-lucide-play" class="size-5" />
+              <UIcon name="i-lucide-play" class="size-5" aria-hidden="true" />
             </button>
             <button
               class="hover:bg-accent px-2 py-1 text-xs"
+              :aria-label="`Add ${song.title} to queue`"
               @click="addToQueue(song)"
             >
-              <UIcon name="i-lucide-list-plus" class="size-5" />
+              <UIcon
+                name="i-lucide-list-plus"
+                class="size-5"
+                aria-hidden="true"
+              />
             </button>
           </div>
-        </div>
-      </div>
+        </li>
+      </ul>
     </div>
   </UPage>
 </template>
