@@ -69,6 +69,20 @@
     await removeItemFromPlaylist(itemId)
     await load()
   }
+
+  // Setup scroll animation
+  const songsContainer = ref<HTMLElement | null>(null)
+  const { setupObserver } = useScrollAnimation(songsContainer)
+
+  // Re-setup observer when playlist items change
+  watch(
+    () => playlist.value?.playlist_items,
+    () => {
+      nextTick(() => {
+        setupObserver()
+      })
+    },
+  )
 </script>
 
 <template>
@@ -101,11 +115,11 @@
           </button>
         </div>
       </div>
-      <ul class="grid gap-2">
+      <ul ref="songsContainer" class="songs-list grid gap-2">
         <li
           v-for="(it, idx) in playlist.playlist_items"
           :key="it.id"
-          class="border-default flex items-center justify-between rounded-sm border p-2"
+          class="song-item border-default flex items-center justify-between rounded-sm border p-2"
         >
           <span class="text-sm">{{ it.file.title }}</span>
           <div class="flex items-center gap-2">
@@ -127,3 +141,19 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+  .songs-list .song-item {
+    transform: scale(0.985);
+    opacity: 0;
+    transition:
+      transform 400ms ease,
+      opacity 400ms ease;
+    will-change: transform, opacity;
+  }
+
+  .songs-list .song-item.in-view {
+    transform: scale(1);
+    opacity: 1;
+  }
+</style>

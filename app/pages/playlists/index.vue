@@ -82,6 +82,27 @@
       value: String(playlist.id),
     }))
   })
+
+  // Setup scroll animations
+  const playlistsContainer = ref<HTMLElement | null>(null)
+  const songsContainer = ref<HTMLElement | null>(null)
+  const { setupObserver: setupPlaylistsObserver } =
+    useScrollAnimation(playlistsContainer)
+  const { setupObserver: setupSongsObserver } =
+    useScrollAnimation(songsContainer)
+
+  // Re-setup observers when data changes
+  watch(playlists, () => {
+    nextTick(() => {
+      setupPlaylistsObserver()
+    })
+  })
+
+  watch(musics, () => {
+    nextTick(() => {
+      setupSongsObserver()
+    })
+  })
 </script>
 
 <template>
@@ -146,11 +167,11 @@
       <div v-if="!playlists.length" class="text-sm text-gray-500">
         No playlists yet.
       </div>
-      <ul class="grid gap-3">
+      <ul ref="playlistsContainer" class="playlists-list grid gap-3">
         <li
           v-for="p in playlists"
           :key="p.id"
-          class="border-default rounded-sm border p-3"
+          class="playlist-item border-default rounded-sm border p-3"
         >
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="title-wrapper inline-flex w-full justify-between">
@@ -194,11 +215,11 @@
 
     <div class="grid gap-2">
       <h2 class="font-serif text-xl">All Songs</h2>
-      <ul class="grid gap-2">
+      <ul ref="songsContainer" class="songs-list grid gap-2">
         <li
           v-for="m in musics"
           :key="m.id"
-          class="border-default grid items-center gap-2 rounded-sm border p-2"
+          class="song-item border-default grid items-center gap-2 rounded-sm border p-2"
         >
           <span class="truncate font-serif text-sm text-wrap overflow-ellipsis">
             {{ m.title }}
@@ -240,3 +261,33 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+  .playlists-list .playlist-item {
+    transform: scale(0.985);
+    opacity: 0;
+    transition:
+      transform 400ms ease,
+      opacity 400ms ease;
+    will-change: transform, opacity;
+  }
+
+  .playlists-list .playlist-item.in-view {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  .songs-list .song-item {
+    transform: scale(0.985);
+    opacity: 0;
+    transition:
+      transform 400ms ease,
+      opacity 400ms ease;
+    will-change: transform, opacity;
+  }
+
+  .songs-list .song-item.in-view {
+    transform: scale(1);
+    opacity: 1;
+  }
+</style>

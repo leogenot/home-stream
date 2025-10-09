@@ -1,18 +1,34 @@
 <script setup lang="ts">
   const { files, deleteFile, fetchFiles } = useUpload()
+
   onMounted(() => {
     fetchFiles()
+  })
+
+  // Setup scroll animation
+  const filesContainer = ref<HTMLElement | null>(null)
+  const { setupObserver } = useScrollAnimation(filesContainer)
+
+  // Re-setup observer when files change
+  watch(files, () => {
+    nextTick(() => {
+      setupObserver()
+    })
   })
 </script>
 
 <template>
   <div>
     <h2 class="font-serif text-xl">Uploaded music:</h2>
-    <div v-if="files.length" class="mt-4 grid gap-2">
+    <div
+      v-if="files.length"
+      ref="filesContainer"
+      class="files-list mt-4 grid gap-2"
+    >
       <div
         v-for="file in files"
         :key="file.id"
-        class="border-default flex items-center justify-between gap-4 border px-2 py-4"
+        class="file-item border-default flex items-center justify-between gap-4 border px-2 py-4"
       >
         <h3 class="truncate font-serif text-sm text-wrap overflow-ellipsis">
           {{ file.title }}
@@ -26,3 +42,19 @@
     <p v-else class="text-gray-500">No uploaded music yet.</p>
   </div>
 </template>
+
+<style scoped>
+  .files-list .file-item {
+    transform: scale(0.985);
+    opacity: 0;
+    transition:
+      transform 400ms ease,
+      opacity 400ms ease;
+    will-change: transform, opacity;
+  }
+
+  .files-list .file-item.in-view {
+    transform: scale(1);
+    opacity: 1;
+  }
+</style>

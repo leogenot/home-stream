@@ -60,6 +60,20 @@
       playAllRandomNow(album.value.songs)
     }
   }
+
+  // Setup scroll animation
+  const songsContainer = ref<HTMLElement | null>(null)
+  const { setupObserver } = useScrollAnimation(songsContainer)
+
+  // Re-setup observer when album songs change
+  watch(
+    () => album.value?.songs,
+    () => {
+      nextTick(() => {
+        setupObserver()
+      })
+    },
+  )
 </script>
 
 <template>
@@ -136,11 +150,11 @@
         <p>No songs found in this album</p>
       </div>
 
-      <div v-else>
+      <div v-else ref="songsContainer" class="songs-list">
         <div
           v-for="(song, i) in album.songs"
           :key="song.id"
-          class="my-6 flex w-full items-center justify-between gap-3"
+          class="song-item my-6 flex w-full items-center justify-between gap-3"
         >
           <div
             class="hover:text-primary cursor-pointer truncate font-serif text-sm text-wrap overflow-ellipsis"
@@ -167,3 +181,19 @@
     </div>
   </UPage>
 </template>
+
+<style scoped>
+  .songs-list .song-item {
+    transform: scale(0.985);
+    opacity: 0;
+    transition:
+      transform 400ms ease,
+      opacity 400ms ease;
+    will-change: transform, opacity;
+  }
+
+  .songs-list .song-item.in-view {
+    transform: scale(1);
+    opacity: 1;
+  }
+</style>

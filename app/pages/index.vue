@@ -13,6 +13,17 @@
     enabled: computed(() => hasMore.value && !isLoading.value),
   })
 
+  // Setup scroll animation
+  const songsContainer = ref<HTMLElement | null>(null)
+  const { setupObserver } = useScrollAnimation(songsContainer)
+
+  // Re-setup observer when songs change
+  watch(songs, () => {
+    nextTick(() => {
+      setupObserver()
+    })
+  })
+
   onMounted(() => {
     // Refresh user data to ensure subscription status is current
     refreshUserData()
@@ -49,11 +60,11 @@
       </div>
     </div>
     <USeparator />
-    <div>
+    <div ref="songsContainer" class="songs-list">
       <div
         v-for="(song, i) in songs"
         :key="song.id"
-        class="my-6 flex w-full items-center justify-between gap-3"
+        class="song-item my-6 flex w-full items-center justify-between gap-3"
       >
         <div
           class="truncate font-serif text-sm text-wrap overflow-ellipsis"
@@ -87,3 +98,19 @@
     </div>
   </UPage>
 </template>
+
+<style scoped>
+  .songs-list .song-item {
+    transform: scale(0.985);
+    opacity: 0;
+    transition:
+      transform 400ms ease,
+      opacity 400ms ease;
+    will-change: transform, opacity;
+  }
+
+  .songs-list .song-item.in-view {
+    transform: scale(1);
+    opacity: 1;
+  }
+</style>

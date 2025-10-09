@@ -13,6 +13,17 @@
     enabled: computed(() => hasMore.value && !isLoading.value),
   })
 
+  // Setup scroll animation
+  const albumsContainer = ref<HTMLElement | null>(null)
+  const { setupObserver } = useScrollAnimation(albumsContainer)
+
+  // Re-setup observer when albums change
+  watch(albums, () => {
+    nextTick(() => {
+      setupObserver()
+    })
+  })
+
   onMounted(() => {
     // Refresh user data to ensure subscription status is current
     refreshUserData()
@@ -50,13 +61,14 @@
 
     <div
       v-else
-      class="grid grid-cols-2 gap-4 pt-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
+      ref="albumsContainer"
+      class="albums-list grid grid-cols-2 gap-4 pt-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
     >
       <NuxtLink
         v-for="album in albums"
         :key="`${album.name}-${album.artist}`"
         :to="`/albums/${getAlbumSlug(album)}`"
-        class="group bg-card hover:bg-accent block rounded-lg transition-colors"
+        class="album-item group bg-card hover:bg-accent block rounded-lg transition-colors"
       >
         <div class="bg-muted aspect-square overflow-hidden rounded-md">
           <img
@@ -108,3 +120,19 @@
     </div>
   </UPage>
 </template>
+
+<style scoped>
+  .albums-list .album-item {
+    transform: scale(0.985);
+    opacity: 0;
+    transition:
+      transform 400ms ease,
+      opacity 400ms ease;
+    will-change: transform, opacity;
+  }
+
+  .albums-list .album-item.in-view {
+    transform: scale(1);
+    opacity: 1;
+  }
+</style>
