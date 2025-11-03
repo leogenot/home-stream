@@ -24,8 +24,8 @@ export default defineEventHandler(async (event) => {
         // Initialize Netlify Blobs store
         const blobStore = getStore({
             name: 'music-files',
-            siteID: process.env.NETLIFY_SITE_ID,
-            token: process.env.NETLIFY_AUTH_TOKEN,
+            // siteID: process.env.NETLIFY_SITE_ID,
+            // token: process.env.NETLIFY_AUTH_TOKEN,
         })
 
         // Fetch the file once; use its size for range handling
