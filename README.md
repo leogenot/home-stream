@@ -230,7 +230,13 @@ sudo systemctl reload nginx
 npm install pm2 -g
 ```
 
-### 5. Set PM2
+### 5. Allow PM2 daemon for automatic start when server reloads:
+
+```bash
+pm2 startup
+```
+
+### 6. Set PM2
 
 ```bash
 # Ensure old process is removed
