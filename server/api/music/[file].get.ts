@@ -1,7 +1,6 @@
 // server/api/music/[file].get.ts
-import { defineEventHandler, sendStream, createError, getHeader, setHeader } from 'h3'
-import { join } from 'path'
-import { createReadStream, existsSync, statSync } from 'fs'
+import { defineEventHandler, createError, getHeader, setHeader } from 'h3'
+import { getStore } from '@netlify/blobs'
 
 export default defineEventHandler(async (event) => {
     const rawFile = event.context.params?.file || ''
@@ -21,19 +20,25 @@ export default defineEventHandler(async (event) => {
         }
     }
 
-    const filePath = join(process.cwd(), 'storage', 'uploads', 'music', file)
-
-    // Check if file exists before trying to create read stream
-    if (!existsSync(filePath)) {
-        throw createError({
-            statusCode: 404,
-            statusMessage: `File not found: ${file}`
-        })
-    }
-
     try {
-        const stat = statSync(filePath)
-        const fileSize = stat.size
+        // Initialize Netlify Blobs store
+        const blobStore = getStore({
+            name: 'music-files',
+            siteID: process.env.NETLIFY_SITE_ID,
+            token: process.env.NETLIFY_AUTH_TOKEN,
+        })
+
+        // Get blob metadata first to check if it exists
+        const metadata = await blobStore.getMetadata(file)
+        
+        if (!metadata) {
+            throw createError({
+                statusCode: 404,
+                statusMessage: `File not found: ${file}`
+            })
+        }
+
+        const fileSize = metadata.size
         const range = getHeader(event, 'range')
 
         // Set content type based on file extension
@@ -62,13 +67,21 @@ export default defineEventHandler(async (event) => {
             // Set 206 Partial Content status
             event.node.res.statusCode = 206
 
-            return sendStream(event, createReadStream(filePath, { start, end }))
+            // Get the full file and slice it
+            const fileData = await blobStore.get(file, { type: 'arrayBuffer' })
+            const buffer = Buffer.from(fileData)
+            const slice = buffer.slice(start, end + 1)
+            return slice
         } else {
             // No range requested, send entire file
             setHeader(event, 'Content-Length', fileSize)
-            return sendStream(event, createReadStream(filePath))
+            const fileData = await blobStore.get(file, { type: 'arrayBuffer' })
+            return Buffer.from(fileData)
         }
     } catch (error: unknown) {
+        if (error && typeof error === 'object' && 'statusCode' in error) {
+            throw error
+        }
         const message = error instanceof Error ? error.message : 'Unknown error'
         throw createError({
             statusCode: 500,

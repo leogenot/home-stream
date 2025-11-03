@@ -70,9 +70,7 @@
     <div class="grid gap-4">
       <h1 class="font-serif text-2xl">Sync Library</h1>
       <p class="text-sm text-neutral-500">
-        Scan
-        <code>storage/uploads/music</code>
-        and add any missing files to your library.
+        Sync functionality is not available with Netlify Blobs storage. Please use the upload page to add files to your library.
       </p>
     </div>
 

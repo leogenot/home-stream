@@ -1,9 +1,7 @@
-import { parseFile } from 'music-metadata'
+import { parseBuffer } from 'music-metadata'
 import { defineEventHandler, getQuery, createError } from 'h3'
-import path from 'path'
 import { serverSupabaseClient } from '#supabase/server'
-
-const MUSIC_DIR = path.resolve(process.cwd(), 'storage/uploads/music')
+import { getStore } from '@netlify/blobs'
 
 export default defineEventHandler(async (event) => {
     // Check authentication
@@ -23,18 +21,24 @@ export default defineEventHandler(async (event) => {
     const safeFile = decodeURIComponent(file)
 
     try {
-        const filePath = path.join(MUSIC_DIR, safeFile)
+        // Initialize Netlify Blobs store
+        const blobStore = getStore({
+            name: 'music-files',
+            siteID: process.env.NETLIFY_SITE_ID,
+            token: process.env.NETLIFY_AUTH_TOKEN,
+        })
 
-        // Check if file exists before trying to parse metadata
-        const { existsSync } = await import('fs')
-        if (!existsSync(filePath)) {
+        // Get file from Netlify Blobs
+        const fileData = await blobStore.get(safeFile, { type: 'arrayBuffer' })
+
+        if (!fileData) {
             throw createError({
                 statusCode: 404,
                 statusMessage: `Music file not found: ${safeFile}`
             })
         }
 
-        const metadata = await parseFile(filePath)
+        const metadata = await parseBuffer(Buffer.from(fileData))
 
         let pictureBase64: string | null = null
         if (metadata.common.picture && metadata.common.picture.length > 0) {

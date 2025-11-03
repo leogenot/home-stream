@@ -1,11 +1,9 @@
 // /server/api/cover/[file].get.ts
-import { parseFile } from 'music-metadata'
-import path from 'path'
-import { existsSync } from 'fs'
+import { parseBuffer } from 'music-metadata'
 import { serverSupabaseClient } from '#supabase/server'
-import { setHeader } from 'h3'
+import { setHeader, createError } from 'h3'
+import { getStore } from '@netlify/blobs'
 
-const MUSIC_DIR = path.resolve(process.cwd(), 'storage/uploads/music')
 const coverCache = new Map<string, { data: Uint8Array; format: string }>()
 
 export default defineEventHandler(async (event) => {
@@ -38,18 +36,25 @@ export default defineEventHandler(async (event) => {
         return cached.data
     }
 
-    const filePath = path.join(MUSIC_DIR, file)
-
-    // Check if file exists before trying to parse metadata
-    if (!existsSync(filePath)) {
-        throw createError({
-            statusCode: 404,
-            statusMessage: `Music file not found: ${file}`
-        })
-    }
-
     try {
-        const metadata = await parseFile(filePath)
+        // Initialize Netlify Blobs store
+        const blobStore = getStore({
+            name: 'music-files',
+            siteID: process.env.NETLIFY_SITE_ID,
+            token: process.env.NETLIFY_AUTH_TOKEN,
+        })
+
+        // Get file from Netlify Blobs
+        const fileData = await blobStore.get(file, { type: 'arrayBuffer' })
+
+        if (!fileData) {
+            throw createError({
+                statusCode: 404,
+                statusMessage: `Music file not found: ${file}`
+            })
+        }
+
+        const metadata = await parseBuffer(Buffer.from(fileData))
         const picture = metadata.common.picture?.[0]
         if (!picture) throw createError({ statusCode: 404, statusMessage: 'No cover found in file' })
 

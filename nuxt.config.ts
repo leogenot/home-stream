@@ -8,6 +8,8 @@ export default defineNuxtConfig({
     supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
     RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
     RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY,
+    netlifySiteId: process.env.NETLIFY_SITE_ID,
+    netlifyAuthToken: process.env.NETLIFY_AUTH_TOKEN,
     public: {
       BASE_URL: process.env.BASE_URL || 'http://localhost:3000',
       SUPABASE_URL: process.env.SUPABASE_URL,
@@ -143,12 +145,6 @@ export default defineNuxtConfig({
       routes: [], // No pre-rendered routes
     },
     compressPublicAssets: true,
-    serverAssets: [
-      {
-        baseName: 'uploads',
-        dir: 'uploads'
-      }
-    ],
     preset: 'node-server',
     routeRules: {
       '/**': {

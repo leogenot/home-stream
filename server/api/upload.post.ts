@@ -1,13 +1,14 @@
 // server/api/upload.post.ts
 import { defineEventHandler, readMultipartFormData, getHeaders, getRequestHeaders, getRequestURL } from 'h3'
-import { join, dirname, extname } from 'path'
-import { writeFile, mkdir } from 'fs/promises'
+import { extname } from 'path'
 import { serverSupabaseClient } from '#supabase/server'
 import { $fetch } from 'ofetch'
+import { getStore } from '@netlify/blobs'
 
 export default defineEventHandler(async (event) => {
     try {
         const files = await readMultipartFormData(event)
+        console.log(files)
         if (!files || !files.length) {
             return { error: 'No file found' }
         }
@@ -19,14 +20,15 @@ export default defineEventHandler(async (event) => {
             return { error: 'User not authenticated' }
         }
 
+        // Initialize Netlify Blobs store
+        const blobStore = getStore({
+            name: 'music-files',
+            siteID: process.env.NETLIFY_SITE_ID,
+            token: process.env.NETLIFY_AUTH_TOKEN,
+        })
+
         const results: any[] = []
         for (const file of files) {
-            const filePath = join(process.cwd(), 'storage', 'uploads', 'music', file.filename as string)
-
-            await mkdir(dirname(filePath), { recursive: true })
-
-            await writeFile(filePath, file.data)
-
             const ext = extname(file.filename as string).toLowerCase()
             const mime = file.type?.toLowerCase() || ''
             const musicExts = ['.mp3', '.wav', '.flac', '.aac', '.ogg']
@@ -39,6 +41,14 @@ export default defineEventHandler(async (event) => {
             }
 
             try {
+                // Store file in Netlify Blobs
+                await blobStore.set(file.filename as string, file.data, {
+                    metadata: {
+                        contentType: mime || 'audio/mpeg',
+                        uploadedAt: new Date().toISOString(),
+                    },
+                })
+
                 const reqUrl = getRequestURL(event)
                 const origin = `${reqUrl.protocol}//${reqUrl.host}`
                 const headers = getRequestHeaders(event)

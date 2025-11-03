@@ -1,7 +1,6 @@
 import { defineEventHandler, readBody } from 'h3'
-import { join } from 'path'
-import { unlink } from 'fs/promises'
 import { serverSupabaseClient } from '#supabase/server'
+import { getStore } from '@netlify/blobs'
 
 export default defineEventHandler(async (event) => {
     const { file, table } = await readBody(event) as { file: string, table: 'music' }
@@ -21,10 +20,15 @@ export default defineEventHandler(async (event) => {
 
         if (error || !data) return { error: 'File not found' }
 
-        const filePath = join(process.cwd(), 'storage', 'uploads', 'music', data.file)
+        // Initialize Netlify Blobs store
+        const blobStore = getStore({
+            name: 'music-files',
+            siteID: process.env.NETLIFY_SITE_ID,
+            token: process.env.NETLIFY_AUTH_TOKEN,
+        })
 
-        // Delete file from disk
-        await unlink(filePath)
+        // Delete file from Netlify Blobs
+        await blobStore.delete(data.file)
 
         // Delete file from Supabase
         await client.from(table).delete().eq('file', file)
