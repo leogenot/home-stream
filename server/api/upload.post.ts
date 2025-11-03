@@ -20,8 +20,8 @@ export default defineEventHandler(async (event) => {
 
         const blobStore = getStore({
             name: 'music-files',
-            // siteID: process.env.NETLIFY_SITE_ID,
-            // token: process.env.NETLIFY_AUTH_TOKEN,
+            siteID: process.env.NETLIFY_SITE_ID,
+            token: process.env.NETLIFY_AUTH_TOKEN,
         })
 
         type UploadResult = { file: string; data: unknown }
@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
             const filename = String(file.filename)
             const ext = extname(filename).toLowerCase()
             const mime = file.type?.toLowerCase() || ''
-            const musicExts = ['.mp3', '.wav', '.flac', '.aac', '.ogg']
+            const musicExts = ['.mp3', '.m4a', '.wav', '.flac', '.aac', '.ogg']
 
             if (!(mime.startsWith('audio') || musicExts.includes(ext))) {
                 console.warn(`Skipping unsupported file type: ${filename}`)
