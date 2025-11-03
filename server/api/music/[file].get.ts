@@ -28,17 +28,13 @@ export default defineEventHandler(async (event) => {
             token: process.env.NETLIFY_AUTH_TOKEN,
         })
 
-        // Get blob metadata first to check if it exists
-        const metadata = await blobStore.getMetadata(file)
-        
-        if (!metadata) {
-            throw createError({
-                statusCode: 404,
-                statusMessage: `File not found: ${file}`
-            })
+        // Fetch the file once; use its size for range handling
+        const fileData = await blobStore.get(file, { type: 'arrayBuffer' })
+        if (!fileData) {
+            throw createError({ statusCode: 404, statusMessage: `File not found: ${file}` })
         }
 
-        const fileSize = metadata.size
+        const fileSize = (fileData as ArrayBuffer).byteLength
         const range = getHeader(event, 'range')
 
         // Set content type based on file extension
@@ -52,30 +48,43 @@ export default defineEventHandler(async (event) => {
 
         setHeader(event, 'Content-Type', contentType)
         setHeader(event, 'Accept-Ranges', 'bytes')
+        setHeader(event, 'Cache-Control', 'public, max-age=3600')
 
         if (range) {
             // Parse range header (e.g., "bytes=0-1023")
             const parts = range.replace(/bytes=/, "").split("-")
             const start = parseInt(parts[0] || '0', 10)
             const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1
-            const chunksize = (end - start) + 1
+
+            // Validate the requested range
+            if (isNaN(start) || isNaN(end) || start < 0 || end < start) {
+                event.node.res.statusCode = 416
+                setHeader(event, 'Content-Range', `bytes */${fileSize}`)
+                return ''
+            }
+            if (start >= fileSize) {
+                event.node.res.statusCode = 416
+                setHeader(event, 'Content-Range', `bytes */${fileSize}`)
+                return ''
+            }
+
+            const safeEnd = Math.min(end, fileSize - 1)
+            const chunksize = (safeEnd - start) + 1
 
             // Set partial content headers
-            setHeader(event, 'Content-Range', `bytes ${start}-${end}/${fileSize}`)
-            setHeader(event, 'Content-Length', chunksize)
+            setHeader(event, 'Content-Range', `bytes ${start}-${safeEnd}/${fileSize}`)
+            event.node.res.setHeader('Content-Length', chunksize)
 
             // Set 206 Partial Content status
             event.node.res.statusCode = 206
 
-            // Get the full file and slice it
-            const fileData = await blobStore.get(file, { type: 'arrayBuffer' })
+            // Slice from the already-fetched buffer
             const buffer = Buffer.from(fileData)
-            const slice = buffer.slice(start, end + 1)
+            const slice = buffer.slice(start, safeEnd + 1)
             return slice
         } else {
             // No range requested, send entire file
-            setHeader(event, 'Content-Length', fileSize)
-            const fileData = await blobStore.get(file, { type: 'arrayBuffer' })
+            event.node.res.setHeader('Content-Length', fileSize)
             return Buffer.from(fileData)
         }
     } catch (error: unknown) {
