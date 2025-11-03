@@ -145,7 +145,7 @@ export default defineNuxtConfig({
       routes: [], // No pre-rendered routes
     },
     compressPublicAssets: true,
-    preset: 'node-server',
+    preset: 'netlify',
     routeRules: {
       '/**': {
         headers: {
