@@ -20,8 +20,8 @@ export default defineEventHandler(async (event) => {
 
         const blobStore = getStore({
             name: 'music-files',
-            siteID: process.env.NETLIFY_SITE_ID,
-            token: process.env.NETLIFY_AUTH_TOKEN,
+            // siteID: process.env.NETLIFY_SITE_ID,
+            // token: process.env.NETLIFY_AUTH_TOKEN,
         })
 
         type UploadResult = { file: string; data: unknown }
